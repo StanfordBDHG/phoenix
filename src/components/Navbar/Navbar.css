@@ -1,0 +1,59 @@
+header p {
+    margin: 0;
+    padding-right: 5px;
+    color: #d2d0d0;
+    line-height: 32px;
+}
+
+.more-menu {
+    height: 32px;
+    width: 32px;
+    border-radius: 32px;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.more-menu:focus {
+    outline: none;
+    background-color: #ffffff36;
+}
+
+.more-menu:hover {
+    background-color: #ffffff36;
+}
+
+.more-menu > img {
+    filter: invert(100%);
+}
+
+.menu {
+    position: absolute;
+    top: 54px;
+    width: 200px;
+    right: 10px;
+    background-color: #006d84;
+    padding: 15px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.menu > button {
+    width: 100%;
+}
+.form-title h1 {
+    padding-left: 10px;
+    font-size: 24px;
+}
+
+.form-title-frontpage  {
+    margin: auto;
+    color: #FFF;
+}
+
+.profile-name {
+    max-width: 160px;
+}
+
+.survey-title-button {
+    cursor: pointer
+}
