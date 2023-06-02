@@ -1,0 +1,42 @@
+.selector {
+    position: relative;
+}
+
+.selector img {
+    position: absolute;
+    right: 12px;
+    top: 15px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.selector select {
+    font-size: 14px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    z-index: 2;
+}
+
+.compact select {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.down-arrow-icon{
+    height: 25px;
+    width: 25px;
+    background: url("../../images/icons/chevron-down-outline.svg") no-repeat center;
+    position: absolute;
+    right: 12px;
+    top: 15px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.select-display-value {
+    font-size: 12px;
+    color: #696969;
+    margin: 4px;
+}
