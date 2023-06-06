@@ -5,7 +5,7 @@ import { TreeContextProvider } from '../store/treeStore/treeStore';
 export default function Routes(): JSX.Element {
     return (
         <Switch>
-            <Route path="/builder" exact>
+            <Route path="/phoenix" exact>
                 <TreeContextProvider>
                     <FrontPage />
                 </TreeContextProvider>
