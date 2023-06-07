@@ -1,7 +1,7 @@
 import createUUID from './CreateUUID';
 
 export const createUrlUUID = (): string => {
-    return `http://cardinalkit.org/fhir/questionnaire/${createUUID()}`;
+    return `http://spezi.health/fhir/questionnaire/${createUUID()}`;
 }
 
 export const createUriUUID = (): string => {
@@ -13,5 +13,5 @@ export const isUriValid = (uri: string): boolean => {
 };
 
 export enum CodingSystemType {
-    valueSetTqqc = 'http://cardinalkit.org/fhir/ValueSet/TQQC',
+    valueSetTqqc = 'http://spezi.health/fhir/ValueSet/TQQC',
 }

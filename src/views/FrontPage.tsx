@@ -96,7 +96,7 @@ const FrontPage = (): JSX.Element => {
             {isMobileModalShown && (
                 <Modal title={t('Warning')} close={onCloseMobileModal} size={'small'}>
                     <div>
-                        <p>The CardinalKit survey builder works best on a large screen and may not appear properly on mobile devices.</p>
+                        <p>The Phoenix Survey Builder works best on a large screen and may not appear properly on mobile devices.</p>
                         <div className="modal-btn-bottom">
                             <div className="center-text">
                                 <Btn title={t('Ok')} type="button" variant="primary" onClick={onCloseMobileModal} />
@@ -133,10 +133,10 @@ const FrontPage = (): JSX.Element => {
             ) : (
                 <>
                     <header>
-                        <h1 className="form-title-frontpage">{`CardinalKit Survey Builder`}</h1>
+                        <h1 className="form-title-frontpage">{`Phoenix Survey Builder`}</h1>
                     </header>
                     <div className="frontpage">
-                        <img src={cardinalkitSpaceman} alt="CardinalKit Spaceman" width="200" className="spaceman" />
+                        <img src={cardinalkitSpaceman} alt="Spezi Spaceman" width="200" className="spaceman" />
                         <h2>{`Easily build a healthcare survey using HL7® FHIR®!`}</h2>
                         <div className="frontpage__infotext">
                             {t('You can start a new survey, or upload and continue to work on one you\'ve already started.')}
@@ -169,7 +169,7 @@ const FrontPage = (): JSX.Element => {
             )}
             <footer className="footer">
                 <p className="footer-text">
-                    An <a href="https://github.com/cardinalkit/builder">open-source project</a> of the <a href="https://cardinalkit.stanford.edu">CardinalKit</a> team at Stanford University.
+                    An <a href="https://github.com/StanfordBDHG/Phoenix">open-source project</a> of the <a href="https://bdh.stanford.edu">Biodesign Digital Health</a> team at Stanford University.
                 </p>
             </footer>
         </>

@@ -1,6 +1,6 @@
 import { ValueSet } from '../types/fhir';
 
-export const predefinedValueSetUri = 'http://cardinalkit.org/fhir/ValueSet/Predefined';
+export const predefinedValueSetUri = 'http://spezi.health/fhir/ValueSet/Predefined';
 
 export const initPredefinedValueSet = [
     {
@@ -38,7 +38,7 @@ export const initPredefinedValueSet = [
         name: 'urn:oid:1102',
         title: 'Yes / No / Do not know',
         status: 'draft',
-        publisher: 'CardinalKit',
+        publisher: 'Stanford University',
         compose: {
             include: [
                 {
@@ -69,7 +69,7 @@ export const initPredefinedValueSet = [
         name: 'urn:oid:9523',
         title: 'Yes / No / Unsure',
         status: 'draft',
-        publisher: 'CardinalKit',
+        publisher: 'Stanford Biodesign Digital Health',
         compose: {
             include: [
                 {

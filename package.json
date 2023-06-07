@@ -1,8 +1,8 @@
 {
-    "name": "cardinalkit-survey-builder",
+    "name": "phoenix-survey-builder",
     "version": "1.0.0",
     "private": true,
-    "homepage": "https://cardinalkit.org/builder",
+    "homepage": "https://spezi.health/phoenix",
     "dependencies": {
         "@ckeditor/ckeditor5-react": "^3.0.0",
         "@helsenorge/ckeditor5-build-markdown": "^24.0.0",
