@@ -7,7 +7,7 @@
         "@ckeditor/ckeditor5-react": "^3.0.0",
         "@helsenorge/ckeditor5-build-markdown": "^24.0.0",
         "@nosferatu500/react-sortable-tree": "^3.0.3",
-        "axios": "^0.21.1",
+        "axios": "^0.21.2",
         "crypto-js": "^4.0.0",
         "date-fns": "^2.17.0",
         "i18next": "^19.6.3",
