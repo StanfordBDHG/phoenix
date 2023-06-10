@@ -184,9 +184,9 @@ export const initialState: TreeState = {
         language: INITIAL_LANGUAGE.code,
         name: '',
         status: 'draft',
-        publisher: 'CardinalKit',
+        publisher: 'Stanford Biodesign Digital Health',
         meta: {
-            profile: ['http://cardinalkit.org/fhir/StructureDefinition/sdf-Questionnaire'],
+            profile: ['http://spezi.health/fhir/StructureDefinition/sdf-Questionnaire'],
             tag: [
                 {
                     system: 'urn:ietf:bcp:47',
@@ -213,7 +213,7 @@ export const initialState: TreeState = {
         ],
         contact: [
             {
-                name: 'http://cardinalkit.org',
+                name: 'http://spezi.health',
             },
         ],
         subjectType: ['Patient'],
