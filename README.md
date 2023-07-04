@@ -12,7 +12,7 @@ A web application that allows you to build healthcare surveys using the [HL7® F
 - Node.js & npm
 
 ## Getting Started
-- To use the application online, visit https://spezi.health/phoenix
+- To use the application online, visit https://stanfordbdhg.github.io/phoenix
 - To run the application locally:
     - Clone this repository and run `npm install` in the root directory
     - Run `npm start` to start the application in development mode
