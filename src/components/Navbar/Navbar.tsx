@@ -12,6 +12,7 @@ import { validateOrphanedElements, validateTranslations, ValidationErrors } from
 import { ValidationErrorsModal } from '../ValidationErrorsModal/validationErrorsModal';
 import { useTranslation } from 'react-i18next';
 import IconBtn from '../IconBtn/IconBtn';
+import MoreIcon from '../../images/icons/ellipsis-horizontal-outline.svg';
 
 type Props = {
     showFormFiller: () => void;
@@ -149,6 +150,17 @@ const Navbar = ({
                         setShowJSONView(!showJSONView);
                     }} />
                     <Btn title={t('Download')} onClick={() => exportToJsonAndDownload()} />
+                    <div
+                        className="more-menu"
+                        tabIndex={0}
+                        role="button"
+                        aria-label="menu list"
+                        aria-pressed="false"
+                        onClick={() => handleMenuItemClick(MenuItem.more)}
+                        onKeyPress={(e) => e.code === 'Enter' && handleMenuItemClick(MenuItem.more)}
+                    >
+                        <img className="more-menu-icon" src={MoreIcon} alt="more icon" height={25} />
+                    </div>
                     
                 </div>
                 {selectedMenuItem === MenuItem.more && (

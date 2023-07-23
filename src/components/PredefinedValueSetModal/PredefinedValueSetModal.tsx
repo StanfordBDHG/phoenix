@@ -159,7 +159,7 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
                             onChange={(event) => setNewValueSet({ ...newValueSet, title: event.target.value })}
                         />
                     </FormField>
-                    <FormField label={t('Teknisk-navn')}>
+                    <FormField label={t('Technical name')}>
                         <InputField
                             value={newValueSet.name}
                             onChange={(event) => setNewValueSet({ ...newValueSet, name: event.target.value })}
@@ -278,7 +278,7 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
                                 <strong>{x.title}</strong> ({x.name}){' '}
                                 {canEdit(x.url) && (
                                     <Btn
-                                        title="Endre"
+                                        title="Change"
                                         type="button"
                                         variant="secondary"
                                         onClick={() => handleEdit(x)}
