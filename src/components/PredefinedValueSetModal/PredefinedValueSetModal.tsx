@@ -11,7 +11,7 @@ import {
 import createUUID from '../../helpers/CreateUUID';
 import { predefinedValueSetUri } from '../../helpers/initPredefinedValueSet';
 import { TreeContext } from '../../store/treeStore/treeStore';
-import { updateValueSetAction } from '../../store/treeStore/treeActions';
+import { updateValueSetAction, deleteValueSetAction } from '../../store/treeStore/treeActions';
 import { ValueSet } from '../../types/fhir';
 import Btn from '../Btn/Btn';
 import FormField from '../FormField/FormField';
@@ -99,8 +99,6 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
         setNewValueSet({ ...newValueSet });
     };
 
-    
-
     const dispatchValueSet = () => {
         dispatch(updateValueSetAction(newValueSet));
         setNewValueSet({ ...initValueSet() });
@@ -151,6 +149,10 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
         const o = JSON.stringify(valueSet);
         setNewValueSet(JSON.parse(o));
     };
+
+    const handleDelete = (valueSet: ValueSet) => {
+        dispatch(deleteValueSetAction(valueSet));
+    }
 
     return (
         <Modal close={props.close} title={t('Predefined ValueSets')} size="large" bottomCloseText={t('Close')}>
@@ -283,12 +285,20 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
                             <p>
                                 <strong>{x.title}</strong> ({x.name}){' '}
                                 {canEdit(x.url) && (
+                                    <>
                                     <Btn
                                         title="Edit"
                                         type="button"
                                         variant="secondary"
                                         onClick={() => handleEdit(x)}
                                     />
+                                    <Btn
+                                        title="Delete"
+                                        type="button"
+                                        variant="secondary"
+                                        onClick={() => handleDelete(x)}
+                                    />
+                                    </>
                                 )}
                             </p>
                             <ul>
