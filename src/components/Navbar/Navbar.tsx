@@ -165,11 +165,11 @@ const Navbar = ({
                             }}
                         />
                         <Btn
-                            title={t('Import choices')}
+                            title={t('Import ValueSets')}
                             onClick={() => callbackAndHide(() => setShowImportValueSet(!showImportValueSet))}
                         />
                         <Btn
-                            title={t('Choices')}
+                            title={t('Predefined ValueSets')}
                             onClick={() => callbackAndHide(() => setShowContained(!showContained))}
                         />
                     </div>

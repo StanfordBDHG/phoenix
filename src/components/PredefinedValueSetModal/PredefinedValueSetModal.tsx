@@ -27,6 +27,7 @@ type Props = {
     close: () => void;
 };
 
+// Creates an empty value set with two options
 const initValueSet = () =>
     ({
         resourceType: 'ValueSet',
@@ -98,6 +99,8 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
         setNewValueSet({ ...newValueSet });
     };
 
+    
+
     const dispatchValueSet = () => {
         dispatch(updateValueSetAction(newValueSet));
         setNewValueSet({ ...initValueSet() });
@@ -150,9 +153,10 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
     };
 
     return (
-        <Modal close={props.close} title={t('Predefined values')} size="large" bottomCloseText={t('Close')}>
+        <Modal close={props.close} title={t('Predefined ValueSets')} size="large" bottomCloseText={t('Close')}>
             <div className="predefined-container">
                 <div>
+                    <h3>Create a New ValueSet</h3>
                     <FormField label={t('Title')}>
                         <InputField
                             value={newValueSet.title}
@@ -171,10 +175,6 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
                             onChange={(event) => setNewValueSet({ ...newValueSet, publisher: event.target.value })}
                         />
                     </FormField>
-                    <div className="btn-group center-text">
-                        <Btn onClick={addNewElement} title={t('+ New option')} variant="secondary" />
-                        <Btn onClick={dispatchValueSet} title={t('Save >')} variant="primary" />
-                    </div>
                     <div className="value-set">
                         {newValueSet.compose?.include.map((include, includeIndex) => {
                             return (
@@ -270,15 +270,21 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
                             );
                         })}
                     </div>
+                    <br />
+                    <div className="btn-group center-text">
+                        <Btn onClick={addNewElement} title={t('Add new option')} variant="secondary" />
+                        <Btn onClick={dispatchValueSet} title={t('Save ValueSet')} variant="primary" />
+                    </div>
                 </div>
                 <div>
+                    <h3>Saved ValueSets</h3>
                     {qContained?.map((x) => (
                         <div key={x.id}>
                             <p>
                                 <strong>{x.title}</strong> ({x.name}){' '}
                                 {canEdit(x.url) && (
                                     <Btn
-                                        title="Change"
+                                        title="Edit"
                                         type="button"
                                         variant="secondary"
                                         onClick={() => handleEdit(x)}

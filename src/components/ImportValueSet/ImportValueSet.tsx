@@ -170,7 +170,8 @@ const ImportValueSet = ({ close }: Props): JSX.Element => {
     return (
         <Modal close={close} title={t('Import ValueSet')} size="large">
             <div>
-                <FormField label={t('Enter a location to import the ValueSets from')}>
+                <p>You can either import a ValueSet from a URL on the web, or upload a ValueSet as a JSON file.</p>
+                <FormField label={t('Enter a URL to import the ValueSet from')}>
                     <form className="input-btn" onSubmit={(e) => handleSubmit(e)}>
                         <input
                             placeholder="https:// .. /ValueSet or https:// .. /ValueSet/[id]"
@@ -196,7 +197,7 @@ const ImportValueSet = ({ close }: Props): JSX.Element => {
                 <div>
                     <div>
                         {t(
-                            'Upload ValueSets as json files. Accepts a Bundle or ValueSet in a single file. It is possible to upload several files at once',
+                            'Upload ValueSet(s) as JSON files, either a ValueSet or a Bundle. You can upload multiple files at once.',
                         )}
                     </div>
                     <div>
@@ -251,7 +252,7 @@ const ImportValueSet = ({ close }: Props): JSX.Element => {
                     <div className="button-btn">
                         <div>
                             <p>
-                                {t('Add ({0} ValueSet) in predefined valuesets').replace(
+                                {t('Add ({0} ValueSet) in predefined ValueSets').replace(
                                     '{0}',
                                     valueSetToAdd.length.toString(),
                                 )}

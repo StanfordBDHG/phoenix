@@ -87,7 +87,7 @@ const Choice = ({ item }: Props): JSX.Element => {
                         }
                     }}
                     value={!!item.answerValueSet}
-                    label={t('Use predefined valueset')}
+                    label={t('Use predefined ValueSet')}
                 />
             </FormField>
             {!!item.answerValueSet ? (
