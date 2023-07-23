@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -9,21 +9,13 @@ import {
 
 import { QuestionnaireItem, QuestionnaireItemAnswerOption } from '../../../types/fhir';
 import Btn from '../../Btn/Btn';
-import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../../types/IQuestionnareItemType';
+import { IItemProperty } from '../../../types/IQuestionnareItemType';
 import { TreeContext } from '../../../store/treeStore/treeStore';
-import { checkboxExtension, dropdownExtension, radiobuttonExtension } from '../../../helpers/QuestionHelper';
 import { removeItemAttributeAction, updateItemAction } from '../../../store/treeStore/treeActions';
 
 import UriField from '../../FormField/UriField';
-import {
-    isItemControlCheckbox,
-    isItemControlDropDown,
-    isItemControlRadioButton,
-    ItemControlType,
-} from '../../../helpers/itemControl';
 import { removeItemExtension, setItemExtension } from '../../../helpers/extensionHelper';
 import FormField from '../../FormField/FormField';
-import ChoiceTypeSelect from './ChoiceTypeSelect';
 import SwitchBtn from '../../SwitchBtn/SwitchBtn';
 import { createUriUUID } from '../../../helpers/uriHelper';
 import DraggableAnswerOptions from '../../AnswerOption/DraggableAnswerOptions';
@@ -37,17 +29,6 @@ const Choice = ({ item }: Props): JSX.Element => {
     const { t } = useTranslation();
     const { dispatch, state } = useContext(TreeContext);
     const { qContained } = state;
-
-    const dispatchExtentionUpdate = (type: ItemControlType) => {
-        removeItemExtension(item, IExtentionType.itemControl, dispatch);
-        if (type === ItemControlType.checkbox && !isItemControlCheckbox(item)) {
-            setItemExtension(item, checkboxExtension, dispatch);
-        } else if (type === ItemControlType.dropdown && !isItemControlDropDown(item)) {
-            setItemExtension(item, dropdownExtension, dispatch);
-        } else if (type === ItemControlType.radioButton && !isItemControlRadioButton(item)) {
-            setItemExtension(item, radiobuttonExtension, dispatch);
-        }
-    };
 
     const dispatchUpdateItem = (
         name: IItemProperty,

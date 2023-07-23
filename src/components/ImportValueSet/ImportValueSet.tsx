@@ -43,7 +43,7 @@ const ImportValueSet = ({ close }: Props): JSX.Element => {
 
         const bundle = await response.json();
 
-        if (bundle.resourceType !== 'Bundle' || bundle.entry.length == 0) {
+        if (bundle.resourceType !== 'Bundle' || bundle.entry.length === 0) {
             return { error: t('This resource does not support the FHIR protocol') };
         }
 

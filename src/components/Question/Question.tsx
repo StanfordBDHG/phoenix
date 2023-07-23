@@ -14,7 +14,7 @@ import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../typ
 
 import { updateItemAction } from '../../store/treeStore/treeActions';
 import { isRecipientList } from '../../helpers/QuestionHelper';
-import { createMarkdownExtension, removeItemExtension, setItemExtension } from '../../helpers/extensionHelper';
+import { createMarkdownExtension, removeItemExtension } from '../../helpers/extensionHelper';
 import { isItemControlInline, isItemControlReceiverComponent, isItemControlHighlight } from '../../helpers/itemControl';
 
 import Accordion from '../Accordion/Accordion';

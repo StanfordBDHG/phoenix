@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { generateQuestionnaire } from '../../helpers/generateQuestionnaire';
 import { TreeContext } from '../../store/treeStore/treeStore';
-import { validateOrphanedElements, validateTranslations, ValidationErrors } from '../../helpers/orphanValidation';
+import { ValidationErrors } from '../../helpers/orphanValidation';
 import IconBtn from '../IconBtn/IconBtn';
 
 type Props = {

@@ -6,14 +6,13 @@ import Btn from '../components/Btn/Btn';
 import FormField from '../components/FormField/FormField';
 import { IQuestionnaireMetadataType } from '../types/IQuestionnaireMetadataType';
 import { updateQuestionnaireMetadataAction } from '../store/treeStore/treeActions';
-import './SurveySetup.css'
-import { IQuestionnaireItemType } from '../types/IQuestionnareItemType';
+import './SurveySetup.css';
 
 const SurveySetup = () => {
 
     const { t } = useTranslation();
     const { state, dispatch } = useContext(TreeContext);
-    const [title, setTitle] = useState(state.qMetadata.title || '')
+    const [title, setTitle] = useState(state.qMetadata.title || 'Untitled')
     const [url, setURL] = useState(state.qMetadata.url || createUrlUUID());
 
     const updateMeta = (

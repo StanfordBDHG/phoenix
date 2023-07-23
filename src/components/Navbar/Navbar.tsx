@@ -32,7 +32,6 @@ enum MenuItem {
 }
 
 const Navbar = ({
-    showFormFiller,
     setValidationErrors,
     validationErrors,
     translationErrors,
@@ -41,7 +40,7 @@ const Navbar = ({
     close,
     title
 }: Props): JSX.Element => {
-    const { i18n, t } = useTranslation();
+    const { t } = useTranslation();
     const { state, dispatch } = useContext(TreeContext);
     const [selectedMenuItem, setSelectedMenuItem] = useState(MenuItem.none);
     const [showContained, setShowContained] = useState(false);
@@ -130,18 +129,6 @@ const Navbar = ({
                         </p>
                     )}
                     <Btn title={t('Edit Metadata')} onClick={() => toggleFormDetails()} />
-                    <Btn
-                            title={t('Validate')}
-                            onClick={() => {
-                                setValidationErrors(
-                                    validateOrphanedElements(t, state.qOrder, state.qItems, state.qContained || []),
-                                );
-                                setTranslationErrors(
-                                    validateTranslations(t, state.qOrder, state.qItems, state.qAdditionalLanguages),
-                                );
-                                setShowValidationErrors(true);
-                            }}
-                        />
                     <Btn title={t('Preview')} onClick={() => {
                         // validate the FHIR and then show the JSON
                         setValidationErrors(
