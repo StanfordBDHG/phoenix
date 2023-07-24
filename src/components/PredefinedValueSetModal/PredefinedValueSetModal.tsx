@@ -99,9 +99,21 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
         setNewValueSet({ ...newValueSet });
     };
 
+    const hasEmptyValues = (valueSet: ValueSet) => {
+        return valueSet.compose?.include.some(include =>
+            !include.system || include.concept?.some(concept => 
+                concept.code === '' || concept.display === ''
+            )
+        ) ?? false;
+    }
+
     const dispatchValueSet = () => {
-        dispatch(updateValueSetAction(newValueSet));
-        setNewValueSet({ ...initValueSet() });
+        if (!hasEmptyValues(newValueSet)) { 
+            dispatch(updateValueSetAction(newValueSet));
+            setNewValueSet({ ...initValueSet() });
+        } else {
+            console.log("ValueSet has empty values.")
+        }
     };
 
     const getListStyle = (isDraggingOver: boolean) => ({

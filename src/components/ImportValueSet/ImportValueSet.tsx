@@ -64,7 +64,7 @@ const ImportValueSet = ({ close }: Props): JSX.Element => {
 
         setValueSetToAdd(valueSet.map((x) => x.id));
 
-        return { valueSet };
+        return { valueSet }; 
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
