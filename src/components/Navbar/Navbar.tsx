@@ -12,6 +12,7 @@ import { validateOrphanedElements, validateTranslations, ValidationErrors } from
 import { ValidationErrorsModal } from '../ValidationErrorsModal/validationErrorsModal';
 import { useTranslation } from 'react-i18next';
 import IconBtn from '../IconBtn/IconBtn';
+import MoreIcon from '../../images/icons/ellipsis-horizontal-outline.svg';
 
 type Props = {
     showFormFiller: () => void;
@@ -31,7 +32,6 @@ enum MenuItem {
 }
 
 const Navbar = ({
-    showFormFiller,
     setValidationErrors,
     validationErrors,
     translationErrors,
@@ -40,7 +40,7 @@ const Navbar = ({
     close,
     title
 }: Props): JSX.Element => {
-    const { i18n, t } = useTranslation();
+    const { t } = useTranslation();
     const { state, dispatch } = useContext(TreeContext);
     const [selectedMenuItem, setSelectedMenuItem] = useState(MenuItem.none);
     const [showContained, setShowContained] = useState(false);
@@ -129,18 +129,6 @@ const Navbar = ({
                         </p>
                     )}
                     <Btn title={t('Edit Metadata')} onClick={() => toggleFormDetails()} />
-                    <Btn
-                            title={t('Validate')}
-                            onClick={() => {
-                                setValidationErrors(
-                                    validateOrphanedElements(t, state.qOrder, state.qItems, state.qContained || []),
-                                );
-                                setTranslationErrors(
-                                    validateTranslations(t, state.qOrder, state.qItems, state.qAdditionalLanguages),
-                                );
-                                setShowValidationErrors(true);
-                            }}
-                        />
                     <Btn title={t('Preview')} onClick={() => {
                         // validate the FHIR and then show the JSON
                         setValidationErrors(
@@ -149,6 +137,17 @@ const Navbar = ({
                         setShowJSONView(!showJSONView);
                     }} />
                     <Btn title={t('Download')} onClick={() => exportToJsonAndDownload()} />
+                    <div
+                        className="more-menu"
+                        tabIndex={0}
+                        role="button"
+                        aria-label="menu list"
+                        aria-pressed="false"
+                        onClick={() => handleMenuItemClick(MenuItem.more)}
+                        onKeyPress={(e) => e.code === 'Enter' && handleMenuItemClick(MenuItem.more)}
+                    >
+                        <img className="more-menu-icon" src={MoreIcon} alt="more icon" height={25} />
+                    </div>
                     
                 </div>
                 {selectedMenuItem === MenuItem.more && (
@@ -166,11 +165,11 @@ const Navbar = ({
                             }}
                         />
                         <Btn
-                            title={t('Import choices')}
+                            title={t('Import ValueSets')}
                             onClick={() => callbackAndHide(() => setShowImportValueSet(!showImportValueSet))}
                         />
                         <Btn
-                            title={t('Choices')}
+                            title={t('Predefined ValueSets')}
                             onClick={() => callbackAndHide(() => setShowContained(!showContained))}
                         />
                     </div>

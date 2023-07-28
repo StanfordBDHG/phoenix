@@ -10,7 +10,7 @@ will give:
 }
  */
 const isEmptyObject = (value: unknown): boolean => {
-    return typeof value === 'object' && Object.keys(<Record<string, unknown>>value).length === 0;
+    return typeof value === 'object' && Object.keys(value as Record<string, unknown>).length === 0;
 };
 
 export const emptyPropertyReplacer = (_key: string, value: unknown): unknown => {

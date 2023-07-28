@@ -60,7 +60,7 @@ const FormBuilder = (props: FormBuilderProps): JSX.Element => {
             <div className="page-wrapper">
                 {(showFormDetails) &&
                     <Modal size={'large'}
-                        title={'Survey Metadata'}
+                        title={t('Survey Metadata')}
                         close={toggleFormDetails}
                         bottomCloseText={'Save'}
                         bottomButtonAlignment={'right-text'}>

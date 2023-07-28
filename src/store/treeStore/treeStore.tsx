@@ -42,6 +42,7 @@ import {
     UPDATE_QUESTIONNAIRE_METADATA_ACTION,
     UPDATE_SIDEBAR_TRANSLATION_ACTION,
     UPDATE_VALUESET_ACTION,
+    DELETE_VALUESET_ACTION,
     UpdateContainedValueSetTranslationAction,
     UpdateItemAction,
     UpdateItemCodePropertyAction,
@@ -53,6 +54,7 @@ import {
     UpdateQuestionnaireMetadataAction,
     UpdateSidebarTranslationAction,
     UpdateValueSetAction,
+    DeleteValueSetAction,
     UPDATE_SETTING_TRANSLATION_ACTION,
     UpdateSettingTranslationAction,
 } from './treeActions';
@@ -90,6 +92,7 @@ export type ActionType =
     | UpdateSettingTranslationAction
     | UpdateSidebarTranslationAction
     | UpdateValueSetAction
+    | DeleteValueSetAction
     | RemoveItemAttributeAction
     | SaveAction
     | UpdateMarkedLinkId;
@@ -585,6 +588,13 @@ function updateValueSet(draft: TreeState, action: UpdateValueSetAction): void {
     }
 }
 
+function deleteValueSet(draft: TreeState, action: DeleteValueSetAction): void {
+    const indexToDelete = draft?.qContained?.findIndex((x) => x.id === action.item.id);
+    if (draft.qContained && indexToDelete !== undefined && indexToDelete >= 0) {
+        draft.qContained.splice(indexToDelete, 1);
+    }
+}
+
 function importValueSet(draft: TreeState, action: ImportValueSetAction): void {
     draft.qContained = [...(draft?.qContained || []), ...action.items];
 }
@@ -717,6 +727,9 @@ const reducer = produce((draft: TreeState, action: ActionType) => {
             break;
         case UPDATE_VALUESET_ACTION:
             updateValueSet(draft, action);
+            break;
+        case DELETE_VALUESET_ACTION:
+            deleteValueSet(draft, action);
             break;
         case IMPORT_VALUESET_ACTION:
             importValueSet(draft, action);

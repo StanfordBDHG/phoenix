@@ -69,7 +69,7 @@ const TranslateContainedValueSets = ({
     }
     return (
         <div>
-            <div className="translation-section-header">{t('Predefined valuesets')}</div>
+            <div className="translation-section-header">{t('Predefined ValueSets')}</div>
             {qContained.map((valueSet: ValueSet) => {
                 return (
                     <div key={`${targetLanguage}-${valueSet.id}`} className="translation-group">

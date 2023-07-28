@@ -11,7 +11,7 @@ import {
 import createUUID from '../../helpers/CreateUUID';
 import { predefinedValueSetUri } from '../../helpers/initPredefinedValueSet';
 import { TreeContext } from '../../store/treeStore/treeStore';
-import { updateValueSetAction } from '../../store/treeStore/treeActions';
+import { updateValueSetAction, deleteValueSetAction } from '../../store/treeStore/treeActions';
 import { ValueSet } from '../../types/fhir';
 import Btn from '../Btn/Btn';
 import FormField from '../FormField/FormField';
@@ -27,6 +27,7 @@ type Props = {
     close: () => void;
 };
 
+// Creates an empty value set with two options
 const initValueSet = () =>
     ({
         resourceType: 'ValueSet',
@@ -98,9 +99,21 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
         setNewValueSet({ ...newValueSet });
     };
 
+    const hasEmptyValues = (valueSet: ValueSet) => {
+        return valueSet.compose?.include.some(include =>
+            !include.system || include.concept?.some(concept => 
+                concept.code === '' || concept.display === ''
+            )
+        ) ?? false;
+    }
+
     const dispatchValueSet = () => {
-        dispatch(updateValueSetAction(newValueSet));
-        setNewValueSet({ ...initValueSet() });
+        if (!hasEmptyValues(newValueSet)) { 
+            dispatch(updateValueSetAction(newValueSet));
+            setNewValueSet({ ...initValueSet() });
+        } else {
+            console.log("ValueSet has empty values.")
+        }
     };
 
     const getListStyle = (isDraggingOver: boolean) => ({
@@ -149,17 +162,22 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
         setNewValueSet(JSON.parse(o));
     };
 
+    const handleDelete = (valueSet: ValueSet) => {
+        dispatch(deleteValueSetAction(valueSet));
+    }
+
     return (
-        <Modal close={props.close} title={t('Predefined values')} size="large" bottomCloseText={t('Close')}>
+        <Modal close={props.close} title={t('Predefined ValueSets')} size="large" bottomCloseText={t('Close')}>
             <div className="predefined-container">
                 <div>
+                    <h3>Create a New ValueSet</h3>
                     <FormField label={t('Title')}>
                         <InputField
                             value={newValueSet.title}
                             onChange={(event) => setNewValueSet({ ...newValueSet, title: event.target.value })}
                         />
                     </FormField>
-                    <FormField label={t('Teknisk-navn')}>
+                    <FormField label={t('Technical name')}>
                         <InputField
                             value={newValueSet.name}
                             onChange={(event) => setNewValueSet({ ...newValueSet, name: event.target.value })}
@@ -171,10 +189,6 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
                             onChange={(event) => setNewValueSet({ ...newValueSet, publisher: event.target.value })}
                         />
                     </FormField>
-                    <div className="btn-group center-text">
-                        <Btn onClick={addNewElement} title={t('+ New option')} variant="secondary" />
-                        <Btn onClick={dispatchValueSet} title={t('Save >')} variant="primary" />
-                    </div>
                     <div className="value-set">
                         {newValueSet.compose?.include.map((include, includeIndex) => {
                             return (
@@ -270,19 +284,33 @@ const PredefinedValueSetModal = (props: Props): JSX.Element => {
                             );
                         })}
                     </div>
+                    <br />
+                    <div className="btn-group center-text">
+                        <Btn onClick={addNewElement} title={t('Add new option')} variant="secondary" />
+                        <Btn onClick={dispatchValueSet} title={t('Save ValueSet')} variant="primary" />
+                    </div>
                 </div>
                 <div>
+                    <h3>Saved ValueSets</h3>
                     {qContained?.map((x) => (
                         <div key={x.id}>
                             <p>
                                 <strong>{x.title}</strong> ({x.name}){' '}
                                 {canEdit(x.url) && (
+                                    <>
                                     <Btn
-                                        title="Endre"
+                                        title="Edit"
                                         type="button"
                                         variant="secondary"
                                         onClick={() => handleEdit(x)}
                                     />
+                                    <Btn
+                                        title="Delete"
+                                        type="button"
+                                        variant="secondary"
+                                        onClick={() => handleDelete(x)}
+                                    />
+                                    </>
                                 )}
                             </p>
                             <ul>
