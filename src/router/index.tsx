@@ -1,15 +1,15 @@
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import FrontPage from '../views/FrontPage';
 import { TreeContextProvider } from '../store/treeStore/treeStore';
 
-export default function Routes(): JSX.Element {
+export default function AppRoutes(): JSX.Element {
     return (
-        <Switch>
-            <Route path="/phoenix" exact>
+        <Routes>
+            <Route path="/phoenix" element={
                 <TreeContextProvider>
                     <FrontPage />
                 </TreeContextProvider>
-            </Route>
-        </Switch>
+            }/>
+        </Routes>
     );
 }

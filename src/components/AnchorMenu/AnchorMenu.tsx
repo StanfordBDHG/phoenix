@@ -264,14 +264,14 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
                         ),
                     })}
                 />
-                {/* props.qOrder.length === 0 && (
+                {props.qOrder.length === 0 && (
                     <div className="anchor-menu__placeholder">
                         <div className="anchor-menu__info">
                             <i className="ion-android-hand" /> &nbsp;
                             {'Drag a question type here to start building your survey!'}
                         </div>
                     </div>
-                ) */}
+                )}
             </div>
         </DndProvider>
     );
