@@ -4,14 +4,15 @@ import * as serviceWorker from './serviceWorker';
 
 import App from './App';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { UserProvider } from './contexts/UserContext';
 import './helpers/i18n';
 //import { debugContextDevtool } from 'react-context-devtool';
 
 const container = document.getElementById('root');
+const root = createRoot(container);
 
-ReactDOM.render(
+root.render(
     <React.StrictMode>
         <UserProvider>
             <App />
