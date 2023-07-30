@@ -1,5 +1,5 @@
 import './AnchorMenu.css';
-import { DndProvider, DragSource, DragSourceConnector, ConnectDragSource } from 'react-dnd';
+import { DndProvider, useDrag, DragSourceConnector } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import React from 'react';
@@ -27,6 +27,7 @@ interface AnchorMenuProps {
     dispatch: React.Dispatch<ActionType>;
 }
 
+// Interface definition to describe the node structure of the questionnaire tree
 interface Node {
     title: string;
     hierarchy?: string;
@@ -40,6 +41,7 @@ interface ExtendedNode {
     path: string[];
 }
 
+// Event type definitions for moving nodes and toggling node visibility in the tree
 interface NodeMoveEvent {
     treeData: Node[];
     nextParentNode: Node;
@@ -56,22 +58,7 @@ interface NodeVisibilityToggleEvent {
 const newNodeLinkId = 'NEW';
 const externalNodeType = 'yourNodeType';
 
-const externalNodeSpec = {
-    // This needs to return an object with a property `node` in it.
-    // Object rest spread is recommended to avoid side effects of
-    // referencing the same object in different trees.
-    beginDrag: (componentProps: { node: Node }) => ({ node: { ...componentProps.node } }),
-};
-const externalNodeCollect = (connect: DragSourceConnector) => ({
-    connectDragSource: connect.dragSource(),
-    // Add props via react-dnd APIs to enable more visual
-    // customization of your component
-    // isDragging: monitor.isDragging(),
-    // didDrop: monitor.didDrop(),
-});
-
-const ExternalNodeBaseComponent = (props: { connectDragSource: ConnectDragSource; node: Node }): JSX.Element | null => {
-
+const YourExternalNodeComponent = ({ node }: { node: Node }): JSX.Element | null => {
     const getRelevantIcon = (type?: string) => {
         switch (type) {
             case IQuestionnaireItemType.group:
@@ -96,22 +83,28 @@ const ExternalNodeBaseComponent = (props: { connectDragSource: ConnectDragSource
                 return 'ion-help-circled';
         }
     };
+    
+const [{ isDragging }, drag] = useDrag(() => ({
+        type: externalNodeType,
+        item: { node: { ...node } },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    }));
 
-    return props.connectDragSource (
-    <div className="anchor-menu__dragcomponent">
-       <i className={getRelevantIcon(props.node.nodeType)} /> &nbsp; {props.node.nodeReadableType}
-    </div>, 
-    {
-        dropEffect: 'copy',
-    });
+    const opacity = isDragging ? 0.5 : 1;
+    return (
+        <div
+            className="anchor-menu__dragcomponent"
+            ref={drag}
+            style={{ opacity }}
+        >
+            <i className={getRelevantIcon(node.nodeType)} /> &nbsp; {node.nodeReadableType}
+        </div>
+    );
 };
 
-const YourExternalNodeComponent = DragSource(
-    externalNodeType,
-    externalNodeSpec,
-    externalNodeCollect,
-)(ExternalNodeBaseComponent);
-
+// The main component "AnchorMenu"
 const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
     const { t } = useTranslation();
     const [collapsedNodes, setCollapsedNodes] = React.useState<string[]>([]);
