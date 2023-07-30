@@ -6,7 +6,8 @@
     "dependencies": {
         "@ckeditor/ckeditor5-react": "^3.0.0",
         "@helsenorge/ckeditor5-build-markdown": "^24.0.0",
-        "@nosferatu500/react-sortable-tree": "^3.0.3",
+        "@nosferatu500/react-dnd-scrollzone": "^3.0.0",
+        "@nosferatu500/react-sortable-tree": "^4.4.0",
         "axios": "^0.21.1",
         "crypto-js": "^4.0.0",
         "date-fns": "^2.17.0",
@@ -14,15 +15,16 @@
         "idb": "^6.0.0",
         "immer": "^8.0.1",
         "qs": "^6.10.1",
-        "react": "^17.0.2",
+        "react": "^18.2.0",
         "react-beautiful-dnd": "^13.0.0",
         "react-datepicker": "^3.5.0",
         "react-device-detect": "^2.2.2",
-        "react-dnd-html5-backend": "^14.0.1",
-        "react-dom": "^17.0.2",
+        "react-dnd": "^16.0.1",
+        "react-dnd-html5-backend": "^16.0.1",
+        "react-dom": "^18.2.0",
         "react-i18next": "^11.7.0",
         "react-router-dom": "^5.2.0",
-        "react-scripts": "^4.0.3",
+        "react-scripts": "^5.0.1",
         "remove-markdown": "^0.5.0"
     },
     "scripts": {
@@ -36,8 +38,7 @@
     },
     "eslintConfig": {
         "extends": [
-            "react-app",
-            "react-app/jest"
+            "react-app"
         ],
         "rules": {
             "eqeqeq": "warn",
@@ -69,14 +70,15 @@
         "@types/react-router-dom": "^5.1.7",
         "@types/react-sortable-tree": "^0.3.13",
         "@typescript-eslint/eslint-plugin": "^4.14.0",
-        "@typescript-eslint/parser": "^4.14.0",
         "chokidar": "^3.5.1",
-        "eslint": "^7.18.0",
+        "eslint": "^8.46.0",
         "eslint-config-prettier": "^7.2.0",
         "eslint-plugin-prettier": "^3.3.1",
         "eslint-plugin-react": "^7.22.0",
         "eslint-plugin-react-hooks": "^4.2.0",
         "gh-pages": "^4.0.0",
+        "install": "^0.13.0",
+        "npm": "^9.8.1",
         "prettier": "^2.2.1",
         "typescript": "^4.1.3"
     }
