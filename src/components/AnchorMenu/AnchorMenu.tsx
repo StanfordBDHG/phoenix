@@ -1,5 +1,5 @@
 import './AnchorMenu.css';
-import { DndProvider, useDrag, DragSourceConnector } from 'react-dnd';
+import { DndProvider, useDrag } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import React from 'react';
@@ -83,8 +83,8 @@ const YourExternalNodeComponent = ({ node }: { node: Node }): JSX.Element | null
                 return 'ion-help-circled';
         }
     };
-    
-const [{ isDragging }, drag] = useDrag(() => ({
+
+    const [{ isDragging }, drag] = useDrag(() => ({
         type: externalNodeType,
         item: { node: { ...node } },
         collect: (monitor) => ({
@@ -93,6 +93,7 @@ const [{ isDragging }, drag] = useDrag(() => ({
     }));
 
     const opacity = isDragging ? 0.5 : 1;
+    
     return (
         <div
             className="anchor-menu__dragcomponent"
@@ -108,7 +109,7 @@ const [{ isDragging }, drag] = useDrag(() => ({
 const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
     const { t } = useTranslation();
     const [collapsedNodes, setCollapsedNodes] = React.useState<string[]>([]);
-    
+
 
     const mapToTreeData = (item: OrderItem[], hierarchy: string, parentLinkId?: string): Node[] => {
         return item
@@ -267,7 +268,7 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
                     <div className="anchor-menu__placeholder">
                         <div className="anchor-menu__info">
                             <i className="ion-android-hand" /> &nbsp;
-                            {'Drag a question type here to start building your survey!'}    
+                            {'Drag a question type here to start building your survey!'}
                         </div>
                     </div>
                 )}
