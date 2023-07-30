@@ -93,6 +93,7 @@ const YourExternalNodeComponent = ({ node }: { node: Node }): JSX.Element | null
     }));
 
     const opacity = isDragging ? 0.5 : 1;
+    
     return (
         <div
             className="anchor-menu__dragcomponent"
