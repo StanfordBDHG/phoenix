@@ -21,9 +21,12 @@ A web application that allows you to build healthcare surveys using the [HL7® F
 - Open `localhost:3000/phoenix` in your browser to view the application.
 
 ## Build for Production
+- First, ensure that Node.js (version 16 or greater) and npm are installed on your system.
+- Clone this repository and run `npm install` in the root directory.
 - Run `npm run build` in the root directory.
+- The build files will be found in the `build/` subdirectory. You may deploy these files to the static web hosting service of your choice.
 
-## Run in Docker
+## Build and Run in Docker
 - First, build the docker image:
 ```
 docker build -t phoenix-survey-builder
