@@ -13,10 +13,26 @@ A web application that allows you to build healthcare surveys using the [HL7® F
 
 ## Getting Started
 - To use the application online, visit https://stanfordbdhg.github.io/phoenix
-- To run the application locally:
-    - Clone this repository and run `npm install` in the root directory
-    - Run `npm start` to start the application in development mode
-    - Open `localhost:3000/builder` in your browser to view the application
+
+## Run for Development
+- First, ensure that Node.js (version 16 or greater) and npm are installed on your system.
+- Clone this repository and run `npm install` in the root directory.
+- Run `npm start` to start the application in development mode.
+- Open `localhost:3000/phoenix` in your browser to view the application.
+
+## Build for Production
+- Run `npm run build` in the root directory.
+
+## Run in Docker
+- First, build the docker image:
+```
+docker build -t phoenix-survey-builder
+```
+- Then, run the docker image:
+```
+docker run -p 8080:80 phoenix-survey-builder
+```
+- Open `localhost:8080/phoenix` in your browser to view the application.
 
 ## Contributors & License
 The Phoenix Survey Builder is licensed under the [MIT license](LICENSE).
