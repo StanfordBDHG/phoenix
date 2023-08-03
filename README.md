@@ -2,6 +2,8 @@
 
 A web application that allows you to build healthcare surveys using the [HL7® FHIR® Questionnaire](https://www.hl7.org/fhir/questionnaire.html) international data standard using an interactive, drag-and-drop interface, and export JSON to be used in CardinalKit/Spezi iOS and Android applications to deliver surveys to patients.
 
+<img src="figures/home_screenshot.png" />
+
 ## Features
 - Drag and drop survey creation
 - Exports surveys as HL7® FHIR® Questionnaires
@@ -35,7 +37,20 @@ docker build -t phoenix-survey-builder
 ```
 docker run -p 8080:80 phoenix-survey-builder
 ```
+(You may substitute `8080` in the command above with a different port of your choice if needed.)
+
 - Open `localhost:8080/phoenix` in your browser to view the application.
+
+## Deploy to GitHub Pages
+The repository contains a GitHub Action that will deploy the application to GitHub pages: [deploy.yml](https://github.com/StanfordBDHG/phoenix/blob/dockerize/.github/workflows/deploy.yml). 
+
+Before using the action:
+- Update `package.json` with the full GitHub pages URL for your repository in the `homepage` key, i.e. `https://username.github.io/repository`.
+- Update the main route path in `src/router/index.tsx` with your repository name:
+```
+<Route path="/YOUR_REPOSITORY_NAME" exact>
+...
+```
 
 ## Contributors & License
 The Phoenix Survey Builder is licensed under the [MIT license](LICENSE).
