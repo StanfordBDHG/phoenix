@@ -1,5 +1,7 @@
 # Phoenix Survey Builder
 
+[![Build and Test](https://github.com/StanfordBDHG/phoenix/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/StanfordBDHG/phoenix/actions/workflows/build-and-test.yml)
+
 A web application that allows you to build healthcare surveys using the [HL7® FHIR® Questionnaire](https://www.hl7.org/fhir/questionnaire.html) international data standard using an interactive, drag-and-drop interface, and export JSON to be used in CardinalKit/Spezi iOS and Android applications to deliver surveys to patients.
 
 <img src="figures/home_screenshot.png" />
