@@ -1,10 +1,7 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
     isItemControlCheckbox,
-    isItemControlDropDown,
-    isItemControlRadioButton,
     ItemControlType,
 } from '../../../helpers/itemControl';
 import { QuestionnaireItem } from '../../../types/fhir';
@@ -22,10 +19,6 @@ const ChoiceTypeSelect = ({ item, dispatchExtentionUpdate }: Props): JSX.Element
     const getSelectedItemControlValue = () => {
         if (isItemControlCheckbox(item)) {
             return ItemControlType.checkbox;
-        } else if (isItemControlDropDown(item)) {
-            return ItemControlType.dropdown;
-        } else if (isItemControlRadioButton(item)) {
-            return ItemControlType.radioButton;
         }
         return ItemControlType.dynamic;
     };
