@@ -29,7 +29,7 @@ const ValidationAnswerTypeString = ({ item }: Props): JSX.Element => {
             code:
                 '^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?',
         },
-        {   display: t('Zip code'), 
+        {   display: t('US ZIP code'), 
             code: '^(000[1-9]|0[1-9][0-9][0-9]|[1-9][0-9][0-9][0-8])$' 
         },
     ];
