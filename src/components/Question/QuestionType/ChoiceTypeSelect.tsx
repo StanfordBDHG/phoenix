@@ -34,11 +34,11 @@ const ChoiceTypeSelect = ({ item, dispatchExtentionUpdate }: Props): JSX.Element
                     options={[
                         {
                             code: ItemControlType.dynamic,
-                            display: t('Allow selection of one value'),
+                            display: t('Dynamic'),
                         },
                         {
                             code: ItemControlType.checkbox,
-                            display: t('Allow selection of multiple values'),
+                            display: t('Checkbox (Allows selection of multiple values)'),
                         },
                     ]}
                     name="choice-item-control-radio"
