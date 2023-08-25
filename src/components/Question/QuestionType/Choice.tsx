@@ -9,17 +9,20 @@ import {
 
 import { QuestionnaireItem, QuestionnaireItemAnswerOption } from '../../../types/fhir';
 import Btn from '../../Btn/Btn';
-import { IItemProperty } from '../../../types/IQuestionnareItemType';
+import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../../types/IQuestionnareItemType';
 import { TreeContext } from '../../../store/treeStore/treeStore';
 import { removeItemAttributeAction, updateItemAction } from '../../../store/treeStore/treeActions';
 
 import UriField from '../../FormField/UriField';
 import { removeItemExtension, setItemExtension } from '../../../helpers/extensionHelper';
 import FormField from '../../FormField/FormField';
+import ChoiceTypeSelect from './ChoiceTypeSelect';
 import SwitchBtn from '../../SwitchBtn/SwitchBtn';
 import { createUriUUID } from '../../../helpers/uriHelper';
 import DraggableAnswerOptions from '../../AnswerOption/DraggableAnswerOptions';
 import PredefinedValueSets from './PredefinedValueSets';
+import { ItemControlType, isItemControlCheckbox, isItemControlDropDown } from '../../../helpers/itemControl';
+import { checkboxExtension } from '../../../helpers/QuestionHelper';
 
 type Props = {
     item: QuestionnaireItem;
@@ -29,6 +32,13 @@ const Choice = ({ item }: Props): JSX.Element => {
     const { t } = useTranslation();
     const { dispatch, state } = useContext(TreeContext);
     const { qContained } = state;
+
+    const dispatchExtensionUpdate = (type: ItemControlType) => {
+        removeItemExtension(item, IExtentionType.itemControl, dispatch);
+        if (type === ItemControlType.checkbox && !isItemControlCheckbox(item)){
+            setItemExtension(item, checkboxExtension, dispatch);
+        }
+    }
 
     const dispatchUpdateItem = (
         name: IItemProperty,
@@ -55,8 +65,7 @@ const Choice = ({ item }: Props): JSX.Element => {
 
     return (
         <>
-            {/* 
-            NOTE: CK does not yet support 'open-choice' questions
+            <ChoiceTypeSelect item={item} dispatchExtentionUpdate={dispatchExtensionUpdate} />
             <FormField>
                 <SwitchBtn
                     onChange={() => {
@@ -70,7 +79,6 @@ const Choice = ({ item }: Props): JSX.Element => {
                     label={t('Allow free-text answer')}
                 />
             </FormField> 
-            */}
             <FormField>
                 <SwitchBtn
                     onChange={() => {
