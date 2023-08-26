@@ -1,10 +1,7 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
     isItemControlCheckbox,
-    isItemControlDropDown,
-    isItemControlRadioButton,
     ItemControlType,
 } from '../../../helpers/itemControl';
 import { QuestionnaireItem } from '../../../types/fhir';
@@ -22,10 +19,6 @@ const ChoiceTypeSelect = ({ item, dispatchExtentionUpdate }: Props): JSX.Element
     const getSelectedItemControlValue = () => {
         if (isItemControlCheckbox(item)) {
             return ItemControlType.checkbox;
-        } else if (isItemControlDropDown(item)) {
-            return ItemControlType.dropdown;
-        } else if (isItemControlRadioButton(item)) {
-            return ItemControlType.radioButton;
         }
         return ItemControlType.dynamic;
     };
@@ -44,16 +37,8 @@ const ChoiceTypeSelect = ({ item, dispatchExtentionUpdate }: Props): JSX.Element
                             display: t('Dynamic'),
                         },
                         {
-                            code: ItemControlType.radioButton,
-                            display: t('Radio buttons'),
-                        },
-                        {
-                            code: ItemControlType.dropdown,
-                            display: t('Dropdown'),
-                        },
-                        {
                             code: ItemControlType.checkbox,
-                            display: t('Checkbox (Allow selection of multiple values)'),
+                            display: t('Checkbox (Allows selection of multiple values)'),
                         },
                     ]}
                     name="choice-item-control-radio"
