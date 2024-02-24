@@ -9,12 +9,13 @@ import {
     QuestionnaireItemAnswerOption,
     ValueSet,
     ValueSetComposeIncludeConcept,
+    Coding
 } from '../../types/fhir';
 import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../types/IQuestionnareItemType';
 
 import { updateItemAction } from '../../store/treeStore/treeActions';
 import { isRecipientList } from '../../helpers/QuestionHelper';
-import { createMarkdownExtension, removeItemExtension } from '../../helpers/extensionHelper';
+import { createMarkdownExtension, removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
 import { isItemControlInline, isItemControlReceiverComponent, isItemControlHighlight } from '../../helpers/itemControl';
 
 import Accordion from '../Accordion/Accordion';
@@ -98,6 +99,7 @@ const Question = (props: QuestionProps): JSX.Element => {
     const isDecimal = props.item.type === IQuestionnaireItemType.decimal;
     const isQuantity = props.item.type === IQuestionnaireItemType.quantity;
     const isDecimalOrQuantity = isDecimal || isQuantity;
+
 
     // Adds instructions for the user
     const instructionType = (): JSX.Element => {
@@ -193,6 +195,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                         </FormField>
                     )}
                     {(isNumber) && (
+                        <>
                         <FormField>
                             <SwitchBtn label={t('Allow decimals')} value={isDecimalOrQuantity} onChange={() => {
                                 const newItemType = isDecimal || isQuantity
@@ -206,6 +209,32 @@ const Question = (props: QuestionProps): JSX.Element => {
                                 }
                             }} />
                         </FormField>
+                        <FormField>
+                    <SwitchBtn 
+                        label={t('Display as a slider')} 
+                        value={hasExtension(props.item, IExtentionType.itemControl)} 
+                        onChange={(() => {
+                            const newExtension = {
+                                url: IExtentionType.itemControl,
+                                valueCodeableConcept: {
+                                    coding: [
+                                        {
+                                            system: "http://hl7.org/fhir/questionnaire-item-control",
+                                            code: "slider",
+                                            display: "Slider"
+                                            }
+                                        ]
+                                    }
+                                };
+                                if (!hasExtension(props.item, IExtentionType.itemControl)) {
+                                    setItemExtension(props.item, newExtension, props.dispatch)
+                                } else {
+                                    removeItemExtension(props.item, IExtentionType.itemControl, props.dispatch)
+                                }
+                            })}
+                    />
+                </FormField>
+                        </>
                     )}
                     {(isDecimalOrQuantity) && (
                         <FormField>
