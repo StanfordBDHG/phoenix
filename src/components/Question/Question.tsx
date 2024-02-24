@@ -99,6 +99,9 @@ const Question = (props: QuestionProps): JSX.Element => {
     const isDecimal = props.item.type === IQuestionnaireItemType.decimal;
     const isQuantity = props.item.type === IQuestionnaireItemType.quantity;
     const isDecimalOrQuantity = isDecimal || isQuantity;
+    const isSlider = hasExtension(props.item, IExtentionType.itemControl);
+    const sliderMinValue = props.item.extension?.find((x) => x.url === IExtentionType.minValue)?.valueInteger;
+    const sliderMaxValue = props.item.extension?.find((x) => x.url === IExtentionType.maxValue)?.valueInteger;
 
 
     // Adds instructions for the user
@@ -196,44 +199,44 @@ const Question = (props: QuestionProps): JSX.Element => {
                     )}
                     {(isNumber) && (
                         <>
-                        <FormField>
-                            <SwitchBtn label={t('Allow decimals')} value={isDecimalOrQuantity} onChange={() => {
-                                const newItemType = isDecimal || isQuantity
-                                        ? IQuestionnaireItemType.integer
-                                        : IQuestionnaireItemType.decimal;
-                                dispatchUpdateItem(IItemProperty.type, newItemType)
+                            <FormField>
+                                <SwitchBtn label={t('Allow decimals')} value={isDecimalOrQuantity} onChange={() => {
+                                    const newItemType = isDecimal || isQuantity
+                                            ? IQuestionnaireItemType.integer
+                                            : IQuestionnaireItemType.decimal;
+                                    dispatchUpdateItem(IItemProperty.type, newItemType)
 
-                                // remove max decimal places extension if toggling off
-                                if (newItemType === IQuestionnaireItemType.integer) {
-                                    removeItemExtension(props.item, IExtentionType.maxDecimalPlaces, props.dispatch);
-                                }
-                            }} />
-                        </FormField>
-                        <FormField>
-                    <SwitchBtn 
-                        label={t('Display as a slider')} 
-                        value={hasExtension(props.item, IExtentionType.itemControl)} 
-                        onChange={(() => {
-                            const newExtension = {
-                                url: IExtentionType.itemControl,
-                                valueCodeableConcept: {
-                                    coding: [
-                                        {
-                                            system: "http://hl7.org/fhir/questionnaire-item-control",
-                                            code: "slider",
-                                            display: "Slider"
-                                            }
-                                        ]
+                                    // remove max decimal places extension if toggling off
+                                    if (newItemType === IQuestionnaireItemType.integer) {
+                                        removeItemExtension(props.item, IExtentionType.maxDecimalPlaces, props.dispatch);
                                     }
-                                };
-                                if (!hasExtension(props.item, IExtentionType.itemControl)) {
-                                    setItemExtension(props.item, newExtension, props.dispatch)
-                                } else {
-                                    removeItemExtension(props.item, IExtentionType.itemControl, props.dispatch)
-                                }
-                            })}
-                    />
-                </FormField>
+                                }} />
+                            </FormField>
+                            <FormField>
+                                <SwitchBtn 
+                                    label={t('Display as a slider')} 
+                                    value={isSlider} 
+                                    onChange={(() => {
+                                        const newExtension = {
+                                            url: IExtentionType.itemControl,
+                                            valueCodeableConcept: {
+                                                coding: [
+                                                    {
+                                                        system: "http://hl7.org/fhir/questionnaire-item-control",
+                                                        code: "slider",
+                                                        display: "Slider"
+                                                        }
+                                                    ]
+                                                }
+                                            };
+                                            if (!isSlider) {
+                                                setItemExtension(props.item, newExtension, props.dispatch)
+                                            } else {
+                                                removeItemExtension(props.item, IExtentionType.itemControl, props.dispatch)
+                                            }
+                                        })}
+                                />
+                            </FormField>
                         </>
                     )}
                     {(isDecimalOrQuantity) && (
@@ -265,6 +268,43 @@ const Question = (props: QuestionProps): JSX.Element => {
                         />
                     )}
                 </FormField>
+                {isSlider && <div className="horizontal equal">
+                    <p>Slider Settings</p>
+                    <FormField label={t('Min value')}>
+                        <input
+                            type="number"
+                            defaultValue={sliderMinValue}
+                            onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                if (!event.target.value) {
+                                    removeItemExtension(props.item, IExtentionType.minValue, props.dispatch);
+                                } else {
+                                    const extension = {
+                                        url: IExtentionType.minValue,
+                                        valueInteger: parseInt(event.target.value),
+                                    };
+                                    setItemExtension(props.item, extension, props.dispatch);
+                                }
+                            }}
+                        ></input>
+                    </FormField>
+                    <FormField label={t('Max value')}>
+                        <input
+                            type="number"
+                            defaultValue={sliderMaxValue}
+                            onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                if (!event.target.value) {
+                                    removeItemExtension(props.item, IExtentionType.maxValue, props.dispatch);
+                                } else {
+                                    const extension = {
+                                        url: IExtentionType.maxValue,
+                                        valueInteger: parseInt(event.target.value),
+                                    };
+                                    setItemExtension(props.item, extension, props.dispatch);
+                                }
+                            }}
+                        ></input>
+                    </FormField>
+                </div>}
                 {/* Sublabel is not currently supported 
                 {canTypeHaveSublabel(props.item) && (
                     <FormField label={t('Sublabel')} isOptional>
