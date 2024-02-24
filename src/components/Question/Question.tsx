@@ -206,13 +206,18 @@ const Question = (props: QuestionProps): JSX.Element => {
                                             : IQuestionnaireItemType.decimal;
                                     dispatchUpdateItem(IItemProperty.type, newItemType)
 
+                                    // remove slider extension if toggling to decimal
+                                    if (newItemType === IQuestionnaireItemType.decimal) {
+                                        removeItemExtension(props.item, IExtentionType.itemControl, props.dispatch);
+                                    }
+
                                     // remove max decimal places extension if toggling off
                                     if (newItemType === IQuestionnaireItemType.integer) {
                                         removeItemExtension(props.item, IExtentionType.maxDecimalPlaces, props.dispatch);
                                     }
                                 }} />
                             </FormField>
-                            <FormField>
+                            {!(isDecimal || isQuantity) && <FormField>
                                 <SwitchBtn 
                                     label={t('Display as a slider')} 
                                     value={isSlider} 
@@ -236,7 +241,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                                             }
                                         })}
                                 />
-                            </FormField>
+                            </FormField>}
                         </>
                     )}
                     {(isDecimalOrQuantity) && (
@@ -343,7 +348,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                 {respondType()}
             </div>
             <div className="question-addons">
-                {canTypeBeValidated(props.item) && (
+                {canTypeBeValidated(props.item) && !isSlider && (
                     <Accordion title={t('Add validation')}>
                         <ValidationAnswerTypes item={props.item} />
                     </Accordion>
