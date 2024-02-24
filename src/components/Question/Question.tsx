@@ -101,7 +101,7 @@ const Question = (props: QuestionProps): JSX.Element => {
     const isSlider = hasExtension(props.item, IExtentionType.itemControl);
     const sliderMinValue = props.item.extension?.find((x) => x.url === IExtentionType.minValue)?.valueInteger;
     const sliderMaxValue = props.item.extension?.find((x) => x.url === IExtentionType.maxValue)?.valueInteger;
-    const sliderStepValue = props.item.extension?.find((x) => x.url === IExtentionType.maxValue)?.valueInteger;
+    const sliderStepValue = props.item.extension?.find((x) => x.url === IExtentionType.questionnaireSliderStepValue)?.valueInteger;
 
     // Adds instructions for the user
     const instructionType = (): JSX.Element => {
