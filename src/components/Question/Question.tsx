@@ -205,12 +205,22 @@ const Question = (props: QuestionProps): JSX.Element => {
                                             : IQuestionnaireItemType.decimal;
                                     dispatchUpdateItem(IItemProperty.type, newItemType)
 
-                                    // remove slider extension if toggling to decimal
+                                    // remove slider-related extensions if toggling decimals on, as sliders currently only support integers
                                     if (newItemType === IQuestionnaireItemType.decimal) {
-                                        removeItemExtension(props.item, IExtentionType.itemControl, props.dispatch);
+                                        const extensionsToRemove = [
+                                            IExtentionType.itemControl,
+                                            IExtentionType.questionnaireSliderStepValue,
+                                            IExtentionType.minValue,
+                                            IExtentionType.maxValue
+                                        ]
+                                        removeItemExtension(
+                                            props.item, 
+                                            extensionsToRemove, 
+                                            props.dispatch
+                                        );
                                     }
 
-                                    // remove max decimal places extension if toggling off
+                                    // remove max decimal places extension if toggling decimals off
                                     if (newItemType === IQuestionnaireItemType.integer) {
                                         removeItemExtension(props.item, IExtentionType.maxDecimalPlaces, props.dispatch);
                                     }
@@ -266,9 +276,19 @@ const Question = (props: QuestionProps): JSX.Element => {
                                         }
                                     };
                                     if (!isSlider) {
-                                        setItemExtension(props.item, newExtension, props.dispatch)
+                                        setItemExtension(props.item, newExtension, props.dispatch);
                                     } else {
-                                        removeItemExtension(props.item, IExtentionType.itemControl, props.dispatch)
+                                        const extensionsToRemove = [
+                                            IExtentionType.itemControl,
+                                            IExtentionType.questionnaireSliderStepValue,
+                                            IExtentionType.minValue,
+                                            IExtentionType.maxValue
+                                        ]
+                                        removeItemExtension(
+                                            props.item, 
+                                            extensionsToRemove,
+                                            props.dispatch
+                                        );
                                     }
                                 })}
                         />
