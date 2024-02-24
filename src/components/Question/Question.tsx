@@ -102,7 +102,7 @@ const Question = (props: QuestionProps): JSX.Element => {
     const isSlider = hasExtension(props.item, IExtentionType.itemControl);
     const sliderMinValue = props.item.extension?.find((x) => x.url === IExtentionType.minValue)?.valueInteger;
     const sliderMaxValue = props.item.extension?.find((x) => x.url === IExtentionType.maxValue)?.valueInteger;
-
+    const sliderStepValue = props.item.extension?.find((x) => x.url === IExtentionType.maxValue)?.valueInteger;
 
     // Adds instructions for the user
     const instructionType = (): JSX.Element => {
@@ -269,8 +269,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                     )}
                 </FormField>
                 {isSlider && <div className="horizontal equal">
-                    <p>Slider Settings</p>
-                    <FormField label={t('Min value')}>
+                    <FormField label={t('Slider min value')}>
                         <input
                             type="number"
                             defaultValue={sliderMinValue}
@@ -287,7 +286,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                             }}
                         ></input>
                     </FormField>
-                    <FormField label={t('Max value')}>
+                    <FormField label={t('Slider max value')}>
                         <input
                             type="number"
                             defaultValue={sliderMaxValue}
@@ -297,6 +296,23 @@ const Question = (props: QuestionProps): JSX.Element => {
                                 } else {
                                     const extension = {
                                         url: IExtentionType.maxValue,
+                                        valueInteger: parseInt(event.target.value),
+                                    };
+                                    setItemExtension(props.item, extension, props.dispatch);
+                                }
+                            }}
+                        ></input>
+                    </FormField>
+                    <FormField label={t('Slider step value')}>
+                        <input
+                            type="number"
+                            defaultValue={sliderStepValue}
+                            onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                if (!event.target.value) {
+                                    removeItemExtension(props.item, IExtentionType.questionnaireSliderStepValue, props.dispatch);
+                                } else {
+                                    const extension = {
+                                        url: IExtentionType.questionnaireSliderStepValue,
                                         valueInteger: parseInt(event.target.value),
                                     };
                                     setItemExtension(props.item, extension, props.dispatch);
