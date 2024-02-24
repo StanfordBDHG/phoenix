@@ -9,7 +9,6 @@ import {
     QuestionnaireItemAnswerOption,
     ValueSet,
     ValueSetComposeIncludeConcept,
-    Coding
 } from '../../types/fhir';
 import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../types/IQuestionnareItemType';
 
@@ -217,31 +216,6 @@ const Question = (props: QuestionProps): JSX.Element => {
                                     }
                                 }} />
                             </FormField>
-                            {!(isDecimal || isQuantity) && <FormField>
-                                <SwitchBtn 
-                                    label={t('Display as a slider')} 
-                                    value={isSlider} 
-                                    onChange={(() => {
-                                        const newExtension = {
-                                            url: IExtentionType.itemControl,
-                                            valueCodeableConcept: {
-                                                coding: [
-                                                    {
-                                                        system: "http://hl7.org/fhir/questionnaire-item-control",
-                                                        code: "slider",
-                                                        display: "Slider"
-                                                        }
-                                                    ]
-                                                }
-                                            };
-                                            if (!isSlider) {
-                                                setItemExtension(props.item, newExtension, props.dispatch)
-                                            } else {
-                                                removeItemExtension(props.item, IExtentionType.itemControl, props.dispatch)
-                                            }
-                                        })}
-                                />
-                            </FormField>}
                         </>
                     )}
                     {(isDecimalOrQuantity) && (
@@ -273,59 +247,88 @@ const Question = (props: QuestionProps): JSX.Element => {
                         />
                     )}
                 </FormField>
-                {isSlider && <div className="horizontal equal">
-                    <FormField label={t('Slider min value')}>
-                        <input
-                            type="number"
-                            defaultValue={sliderMinValue}
-                            onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                if (!event.target.value) {
-                                    removeItemExtension(props.item, IExtentionType.minValue, props.dispatch);
-                                } else {
-                                    const extension = {
-                                        url: IExtentionType.minValue,
-                                        valueInteger: parseInt(event.target.value),
+                {!isDecimalOrQuantity && 
+                    <FormField>
+                        <SwitchBtn 
+                            label={t('Display as a slider')} 
+                            value={isSlider} 
+                            onChange={(() => {
+                                const newExtension = {
+                                    url: IExtentionType.itemControl,
+                                    valueCodeableConcept: {
+                                        coding: [
+                                            {
+                                                system: "http://hl7.org/fhir/questionnaire-item-control",
+                                                code: "slider",
+                                                display: "Slider"
+                                                }
+                                            ]
+                                        }
                                     };
-                                    setItemExtension(props.item, extension, props.dispatch);
-                                }
-                            }}
-                        ></input>
+                                    if (!isSlider) {
+                                        setItemExtension(props.item, newExtension, props.dispatch)
+                                    } else {
+                                        removeItemExtension(props.item, IExtentionType.itemControl, props.dispatch)
+                                    }
+                                })}
+                        />
                     </FormField>
-                    <FormField label={t('Slider max value')}>
-                        <input
-                            type="number"
-                            defaultValue={sliderMaxValue}
-                            onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                if (!event.target.value) {
-                                    removeItemExtension(props.item, IExtentionType.maxValue, props.dispatch);
-                                } else {
-                                    const extension = {
-                                        url: IExtentionType.maxValue,
-                                        valueInteger: parseInt(event.target.value),
-                                    };
-                                    setItemExtension(props.item, extension, props.dispatch);
-                                }
-                            }}
-                        ></input>
-                    </FormField>
-                    <FormField label={t('Slider step value')}>
-                        <input
-                            type="number"
-                            defaultValue={sliderStepValue}
-                            onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                if (!event.target.value) {
-                                    removeItemExtension(props.item, IExtentionType.questionnaireSliderStepValue, props.dispatch);
-                                } else {
-                                    const extension = {
-                                        url: IExtentionType.questionnaireSliderStepValue,
-                                        valueInteger: parseInt(event.target.value),
-                                    };
-                                    setItemExtension(props.item, extension, props.dispatch);
-                                }
-                            }}
-                        ></input>
-                    </FormField>
-                </div>}
+                }
+                {isSlider && 
+                    <div className="horizontal equal">
+                        <FormField label={t('Slider min value')}>
+                            <input
+                                type="number"
+                                defaultValue={sliderMinValue}
+                                onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                    if (!event.target.value) {
+                                        removeItemExtension(props.item, IExtentionType.minValue, props.dispatch);
+                                    } else {
+                                        const extension = {
+                                            url: IExtentionType.minValue,
+                                            valueInteger: parseInt(event.target.value),
+                                        };
+                                        setItemExtension(props.item, extension, props.dispatch);
+                                    }
+                                }}
+                            ></input>
+                        </FormField>
+                        <FormField label={t('Slider max value')}>
+                            <input
+                                type="number"
+                                defaultValue={sliderMaxValue}
+                                onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                    if (!event.target.value) {
+                                        removeItemExtension(props.item, IExtentionType.maxValue, props.dispatch);
+                                    } else {
+                                        const extension = {
+                                            url: IExtentionType.maxValue,
+                                            valueInteger: parseInt(event.target.value),
+                                        };
+                                        setItemExtension(props.item, extension, props.dispatch);
+                                    }
+                                }}
+                            ></input>
+                        </FormField>
+                        <FormField label={t('Slider step value')}>
+                            <input
+                                type="number"
+                                defaultValue={sliderStepValue}
+                                onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                    if (!event.target.value) {
+                                        removeItemExtension(props.item, IExtentionType.questionnaireSliderStepValue, props.dispatch);
+                                    } else {
+                                        const extension = {
+                                            url: IExtentionType.questionnaireSliderStepValue,
+                                            valueInteger: parseInt(event.target.value),
+                                        };
+                                        setItemExtension(props.item, extension, props.dispatch);
+                                    }
+                                }}
+                            ></input>
+                        </FormField>
+                    </div>
+                }
                 {/* Sublabel is not currently supported 
                 {canTypeHaveSublabel(props.item) && (
                     <FormField label={t('Sublabel')} isOptional>
