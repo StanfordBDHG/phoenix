@@ -13,9 +13,9 @@ interface SliderSettingsProp {
 const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
     const { t } = useTranslation();
     const { dispatch } = useContext(TreeContext);
-    const [minValue, setMinValue] = useState(item.extension?.find((x) => x.url === 'minValue')?.valueInteger);
-    const [maxValue, setMaxValue] = useState(item.extension?.find((x) => x.url === 'maxValue')?.valueInteger);
-    const [stepValue, setStepValue] = useState(item.extension?.find((x) => x.url === 'questionnaireSliderStepValue')?.valueInteger);
+    const [minValue, setMinValue] = useState(item.extension?.find((x) => x.url === IExtentionType.minValue)?.valueInteger);
+    const [maxValue, setMaxValue] = useState(item.extension?.find((x) => x.url === IExtentionType.maxValue)?.valueInteger);
+    const [stepValue, setStepValue] = useState(item.extension?.find((x) => x.url === IExtentionType.questionnaireSliderStepValue)?.valueInteger);
     const [errors, setErrors] = useState({ minValue: false, maxValue: false, stepValue: false });
     const [errorMessage, setErrorMessage] = useState('');
 
