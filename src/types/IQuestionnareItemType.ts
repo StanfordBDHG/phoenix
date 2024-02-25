@@ -100,6 +100,7 @@ export enum IExtentionType {
     optionReference = 'http://ehelse.no/fhir/StructureDefinition/sdf-optionReference',
     presentationbuttons = 'http://helsenorge.no/fhir/StructureDefinition/sdf-presentationbuttons',
     questionnaireUnit = 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
+    questionnaireSliderStepValue = 'http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue',
     regEx = 'http://hl7.org/fhir/StructureDefinition/regex',
     repeatstext = 'http://ehelse.no/fhir/StructureDefinition/repeatstext',
     maxOccurs = 'http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs',

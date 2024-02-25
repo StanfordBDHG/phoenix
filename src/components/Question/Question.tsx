@@ -14,7 +14,7 @@ import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../typ
 
 import { updateItemAction } from '../../store/treeStore/treeActions';
 import { isRecipientList } from '../../helpers/QuestionHelper';
-import { createMarkdownExtension, removeItemExtension } from '../../helpers/extensionHelper';
+import { createMarkdownExtension, removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
 import { isItemControlInline, isItemControlReceiverComponent, isItemControlHighlight } from '../../helpers/itemControl';
 
 import Accordion from '../Accordion/Accordion';
@@ -39,6 +39,7 @@ import {
     canTypeHaveSublabel,
     getItemDisplayType,
 } from '../../helpers/questionTypeFeatures';
+import SliderSettings from './SliderSettings/SliderSettings';
 
 interface QuestionProps {
     item: QuestionnaireItem;
@@ -98,6 +99,7 @@ const Question = (props: QuestionProps): JSX.Element => {
     const isDecimal = props.item.type === IQuestionnaireItemType.decimal;
     const isQuantity = props.item.type === IQuestionnaireItemType.quantity;
     const isDecimalOrQuantity = isDecimal || isQuantity;
+    const isSlider = hasExtension(props.item, IExtentionType.itemControl);
 
     // Adds instructions for the user
     const instructionType = (): JSX.Element => {
@@ -193,19 +195,36 @@ const Question = (props: QuestionProps): JSX.Element => {
                         </FormField>
                     )}
                     {(isNumber) && (
-                        <FormField>
-                            <SwitchBtn label={t('Allow decimals')} value={isDecimalOrQuantity} onChange={() => {
-                                const newItemType = isDecimal || isQuantity
-                                        ? IQuestionnaireItemType.integer
-                                        : IQuestionnaireItemType.decimal;
-                                dispatchUpdateItem(IItemProperty.type, newItemType)
+                        <>
+                            <FormField>
+                                <SwitchBtn label={t('Allow decimals')} value={isDecimalOrQuantity} onChange={() => {
+                                    const newItemType = isDecimal || isQuantity
+                                            ? IQuestionnaireItemType.integer
+                                            : IQuestionnaireItemType.decimal;
+                                    dispatchUpdateItem(IItemProperty.type, newItemType)
 
-                                // remove max decimal places extension if toggling off
-                                if (newItemType === IQuestionnaireItemType.integer) {
-                                    removeItemExtension(props.item, IExtentionType.maxDecimalPlaces, props.dispatch);
-                                }
-                            }} />
-                        </FormField>
+                                    // remove slider-related extensions if toggling decimals on, as sliders currently only support integers
+                                    if (newItemType === IQuestionnaireItemType.decimal) {
+                                        const extensionsToRemove = [
+                                            IExtentionType.itemControl,
+                                            IExtentionType.questionnaireSliderStepValue,
+                                            IExtentionType.minValue,
+                                            IExtentionType.maxValue
+                                        ]
+                                        removeItemExtension(
+                                            props.item, 
+                                            extensionsToRemove, 
+                                            props.dispatch
+                                        );
+                                    }
+
+                                    // remove max decimal places extension if toggling decimals off
+                                    if (newItemType === IQuestionnaireItemType.integer) {
+                                        removeItemExtension(props.item, IExtentionType.maxDecimalPlaces, props.dispatch);
+                                    }
+                                }} />
+                            </FormField>
+                        </>
                     )}
                     {(isDecimalOrQuantity) && (
                         <FormField>
@@ -236,6 +255,45 @@ const Question = (props: QuestionProps): JSX.Element => {
                         />
                     )}
                 </FormField>
+                <br />
+                {!isDecimalOrQuantity && 
+                    <FormField>
+                        <SwitchBtn 
+                            label={t('Display as a slider')} 
+                            value={isSlider} 
+                            onChange={(() => {
+                                const newExtension = {
+                                    url: IExtentionType.itemControl,
+                                    valueCodeableConcept: {
+                                        coding: [
+                                            {
+                                                system: "http://hl7.org/fhir/questionnaire-item-control",
+                                                code: "slider",
+                                                display: "Slider"
+                                                }
+                                            ]
+                                        }
+                                    };
+                                    if (!isSlider) {
+                                        setItemExtension(props.item, newExtension, props.dispatch);
+                                    } else {
+                                        const extensionsToRemove = [
+                                            IExtentionType.itemControl,
+                                            IExtentionType.questionnaireSliderStepValue,
+                                            IExtentionType.minValue,
+                                            IExtentionType.maxValue
+                                        ]
+                                        removeItemExtension(
+                                            props.item, 
+                                            extensionsToRemove,
+                                            props.dispatch
+                                        );
+                                    }
+                                })}
+                        />
+                    </FormField>
+                }
+                {isSlider && <SliderSettings item={props.item} /> }
                 {/* Sublabel is not currently supported 
                 {canTypeHaveSublabel(props.item) && (
                     <FormField label={t('Sublabel')} isOptional>
@@ -258,7 +316,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                 {respondType()}
             </div>
             <div className="question-addons">
-                {canTypeBeValidated(props.item) && (
+                {canTypeBeValidated(props.item) && !isSlider && (
                     <Accordion title={t('Add validation')}>
                         <ValidationAnswerTypes item={props.item} />
                     </Accordion>
