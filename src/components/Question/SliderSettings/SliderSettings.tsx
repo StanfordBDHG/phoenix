@@ -15,27 +15,49 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
     const [minValue, setMinValue] = useState(item.extension?.find((x) => x.url === 'minValue')?.valueInteger);
     const [maxValue, setMaxValue] = useState(item.extension?.find((x) => x.url === 'maxValue')?.valueInteger);
     const [stepValue, setStepValue] = useState(item.extension?.find((x) => x.url === 'questionnaireSliderStepValue')?.valueInteger);
-    const [error, setError] = useState('');
+    const [errors, setErrors] = useState({ minValue: false, maxValue: false, stepValue: false });
+    const [errorMessage, setErrorMessage] = useState('');
 
     const validate = () => {
+        let newErrors = { minValue: false, maxValue: false, stepValue: false };
+        let isValid = true;
+
+        let errorMessage = '';
+
         if (minValue == null || maxValue == null) {
-            setError(t('Both min and max values must be filled in.'));
-            return false;
+            newErrors.minValue = newErrors.maxValue = true;
+            errorMessage += t('Both min and max values must be filled in.');
+            isValid = false;
+        } else if (maxValue <= minValue) {
+            newErrors.minValue = newErrors.maxValue = true;
+            errorMessage += t('Max value must be greater than min value.');
+            isValid = false;
+        } else if (stepValue == null || stepValue <= 0 || stepValue > (maxValue - minValue)) {
+            newErrors.stepValue = true;
+            errorMessage += t('Step value must be a positive number and less than the difference between max and min values.');
+            isValid = false;
+        } else if ((maxValue - minValue) % stepValue !== 0) {
+            newErrors.stepValue = true;
+            errorMessage += t('It must be possible to reach the max value from the min value using the step value.');
+            isValid = false;
+        }      
+
+        setErrors(newErrors);
+        if (isValid) {
+            setErrorMessage('');
+        } else {
+            setErrorMessage(errorMessage);
         }
-        if (stepValue == null || (maxValue - minValue) % stepValue !== 0) {
-            setError(t('Step value must be divisible by the difference between max and min values.'));
-            return false;
-        }
-        setError('');
-        return true;
+        return isValid;
     };
 
     const handleMinValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(event.target.value);
-        setMinValue(value);
         if (!event.target.value) {
+            setMinValue(undefined);
             removeItemExtension(item, 'minValue', dispatch);
         } else {
+            const value = parseInt(event.target.value);
+            setMinValue(value);
             const extension = {
                 url: 'minValue',
                 valueInteger: value,
@@ -43,13 +65,15 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
             setItemExtension(item, extension, dispatch);
         }
     };
+    
 
     const handleMaxValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(event.target.value);
-        setMaxValue(value);
         if (!event.target.value) {
+            setMaxValue(undefined);
             removeItemExtension(item, 'maxValue', dispatch);
         } else {
+            const value = parseInt(event.target.value);
+            setMaxValue(value);
             const extension = {
                 url: 'maxValue',
                 valueInteger: value,
@@ -59,7 +83,7 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
     };
 
     const handleStepValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(event.target.value);
+        const value = parseInt(event.target.value, 10);
         setStepValue(value);
         if (!event.target.value) {
             removeItemExtension(item, 'questionnaireSliderStepValue', dispatch);
@@ -82,31 +106,34 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
             <FormField label={t('Slider min value')}>
                 <input
                     type="number"
-                    value={minValue || ''}
+                    value={minValue ?? ''}
                     onBlur={handleBlur}
                     onChange={handleMinValueChange}
+                    style={{ borderColor: errors.minValue ? 'red' : undefined }}
                 ></input>
             </FormField>
             <FormField label={t('Slider max value')}>
                 <input
                     type="number"
-                    value={maxValue || ''}
+                    value={maxValue ?? ''}
                     onBlur={handleBlur}
                     onChange={handleMaxValueChange}
+                    style={{ borderColor: errors.maxValue ? 'red' : undefined }}
                 ></input>
             </FormField>
             <FormField label={t('Slider step value')}>
                 <input
                     type="number"
-                    value={stepValue || ''}
+                    value={stepValue ?? ''}
                     onBlur={handleBlur}
                     onChange={handleStepValueChange}
+                    style={{ borderColor: errors.stepValue ? 'red' : undefined }}
                 ></input>
             </FormField>
         </div>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
+        {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
         </>
-    )
+    );
 }
 
 export default SliderSettings;
