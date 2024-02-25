@@ -4,6 +4,7 @@ import { TreeContext } from '../../../store/treeStore/treeStore';
 import { removeItemExtension, setItemExtension } from '../../../helpers/extensionHelper';
 import FormField from '../../FormField/FormField';
 import { QuestionnaireItem } from '../../../types/fhir';
+import { IExtentionType } from '../../../types/IQuestionnareItemType';
 
 interface SliderSettingsProp {
     item: QuestionnaireItem;
@@ -59,7 +60,7 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
             const value = parseInt(event.target.value);
             setMinValue(value);
             const extension = {
-                url: 'minValue',
+                url: IExtentionType.minValue,
                 valueInteger: value,
             };
             setItemExtension(item, extension, dispatch);
@@ -75,7 +76,7 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
             const value = parseInt(event.target.value);
             setMaxValue(value);
             const extension = {
-                url: 'maxValue',
+                url: IExtentionType.maxValue,
                 valueInteger: value,
             };
             setItemExtension(item, extension, dispatch);
@@ -83,13 +84,14 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
     };
 
     const handleStepValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(event.target.value, 10);
-        setStepValue(value);
         if (!event.target.value) {
+            setStepValue(undefined);
             removeItemExtension(item, 'questionnaireSliderStepValue', dispatch);
         } else {
+            const value = parseInt(event.target.value);
+            setStepValue(value);
             const extension = {
-                url: 'questionnaireSliderStepValue',
+                url: IExtentionType.questionnaireSliderStepValue,
                 valueInteger: value,
             };
             setItemExtension(item, extension, dispatch);
