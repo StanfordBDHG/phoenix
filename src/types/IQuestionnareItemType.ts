@@ -105,7 +105,7 @@ export enum IExtentionType {
     repeatstext = 'http://ehelse.no/fhir/StructureDefinition/repeatstext',
     maxOccurs = 'http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs',
     minOccurs = 'http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs',
-    validationtext = 'http://ehelse.no/fhir/StructureDefinition/validationtext',
+    validationtext = 'http://biodesign.stanford.edu/fhir/StructureDefinition/validationtext',
     navigator = 'http://helsenorge.no/fhir/StructureDefinition/sdf-questionnaire-navgiator-state',
     navigatorCodeSystem = 'http://helsenorge.no/fhir/CodeSystem/sdf-questionnaire-navigator-state ',
     fhirPathMaxValue = 'http://ehelse.no/fhir/StructureDefinition/sdf-maxvalue',
