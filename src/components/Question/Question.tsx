@@ -256,7 +256,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                     )}
                 </FormField>
                 <br />
-                {!isDecimalOrQuantity && 
+                {isNumber && !isDecimalOrQuantity &&
                     <FormField>
                         <SwitchBtn 
                             label={t('Display as a slider')} 
