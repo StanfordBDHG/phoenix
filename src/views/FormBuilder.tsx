@@ -42,7 +42,7 @@ const FormBuilder = (props: FormBuilderProps): JSX.Element => {
                 title={state.qMetadata.title}
             />
             <div className="editor">
-                { state.qMetadata.url && state.qMetadata.title ? (
+                { state.qMetadata.title ? (
                 <AnchorMenu
                     dispatch={dispatch}
                     qOrder={state.qOrder}

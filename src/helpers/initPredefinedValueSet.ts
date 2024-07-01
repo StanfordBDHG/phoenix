@@ -69,7 +69,7 @@ export const initPredefinedValueSet = [
         name: 'urn:oid:9523',
         title: 'Yes / No / Unsure',
         status: 'draft',
-        publisher: 'Stanford Biodesign Digital Health',
+        publisher: '',
         compose: {
             include: [
                 {
