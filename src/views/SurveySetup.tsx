@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TreeContext } from '../store/treeStore/treeStore';
 import Btn from '../components/Btn/Btn';
