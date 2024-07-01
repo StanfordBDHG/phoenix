@@ -187,7 +187,7 @@ export const initialState: TreeState = {
         language: INITIAL_LANGUAGE.code,
         name: '',
         status: 'draft',
-        publisher: 'Stanford Biodesign Digital Health',
+        publisher: '',
         meta: {
             profile: ['http://spezi.health/fhir/StructureDefinition/sdf-Questionnaire'],
             tag: [
@@ -216,7 +216,7 @@ export const initialState: TreeState = {
         ],
         contact: [
             {
-                name: 'http://spezi.health',
+                name: '',
             },
         ],
         subjectType: ['Patient'],
