@@ -15,7 +15,7 @@ import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../typ
 import { updateItemAction } from '../../store/treeStore/treeActions';
 import { isRecipientList } from '../../helpers/QuestionHelper';
 import { createMarkdownExtension, removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
-import { isItemControlInline, isItemControlReceiverComponent, isItemControlHighlight } from '../../helpers/itemControl';
+import { isItemControlInline, isItemControlHighlight } from '../../helpers/itemControl';
 
 import Accordion from '../Accordion/Accordion';
 import { ActionType } from '../../store/treeStore/treeStore';
@@ -36,7 +36,6 @@ import { ValidationErrors } from '../../helpers/orphanValidation';
 import {
     canTypeBeRequired,
     canTypeBeValidated,
-    canTypeHaveSublabel,
     getItemDisplayType,
 } from '../../helpers/questionTypeFeatures';
 import SliderSettings from './SliderSettings/SliderSettings';
@@ -54,7 +53,7 @@ interface QuestionProps {
 
 const Question = (props: QuestionProps): JSX.Element => {
     const { t } = useTranslation();
-    const [isMarkdownActivated, setIsMarkdownActivated] = React.useState<boolean>(!!props.item._text);
+    const [isMarkdownActivated] = React.useState<boolean>(!!props.item._text);
     const codeElements = props.item.code ? `(${props.item.code.length})` : '(0)';
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const removeMd = require('remove-markdown');
@@ -73,10 +72,6 @@ const Question = (props: QuestionProps): JSX.Element => {
                 props.item._text?.extension?.find((x) => x.url === IExtentionType.markdown)?.valueMarkdown || '';
         }
         return labelText || props.item.text || '';
-    };
-
-    const getSublabelText = (): string => {
-        return props.item.extension?.find((x) => x.url === IExtentionType.sublabel)?.valueMarkdown || '';
     };
 
     const convertToPlaintext = (stringToBeConverted: string) => {
