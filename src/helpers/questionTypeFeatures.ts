@@ -126,7 +126,6 @@ export const canTypeHaveSublabel = (item: QuestionnaireItem): boolean => {
 
 export const canTypeBeRequired = (item: QuestionnaireItem): boolean => {
     return (
-        item.type !== IQuestionnaireItemType.group &&
         item.type !== IQuestionnaireItemType.display &&
         !isItemControlInline(item) &&
         !isItemControlHighlight(item) &&
