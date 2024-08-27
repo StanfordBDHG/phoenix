@@ -42,8 +42,7 @@ const validateUniqueLinkId = (
 const validateRequiredItem = (t: TFunction<'translation'>, qItem: QuestionnaireItem): ValidationErrors[] => {
     const returnErrors: ValidationErrors[] = [];
     if (
-        (qItem.type === IQuestionnaireItemType.group ||
-            qItem.type === IQuestionnaireItemType.display ||
+        (qItem.type === IQuestionnaireItemType.display ||
             isItemControlInline(qItem) ||
             isItemControlHighlight(qItem) ||
             isItemControlHelp(qItem) ||
