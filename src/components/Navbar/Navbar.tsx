@@ -8,7 +8,7 @@ import JSONView from '../JSONView/JSONView';
 import PredefinedValueSetModal from '../PredefinedValueSetModal/PredefinedValueSetModal';
 import ImportValueSet from '../ImportValueSet/ImportValueSet';
 import { saveAction } from '../../store/treeStore/treeActions';
-import { validateOrphanedElements, validateTranslations, ValidationErrors } from '../../helpers/orphanValidation';
+import { validateTranslations, ValidationErrors } from '../../helpers/orphanValidation';
 import { ValidationErrorsModal } from '../ValidationErrorsModal/validationErrorsModal';
 import { useTranslation } from 'react-i18next';
 import IconBtn from '../IconBtn/IconBtn';
@@ -16,7 +16,6 @@ import MoreIcon from '../../images/icons/ellipsis-horizontal-outline.svg';
 
 type Props = {
     showFormFiller: () => void;
-    setValidationErrors: (errors: ValidationErrors[]) => void;
     validationErrors: ValidationErrors[];
     translationErrors: ValidationErrors[];
     setTranslationErrors: (errors: ValidationErrors[]) => void;
@@ -32,7 +31,6 @@ enum MenuItem {
 }
 
 const Navbar = ({
-    setValidationErrors,
     validationErrors,
     translationErrors,
     setTranslationErrors,
@@ -130,13 +128,22 @@ const Navbar = ({
                     )}
                     <Btn title={t('Edit Metadata')} onClick={() => toggleFormDetails()} />
                     <Btn title={t('Preview')} onClick={() => {
-                        // validate the FHIR and then show the JSON
-                        setValidationErrors(
-                            validateOrphanedElements(t, state.qOrder, state.qItems, state.qContained || []),
-                        );
+                        // show the JSON
                         setShowJSONView(!showJSONView);
                     }} />
-                    <Btn title={t('Download')} onClick={() => exportToJsonAndDownload()} />
+                    <Btn title={t('Download')} onClick={() => {
+                            setTranslationErrors(
+                                validateTranslations(t, state.qOrder, state.qItems, state.qAdditionalLanguages),
+                            );
+                            if(validationErrors.length > 0 || translationErrors.length > 0)
+                            {
+                                setShowValidationErrors(true);
+                            }
+                            else
+                            {
+                                exportToJsonAndDownload();
+                            }
+                        }} />
                     <div
                         className="more-menu"
                         tabIndex={0}
@@ -155,9 +162,6 @@ const Navbar = ({
                         <Btn
                             title={t('Validate')}
                             onClick={() => {
-                                setValidationErrors(
-                                    validateOrphanedElements(t, state.qOrder, state.qItems, state.qContained || []),
-                                );
                                 setTranslationErrors(
                                     validateTranslations(t, state.qOrder, state.qItems, state.qAdditionalLanguages),
                                 );
