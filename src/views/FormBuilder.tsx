@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TreeContext } from '../store/treeStore/treeStore';
 import AnchorMenu from '../components/AnchorMenu/AnchorMenu';
@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar/Navbar';
 import QuestionDrawer from '../components/QuestionDrawer/QuestionDrawer';
 import Modal from '../components/Modal/Modal'
 import './FormBuilder.css';
-import { ValidationErrors } from '../helpers/orphanValidation';
+import {validateOrphanedElements, ValidationErrors } from '../helpers/orphanValidation';
 import TranslationModal from '../components/Languages/Translation/TranslationModal';
 import MetadataEditor from '../components/Metadata/MetadataEditor';
 import SurveySetup from './SurveySetup'
@@ -20,7 +20,6 @@ const FormBuilder = (props: FormBuilderProps): JSX.Element => {
     const { state, dispatch } = useContext(TreeContext);
     const [showFormDetails, setShowFormDetails] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
-    const [validationErrors, setValidationErrors] = useState<Array<ValidationErrors>>([]);
     const [translationErrors, setTranslationErrors] = useState<Array<ValidationErrors>>([]);
     const [translateLang, setTranslateLang] = useState('');
 
@@ -29,12 +28,16 @@ const FormBuilder = (props: FormBuilderProps): JSX.Element => {
         setShowFormDetails(!showFormDetails);
     }, [showFormDetails]);
 
+    const recomputeValidationErrors = useMemo(() => 
+        validateOrphanedElements(t, state.qOrder, state.qItems, state.qContained || []),
+        [t, state.qOrder, state.qItems, state.qContained] // Dependencies array
+    );
+
     return (
         <>
             <Navbar
                 showFormFiller={() => setShowPreview(!showPreview)}
-                validationErrors={validationErrors}
-                setValidationErrors={setValidationErrors}
+                validationErrors={recomputeValidationErrors}
                 translationErrors={translationErrors}
                 setTranslationErrors={setTranslationErrors}
                 toggleFormDetails={toggleFormDetails}
@@ -48,7 +51,7 @@ const FormBuilder = (props: FormBuilderProps): JSX.Element => {
                     qOrder={state.qOrder}
                     qItems={state.qItems}
                     qCurrentItem={state.qCurrentItem}
-                    validationErrors={validationErrors}
+                    validationErrors={recomputeValidationErrors}
                 />
                 ) : (
                     <SurveySetup />
@@ -67,7 +70,7 @@ const FormBuilder = (props: FormBuilderProps): JSX.Element => {
                         <MetadataEditor />
                     </Modal>
                 }
-                <QuestionDrawer validationErrors={validationErrors} />
+                <QuestionDrawer validationErrors={recomputeValidationErrors} />
             </div>
         </>
     );
