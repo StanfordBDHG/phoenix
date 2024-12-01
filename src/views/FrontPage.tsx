@@ -11,6 +11,8 @@ import Btn from '../components/Btn/Btn';
 import './FrontPage.css';
 import cardinalkitSpaceman from '../images/cardinalkit-spaceman.png';
 import { isMobile } from "react-device-detect";
+import PasteJSONModal from '../components/PasteJSON/PasteJSONView';
+
 
 const FrontPage = (): JSX.Element => {
     const { t } = useTranslation();
@@ -21,6 +23,7 @@ const FrontPage = (): JSX.Element => {
     const [isDeletionAlertShown, setIsDeletionAlertShown] = useState<boolean>(false);
     const [isMobileModalShown, setIsMobileModalShown] = useState<boolean>(isMobile);
     const uploadRef = useRef<HTMLInputElement>(null);
+    const [isPasteJSONViewShown, setIsPasteJSONViewShown] = useState<boolean>(false);
 
     useEffect(() => {
         getStoredQuestionnaire();
@@ -31,13 +34,24 @@ const FrontPage = (): JSX.Element => {
         setStateFromStorage(indexedDbState);
     };
 
+    const loadQuestionnaire = (json: string): boolean => {
+        let questionnaireObj: any;
+        try {
+            questionnaireObj = JSON.parse(json);
+        } catch (error) {
+            alert(`Invalid JSON input: ${error}`)
+            return false;
+        }
+        const importedState = mapToTreeState(questionnaireObj);
+        dispatch(resetQuestionnaireAction(importedState));
+        setIsLoading(false);
+        setIsFormBuilderShown(true);
+        return true;
+    }
+
     const onReaderLoad = (event: ProgressEvent<FileReader>) => {
         if (event.target?.result) {
-            const questionnaireObj = JSON.parse(event.target.result as string);
-            const importedState = mapToTreeState(questionnaireObj);
-            dispatch(resetQuestionnaireAction(importedState));
-            setIsLoading(false);
-            setIsFormBuilderShown(true);
+            loadQuestionnaire(event.target.result as string);
             // Reset file input
             if (uploadRef.current) {
                 uploadRef.current.value = '';
@@ -126,6 +140,18 @@ const FrontPage = (): JSX.Element => {
                     <p className="center-text">{t('Loading survey...')}</p>
                 </Modal>
             )}
+            {isPasteJSONViewShown && (
+                <PasteJSONModal
+                    onCancel={() => setIsPasteJSONViewShown(false)}
+                    onImport={json => {
+                        if (loadQuestionnaire(json)) {
+                            // if the import failed (ie, the retval was false), we want the JSONModal to stay around,
+                            // so that the user can fix the issue and the entered data isn't lost.
+                            setIsPasteJSONViewShown(false)
+                        }
+                    }
+                }/>
+            )}
             {isFormBuilderShown ? (
                 <FormBuilder close={() => {
                     setIsDeletionAlertShown(true);
@@ -162,6 +188,15 @@ const FrontPage = (): JSX.Element => {
                                 uploadRef.current?.click();
                             }}
                             title={t('Upload Existing Survey')}
+                            variant="secondary"
+                        />
+                        <br/>
+                        <br/>
+                        <Btn
+                            onClick={() => {
+                                setIsPasteJSONViewShown(true)
+                            }}
+                            title={t('Paste JSON')}
                             variant="secondary"
                         />
                     </div>
