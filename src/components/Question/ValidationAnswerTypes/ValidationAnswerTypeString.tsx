@@ -21,8 +21,7 @@ const ValidationAnswerTypeString = ({ item }: Props): JSX.Element => {
     const regexOptions = [
         {
             display: t('Email'),
-            code:
-                ".*@.+",
+            code: '.*@.*',
         },
         {
             display: t('URL'),

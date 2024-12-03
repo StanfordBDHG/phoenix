@@ -99,7 +99,7 @@ const Question = (props: QuestionProps): JSX.Element => {
     const isDecimal = props.item.type === IQuestionnaireItemType.decimal;
     const isQuantity = props.item.type === IQuestionnaireItemType.quantity;
     const isDecimalOrQuantity = isDecimal || isQuantity;
-    const isSlider = hasExtension(props.item, IExtentionType.itemControl);
+    const isSlider = isNumber && hasExtension(props.item, IExtentionType.itemControl);
 
     // Adds instructions for the user
     const instructionType = (): JSX.Element => {
