@@ -35,7 +35,7 @@ const TranslateSettings = ({
         <div>
             <div className="translation-section-header">{t('Questionnaire settings')}</div>
             {Object.values(translatableSettings).map((extensionToTranslate) => {
-                if (!extensionToTranslate) return;
+                if (!extensionToTranslate) return [];
 
                 const mainExtension = (extensions || []).find((e) => e.url === extensionToTranslate.extension);
                 let baseValue;

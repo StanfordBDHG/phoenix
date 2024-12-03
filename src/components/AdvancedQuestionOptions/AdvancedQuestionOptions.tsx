@@ -263,7 +263,7 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
                         <div className="msg-error" aria-live="polite">
                             {`${t('LinkId is already in use')} `}
                             <button onClick={resetLinkId}>
-                                <img src={UndoIcon} height={16} />
+                                <img src={UndoIcon}  alt="Undo Button" height={16} />
                                 {` ${t('Sett tilbake til opprinnelig verdi')}`}
                             </button>
                         </div>
