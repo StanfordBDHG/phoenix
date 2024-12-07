@@ -64,7 +64,13 @@ const EnableWhen = ({
 
     return (
         <div>
-            <p>{t('Set a condition for displaying this question:')}</p>
+            <p>{t('Define which conditions must be fulfilled for enabling this question. If no conditions are defined, the question is always enabled.')}</p>
+            {enableWhen.length > 1 && (
+                <EnableBehavior
+                    currentItem={getItem(linkId)}
+                    dispatchUpdateItemEnableBehavior={dispatchUpdateItemEnableBehavior}
+                />
+            )}
             {enableWhen.map((x, index) => {
                 const conditionItem = getItem(x.question);
                 const hasValidationError = itemValidationErrors.some(
@@ -158,12 +164,6 @@ const EnableWhen = ({
                 icon="ion-plus-round"
                 title={t('Add a condition')}
             />
-            {enableWhen.length > 1 && (
-                <EnableBehavior
-                    currentItem={getItem(linkId)}
-                    dispatchUpdateItemEnableBehavior={dispatchUpdateItemEnableBehavior}
-                />
-            )}
             {enableWhen.length > 0 && (
                 <EnableWhenInfoBox
                     getItem={getItem}
