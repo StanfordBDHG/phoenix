@@ -64,7 +64,7 @@ const EnableWhen = ({
 
     return (
         <div>
-            <p>{t('Define which conditions must be fulfilled for enabling this question. If no conditions are defined, the question is always enabled.')}</p>
+            <p>{t('Define which conditions must be fulfilled for enabling this question.\nIf no conditions are defined, the question is always enabled.')}</p>
             {enableWhen.length > 1 && (
                 <EnableBehavior
                     currentItem={getItem(linkId)}
