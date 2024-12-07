@@ -1,7 +1,7 @@
 import React, { createContext, Dispatch, useEffect, useReducer } from 'react';
 import produce from 'immer';
 
-import { Extension, QuestionnaireItem, ValueSet } from '../../types/fhir';
+import { Extension, QuestionnaireItem, QuestionnaireItemEnableBehaviorCodes, ValueSet } from '../../types/fhir';
 import {
     ADD_ITEM_CODE_ACTION,
     ADD_QUESTIONNAIRE_LANGUAGE_ACTION,
@@ -60,7 +60,7 @@ import {
 } from './treeActions';
 import { IQuestionnaireMetadata, IQuestionnaireMetadataType } from '../../types/IQuestionnaireMetadataType';
 import createUUID from '../../helpers/CreateUUID';
-import { IItemProperty, UseContextSystem } from '../../types/IQuestionnareItemType';
+import { IEnableWhen, IItemProperty, UseContextSystem } from '../../types/IQuestionnareItemType';
 import { INITIAL_LANGUAGE } from '../../helpers/LanguageHelper';
 import { isIgnorableItem } from '../../helpers/itemControl';
 import { createOptionReferenceExtensions } from '../../helpers/extensionHelper';
@@ -393,6 +393,21 @@ function updateItem(draft: TreeState, action: UpdateItemAction): void {
             ...(draft.qItems[action.linkId].extension || []),
             ...createOptionReferenceExtensions,
         ];
+    }
+
+    const isAnyOf = <T,>(val: T | undefined, ...options: (T | undefined)[]): boolean => {
+        return options.includes(val);
+    };
+
+    if (action.itemProperty === 'enableWhen') {
+        const numEntries = (action.itemValue as IEnableWhen[]).length;
+        if (numEntries <= 1) {
+            draft.qItems[action.linkId].enableBehavior = undefined;
+        } else if (numEntries > 1 &&
+            !isAnyOf(draft.qItems[action.linkId].enableBehavior, QuestionnaireItemEnableBehaviorCodes.ALL, QuestionnaireItemEnableBehaviorCodes.ANY)
+        ) {
+            draft.qItems[action.linkId].enableBehavior = QuestionnaireItemEnableBehaviorCodes.ALL;
+        }
     }
 }
 

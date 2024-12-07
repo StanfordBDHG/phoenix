@@ -21,16 +21,13 @@ const EnableBehavior = ({ currentItem, dispatchUpdateItemEnableBehavior }: Props
                         ? QuestionnaireItemEnableBehaviorCodes.ALL
                         : QuestionnaireItemEnableBehaviorCodes.ANY
                 }
-                options={[
-                    {
-                        code: QuestionnaireItemEnableBehaviorCodes.ANY,
-                        display: t('At least one condition must be fulfilled'),
-                    },
-                    {
-                        code: QuestionnaireItemEnableBehaviorCodes.ALL,
-                        display: t('All conditions must be fulfilled'),
-                    },
-                ]}
+                options={[{
+                    code: QuestionnaireItemEnableBehaviorCodes.ALL,
+                    display: t('All conditions must be fulfilled')
+                }, {
+                    code: QuestionnaireItemEnableBehaviorCodes.ANY,
+                    display: t('At least one condition must be fulfilled')
+                }]}
                 name={`ew-behavior-${currentItem.linkId}`}
             />
         </div>
