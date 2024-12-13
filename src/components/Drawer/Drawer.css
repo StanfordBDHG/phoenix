@@ -1,6 +1,6 @@
 .drawer {
     display: block;
-    height: 100%;
+    height: calc(100% - 64px);
     background: white;
     position: fixed;
     top: 64px;
