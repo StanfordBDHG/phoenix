@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/phoenix/static/css/main.47e53d87.chunk.css",
-    "main.js": "/phoenix/static/js/main.253fce15.chunk.js",
-    "main.js.map": "/phoenix/static/js/main.253fce15.chunk.js.map",
+    "main.css": "/phoenix/static/css/main.d0eeeebf.chunk.css",
+    "main.js": "/phoenix/static/js/main.e7c37b05.chunk.js",
+    "main.js.map": "/phoenix/static/js/main.e7c37b05.chunk.js.map",
     "runtime-main.js": "/phoenix/static/js/runtime-main.f1ea19be.js",
     "runtime-main.js.map": "/phoenix/static/js/runtime-main.f1ea19be.js.map",
     "static/css/2.775d1442.chunk.css": "/phoenix/static/css/2.775d1442.chunk.css",
@@ -10,7 +10,7 @@
     "static/js/2.30045bb2.chunk.js.map": "/phoenix/static/js/2.30045bb2.chunk.js.map",
     "index.html": "/phoenix/index.html",
     "static/css/2.775d1442.chunk.css.map": "/phoenix/static/css/2.775d1442.chunk.css.map",
-    "static/css/main.47e53d87.chunk.css.map": "/phoenix/static/css/main.47e53d87.chunk.css.map",
+    "static/css/main.d0eeeebf.chunk.css.map": "/phoenix/static/css/main.d0eeeebf.chunk.css.map",
     "static/js/2.30045bb2.chunk.js.LICENSE.txt": "/phoenix/static/js/2.30045bb2.chunk.js.LICENSE.txt",
     "static/media/alert-circle-outline.2afd351d.svg": "/phoenix/static/media/alert-circle-outline.2afd351d.svg",
     "static/media/arrow-undo-outline.e3d7c780.svg": "/phoenix/static/media/arrow-undo-outline.e3d7c780.svg",
@@ -28,7 +28,7 @@
     "static/js/runtime-main.f1ea19be.js",
     "static/css/2.775d1442.chunk.css",
     "static/js/2.30045bb2.chunk.js",
-    "static/css/main.47e53d87.chunk.css",
-    "static/js/main.253fce15.chunk.js"
+    "static/css/main.d0eeeebf.chunk.css",
+    "static/js/main.e7c37b05.chunk.js"
   ]
 }
