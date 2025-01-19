@@ -1,7 +1,7 @@
 import './IconBtn.css';
 
 type IconBtnProps = {
-    type?: 'back' | 'forward' | 'x' | 'info';
+    type?: 'back' | 'forward' | 'x' | 'info' | 'check';
     title?: string;
     onClick?: () => void;
     color?: 'white' | 'black';
@@ -31,6 +31,9 @@ const IconBtn = ({ type, title, onClick, color = 'white', size }: IconBtnProps):
             icon = 'ion-ios-information-outline';
             break;
         }
+        case 'check':
+            icon = 'ion-checkmark';
+            break;
         default:
             icon = 'ion-close-round';
     }
