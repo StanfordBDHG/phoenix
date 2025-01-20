@@ -75,21 +75,18 @@ const Navbar = ({
         const questionnaire = generateQuestionnaire(state);
         const filename = `${getFileName()}.${fileExtension}`;
         const contentType = 'application/json;charset=utf-8;';
-
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            const blob = new Blob([decodeURIComponent(encodeURI(questionnaire))], {
-                type: contentType,
-            });
-            navigator.msSaveOrOpenBlob(blob, filename);
-        } else {
-            const a = document.createElement('a');
-            a.download = filename;
-            a.href = 'data:' + contentType + ',' + encodeURIComponent(questionnaire);
-            a.target = '_blank';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
+        
+        const blob = new Blob([questionnaire], { type: contentType });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.download = filename;
+        a.href = url;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
         dispatch(saveAction());
     }
 

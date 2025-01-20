@@ -1,5 +1,5 @@
 import './AnchorMenu.css';
-import { DndProvider, useDrag } from 'react-dnd';
+import { DndProvider, useDrag, DndProviderProps } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import React from 'react';
@@ -172,7 +172,7 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
 
     const orderTreeData = mapToTreeData(props.qOrder, '');
     return (
-        <DndProvider backend={HTML5Backend}>
+        <DndProvider backend={HTML5Backend} {...({} as any)}>
             <div className="questionnaire-overview">
                 <div className="questionnaire-overview__toolbox">
                     {createTypeComponent(IQuestionnaireItemType.display, t('Instruction'))}
