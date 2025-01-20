@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { QuestionnaireItem, QuestionnaireItemEnableBehaviorCodes } from '../../types/fhir';
 import RadioBtn from '../RadioBtn/RadioBtn';

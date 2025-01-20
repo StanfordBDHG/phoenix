@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { BundleEntry, ValueSet } from '../../types/fhir';
@@ -17,7 +17,7 @@ type Props = {
 };
 
 const ImportValueSet = ({ close }: Props): JSX.Element => {
-    const uploadRef = React.useRef<HTMLInputElement>(null);
+    const uploadRef = useRef<HTMLInputElement>(null);
     const { t } = useTranslation();
     const { dispatch, state } = useContext(TreeContext);
 

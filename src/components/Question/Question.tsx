@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Question.css';
 
@@ -15,7 +15,7 @@ import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../typ
 import { updateItemAction } from '../../store/treeStore/treeActions';
 import { isRecipientList } from '../../helpers/QuestionHelper';
 import { createMarkdownExtension, removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
-import { isItemControlInline, isItemControlReceiverComponent, isItemControlHighlight } from '../../helpers/itemControl';
+import { isItemControlInline, isItemControlHighlight } from '../../helpers/itemControl';
 
 import Accordion from '../Accordion/Accordion';
 import { ActionType } from '../../store/treeStore/treeStore';
@@ -55,7 +55,7 @@ interface QuestionProps {
 
 const Question = (props: QuestionProps): JSX.Element => {
     const { t } = useTranslation();
-    const [isMarkdownActivated, setIsMarkdownActivated] = React.useState<boolean>(!!props.item._text);
+    const [isMarkdownActivated, setIsMarkdownActivated] = useState<boolean>(!!props.item._text);
     const codeElements = props.item.code ? `(${props.item.code.length})` : '(0)';
 
     const dispatchUpdateItem = (

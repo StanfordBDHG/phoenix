@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QuestionnaireItem, Extension } from '../../../types/fhir';
 import FormField from '../../FormField/FormField';
@@ -30,17 +30,17 @@ const ValidationAnswerTypeDate = ({ item }: Props): JSX.Element => {
     const fhirPathMinDate = item?.extension?.find((x) => x.url === IExtentionType.fhirPathMinValue)?.valueString;
     const fhirPathMaxDate = item?.extension?.find((x) => x.url === IExtentionType.fhirPathMaxValue)?.valueString;
 
-    const [fhirPathMinDateOperator, setFhirPathMinDateOperator] = React.useState<string>(
+    const [fhirPathMinDateOperator, setFhirPathMinDateOperator] = useState<string>(
         getDateOperator(fhirPathMinDate, minDate),
     );
-    const [fhirPathMinDateNumber, setFhirPathMinDateNumber] = React.useState<string>(getDateNumber(fhirPathMinDate));
-    const [fhirPathMinDateUnit, setFhirPathMinDateUnit] = React.useState<string>(getDateUnit(fhirPathMinDate));
+    const [fhirPathMinDateNumber, setFhirPathMinDateNumber] = useState<string>(getDateNumber(fhirPathMinDate));
+    const [fhirPathMinDateUnit, setFhirPathMinDateUnit] = useState<string>(getDateUnit(fhirPathMinDate));
 
-    const [fhirPathMaxDateOperator, setFhirPathMaxDateOperator] = React.useState<string>(
+    const [fhirPathMaxDateOperator, setFhirPathMaxDateOperator] = useState<string>(
         getDateOperator(fhirPathMaxDate, maxDate),
     );
-    const [fhirPathMaxDateNumber, setFhirPathMaxDateNumber] = React.useState<string>(getDateNumber(fhirPathMaxDate));
-    const [fhirPathMaxDateUnit, setFhirPathMaxDateUnit] = React.useState<string>(getDateUnit(fhirPathMaxDate));
+    const [fhirPathMaxDateNumber, setFhirPathMaxDateNumber] = useState<string>(getDateNumber(fhirPathMaxDate));
+    const [fhirPathMaxDateUnit, setFhirPathMaxDateUnit] = useState<string>(getDateUnit(fhirPathMaxDate));
 
     const setAbsoluteValueExtension = (updatedValue: string, extensionUrl: string) => {
         if (updatedValue) {

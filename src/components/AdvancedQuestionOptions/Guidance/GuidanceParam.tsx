@@ -1,4 +1,4 @@
-import React, { FocusEvent, useContext, useState } from 'react';
+import { FocusEvent, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getGuidanceParameterName, isValidGuidanceParameterName } from '../../../helpers/QuestionHelper';

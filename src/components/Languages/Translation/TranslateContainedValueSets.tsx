@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ValueSet } from '../../../types/fhir';
 import { ActionType, Languages } from '../../../store/treeStore/treeStore';

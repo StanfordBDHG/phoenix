@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { removeItemExtension, setItemExtension } from '../../../helpers/extensionHelper';
 import { updateItemAction } from '../../../store/treeStore/treeActions';
@@ -50,7 +50,7 @@ const ValidationAnswerTypeString = ({ item }: Props): JSX.Element => {
     const minLength = item?.extension?.find((x) => x.url === IExtentionType.minLength)?.valueInteger;
     const isSelectedRegexCustomRegex = selectedRegEx ? !regexOptions.find((x) => x.code === selectedRegEx) : false;
 
-    const [isCustomRegex, setIsCustomRegex] = React.useState<boolean>(isSelectedRegexCustomRegex);
+    const [isCustomRegex, setIsCustomRegex] = useState<boolean>(isSelectedRegexCustomRegex);
 
     return (
         <>

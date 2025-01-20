@@ -9,7 +9,6 @@ import {
 
 import { IOperator } from '../../types/IQuestionnareItemType';
 import Infobox from './Infobox';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import createUUID from '../../helpers/CreateUUID';
 import { format } from 'date-fns';

@@ -2,7 +2,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './DatePicker.css';
 
 import ReactDatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { enUS } from 'date-fns/locale';

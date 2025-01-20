@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActionType, Items, Languages } from '../../../store/treeStore/treeStore';
 import { isItemControlSidebar } from '../../../helpers/itemControl';
