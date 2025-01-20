@@ -16,19 +16,63 @@ A web application that allows you to build healthcare surveys using the [HL7® F
 - Node.js & npm
 
 ## Getting Started
-- To use the application online, visit https://stanfordbdhg.github.io/phoenix.
+- To use the application online, visit [https://stanfordbdhg.github.io/phoenix](https://stanfordbdhg.github.io/phoenix).
 
 ## Run for Development
-- First, ensure that Node.js (version 16 or greater) and npm are installed on your system.
-- Clone this repository and run `npm install` in the root directory.
-- Run `npm start` to start the application in development mode.
-- Open `localhost:3000/phoenix` in your browser to view the application.
+First, ensure that Node.js (version 16 or greater) and npm are installed on your system.
+
+In your terminal, clone this repository from GitHub to your local computer.
+
+```bash
+git clone https://github.com/StanfordBDHG/phoenix.git
+```
+
+Run the following command in the project directory to install dependencies.
+
+```bash
+npm install
+```
+
+Now, run the following command to start the application in development mode.
+
+```bash
+npm run dev
+```
+
+You should see the following message in your terminal if the application is running successfully.
+
+```bash
+  VITE v5.4.12  ready in 133 ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+```
+
+You can now open [http://localhost:3000/phoenix](http://localhost:3000/phoenix) in your browser to view the application.
 
 ## Build for Production
-- First, ensure that Node.js (version 16 or greater) and npm are installed on your system.
-- Clone this repository and run `npm install` in the root directory.
-- Run `npm run build` in the root directory.
-- The build files will be found in the `build/` subdirectory. You may deploy these files to the static web hosting service of your choice.
+First, ensure that Node.js (version 16 or greater) and npm are installed on your system.
+
+In your terminal, clone this repository from GitHub to your local computer.
+
+```bash
+git clone https://github.com/StanfordBDHG/phoenix.git
+```
+
+Run the following command in the project directory to install dependencies.
+
+```bash
+npm install
+```
+
+Now, run the following command to build the application for production.
+
+```bash
+npm run build
+```
+
+The build files will be found in the `build/` subdirectory. You may deploy these files to the static web hosting service of your choice.
 
 ## Build and Run in Docker
 
@@ -47,7 +91,7 @@ docker run -p 8080:80 phoenix-survey-builder
 > [!TIP]
 > You may also substitute `8080` in the command above with a different port of your choice.
 
-Open `localhost:8080/phoenix` in your browser to view the application.
+Open `http://localhost:8080/phoenix` in your browser to view the application.
 
 ## Deploy to GitHub Pages
 

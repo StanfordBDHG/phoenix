@@ -40,6 +40,7 @@ import {
     getItemDisplayType,
 } from '../../helpers/questionTypeFeatures';
 import SliderSettings from './SliderSettings/SliderSettings';
+import removeMd from 'remove-markdown';
 
 interface QuestionProps {
     item: QuestionnaireItem;
@@ -56,8 +57,6 @@ const Question = (props: QuestionProps): JSX.Element => {
     const { t } = useTranslation();
     const [isMarkdownActivated, setIsMarkdownActivated] = React.useState<boolean>(!!props.item._text);
     const codeElements = props.item.code ? `(${props.item.code.length})` : '(0)';
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const removeMd = require('remove-markdown');
 
     const dispatchUpdateItem = (
         name: IItemProperty,
