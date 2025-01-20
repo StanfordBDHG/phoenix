@@ -247,7 +247,7 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
             )}
             <div className="horizontal full">
                 <div className={`form-field ${isDuplicateLinkId ? 'field-error' : ''}`}>
-                    <label>{t('LinkId')}</label>
+                    <label>{t('LinkId') as string}</label>
                     <InputField
                         value={linkId}
                         onChange={(event) => {
