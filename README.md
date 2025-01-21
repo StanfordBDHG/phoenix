@@ -19,7 +19,7 @@ A web application that allows you to build healthcare surveys using the [HL7® F
 - To use the application online, visit [https://stanfordbdhg.github.io/phoenix](https://stanfordbdhg.github.io/phoenix).
 
 ## Run for Development
-First, ensure that Node.js (version 16 or greater) and npm are installed on your system.
+First, ensure that Node.js (version 18 or greater) and npm are installed on your system.
 
 In your terminal, clone this repository from GitHub to your local computer.
 
