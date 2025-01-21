@@ -12,6 +12,7 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  base: '/phoenix',
   optimizeDeps: {
     esbuildOptions: {
       target: 'es2020'
