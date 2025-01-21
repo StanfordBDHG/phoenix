@@ -26,7 +26,7 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY default.conf /etc/nginx/conf.d/default.conf
 
 # Copy build folder from build stage to nginx public folder
-COPY --from=build /app/build /usr/share/nginx/html/phoenix
+COPY --from=build /app/dist /usr/share/nginx/html/phoenix
 
 # Expose port 80
 EXPOSE 80
