@@ -38,7 +38,7 @@ interface Node {
 
 interface ExtendedNode {
     node: Node;
-    path: string[];
+    path: any[];
 }
 
 // Event type definitions for moving nodes and toggling node visibility in the tree
@@ -46,8 +46,8 @@ interface NodeMoveEvent {
     treeData: Node[];
     nextParentNode: Node;
     node: Node;
-    nextPath: string[];
-    prevPath: string[];
+    nextPath: any[];
+    prevPath: any[];
 }
 
 interface NodeVisibilityToggleEvent {
