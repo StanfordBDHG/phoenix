@@ -16,10 +16,10 @@ interface MarkdownEditorProps {
 
 const MarkdownEditor = (props: MarkdownEditorProps): JSX.Element => {
     const [value, setValue] = useState<string>(props.data);
-    const handleChange = (event: Event, editor: Editor) => {
+    const handleChange = (_unused: unknown, editor: Editor) => {
         setValue(editor.getData());
     };
-    const handleBlur = (event: Event, editor: Editor) => {
+    const handleBlur = (_unused: unknown, editor: Editor) => {
         if (props.onBlur) {
             props.onBlur(editor.getData());
         }

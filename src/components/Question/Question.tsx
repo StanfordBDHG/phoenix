@@ -166,7 +166,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                     {instructionType()}
                 </div>
                 <div className="horizontal">
-                    {/*  <FormField>
+                     <FormField>
                         Markdown not currently supported 
                         <SwitchBtn
                             label={t('Text formatting')}
@@ -183,7 +183,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                                 }
                             }} 
                         /> 
-                    </FormField> */}
+                    </FormField>
                     {canTypeBeRequired(props.item) && (
                         <FormField>
                             <SwitchBtn
@@ -293,7 +293,6 @@ const Question = (props: QuestionProps): JSX.Element => {
                     </FormField>
                 }
                 {isSlider && <SliderSettings item={props.item} /> }
-                {/* Sublabel is not currently supported 
                 {canTypeHaveSublabel(props.item) && (
                     <FormField label={t('Sublabel')} isOptional>
                         <MarkdownEditor
@@ -311,7 +310,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                             }}
                         />
                     </FormField>
-                )} */}
+                )}
                 {respondType()}
             </div>
             <div className="question-addons">

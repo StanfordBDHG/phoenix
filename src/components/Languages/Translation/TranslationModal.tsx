@@ -262,7 +262,7 @@ const TranslationModal = (props: TranslationModalProps): JSX.Element => {
                                 )}
                                 <div>
                                     <div className="translation-section-header">{t('Elements')}</div>
-                                    {renderItems(flattOrder.filter((val, i) => i <= count))}
+                                    {renderItems(flattOrder.filter((_, i) => i <= count))}
                                 </div>
                                 <div
                                     id="bottom-translation-modal"
