@@ -167,7 +167,6 @@ const Question = (props: QuestionProps): JSX.Element => {
                 </div>
                 <div className="horizontal">
                      <FormField>
-                        Markdown not currently supported 
                         <SwitchBtn
                             label={t('Text formatting')}
                             value={isMarkdownActivated}
