@@ -38,7 +38,7 @@ interface Node {
 
 interface ExtendedNode {
     node: Node;
-    path: string[] | number[];
+    path: string[];
 }
 
 // Event type definitions for moving nodes and toggling node visibility in the tree
@@ -46,8 +46,8 @@ interface NodeMoveEvent {
     treeData: Node[];
     nextParentNode: Node;
     node: Node;
-    nextPath: number[];
-    prevPath: number[];
+    nextPath: string[];
+    prevPath: string[];
 }
 
 interface NodeVisibilityToggleEvent {
@@ -105,11 +105,6 @@ const YourExternalNodeComponent = ({ node }: { node: Node }): JSX.Element | null
     );
 };
 
-// Add a helper function to handle both types of paths
-const convertPath = (path: string[] | number[]): string[] => {
-    return path.map(String);
-};
-
 // The main component "AnchorMenu"
 const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
     const { t } = useTranslation();
@@ -138,10 +133,10 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
     };
 
     // Update treePathToOrderArray to use the helper
-    const treePathToOrderArray = (treePath: number[]): string[] => {
+    const treePathToOrderArray = (treePath: string[]): string[] => {
         const newPath = [...treePath];
         newPath.splice(-1);
-        return convertPath(newPath);
+        return newPath;
     };
 
     const hasValidationError = (linkId: string): boolean => {
@@ -248,7 +243,7 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
                                     props.dispatch(
                                         updateMarkedLinkIdAction(
                                             extendedNode.node.title,
-                                            convertPath(extendedNode.path),
+                                            treePathToOrderArray(extendedNode.path),
                                         ),
                                     );
                                 }}
@@ -264,7 +259,7 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
                         buttons: generateItemButtons(
                             t,
                             props.qItems[extendedNode.node.title],
-                            convertPath(extendedNode.path),
+                            treePathToOrderArray(extendedNode.path),
                             false,
                             props.dispatch,
                         ),
