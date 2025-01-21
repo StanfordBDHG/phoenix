@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Question.css';
 
@@ -15,7 +15,7 @@ import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../typ
 import { updateItemAction } from '../../store/treeStore/treeActions';
 import { isRecipientList } from '../../helpers/QuestionHelper';
 import { createMarkdownExtension, removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
-import { isItemControlInline, isItemControlReceiverComponent, isItemControlHighlight } from '../../helpers/itemControl';
+import { isItemControlInline, isItemControlHighlight } from '../../helpers/itemControl';
 
 import Accordion from '../Accordion/Accordion';
 import { ActionType } from '../../store/treeStore/treeStore';
@@ -40,6 +40,7 @@ import {
     getItemDisplayType,
 } from '../../helpers/questionTypeFeatures';
 import SliderSettings from './SliderSettings/SliderSettings';
+import removeMd from 'remove-markdown';
 
 interface QuestionProps {
     item: QuestionnaireItem;
@@ -54,10 +55,8 @@ interface QuestionProps {
 
 const Question = (props: QuestionProps): JSX.Element => {
     const { t } = useTranslation();
-    const [isMarkdownActivated, setIsMarkdownActivated] = React.useState<boolean>(!!props.item._text);
+    const [isMarkdownActivated, setIsMarkdownActivated] = useState<boolean>(!!props.item._text);
     const codeElements = props.item.code ? `(${props.item.code.length})` : '(0)';
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const removeMd = require('remove-markdown');
 
     const dispatchUpdateItem = (
         name: IItemProperty,
@@ -167,8 +166,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                     {instructionType()}
                 </div>
                 <div className="horizontal">
-                    {/*  <FormField>
-                        Markdown not currently supported 
+                     <FormField>
                         <SwitchBtn
                             label={t('Text formatting')}
                             value={isMarkdownActivated}
@@ -184,7 +182,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                                 }
                             }} 
                         /> 
-                    </FormField> */}
+                    </FormField>
                     {canTypeBeRequired(props.item) && (
                         <FormField>
                             <SwitchBtn
@@ -294,7 +292,6 @@ const Question = (props: QuestionProps): JSX.Element => {
                     </FormField>
                 }
                 {isSlider && <SliderSettings item={props.item} /> }
-                {/* Sublabel is not currently supported 
                 {canTypeHaveSublabel(props.item) && (
                     <FormField label={t('Sublabel')} isOptional>
                         <MarkdownEditor
@@ -312,7 +309,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                             }}
                         />
                     </FormField>
-                )} */}
+                )}
                 {respondType()}
             </div>
             <div className="question-addons">

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { TreeContext, TreeState } from '../store/treeStore/treeStore';
 import { getStateFromDb } from '../store/treeStore/indexedDbHelper';
 import { resetQuestionnaireAction } from '../store/treeStore/treeActions';

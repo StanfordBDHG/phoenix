@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from 'react';
+import { useState, MouseEvent } from 'react';
 import './Accordion.css';
 
 type AccordionProps = {

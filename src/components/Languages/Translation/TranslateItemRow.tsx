@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QuestionnaireItem, QuestionnaireItemAnswerOption } from '../../../types/fhir';
 import FormField from '../../FormField/FormField';

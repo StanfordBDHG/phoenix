@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isUriValid } from '../../helpers/uriHelper';
 
@@ -10,10 +10,10 @@ type Props = {
 
 const UriField = ({ value, disabled, onBlur }: Props): JSX.Element => {
     const { t } = useTranslation();
-    const ref = React.useRef<HTMLInputElement>(null);
-    const [hasValidUri, setHasValidUri] = React.useState<boolean>(isUriValid(value || ''));
+    const ref = useRef<HTMLInputElement>(null);
+    const [hasValidUri, setHasValidUri] = useState<boolean>(isUriValid(value || ''));
 
-    React.useEffect(() => {
+    useEffect(() => {
         // if new value is sent as prop, set this as the current value
         if (ref.current) {
             ref.current.value = value || '';

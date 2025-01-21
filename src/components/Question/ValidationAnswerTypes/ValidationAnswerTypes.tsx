@@ -1,4 +1,3 @@
-import React from 'react';
 import { IQuestionnaireItemType } from '../../../types/IQuestionnareItemType';
 import ValidationAnswerTypeNumber from './ValidationAnswerTypeNumber';
 import ValidationAnswerTypeString from './ValidationAnswerTypeString';

@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TreeContext } from '../../store/treeStore/treeStore';
 import { QuestionnaireItem, ValueSetComposeIncludeConcept } from '../../types/fhir';

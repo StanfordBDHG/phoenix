@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { format, parse } from 'date-fns';
 import Picker from '../../DatePicker/DatePicker';

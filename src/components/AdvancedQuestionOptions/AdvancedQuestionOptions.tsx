@@ -1,4 +1,4 @@
-import React, { FocusEvent, useContext, useState } from 'react';
+import { FocusEvent, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { findTreeArray, TreeContext } from '../../store/treeStore/treeStore';
 import { Extension, QuestionnaireItem } from '../../types/fhir';

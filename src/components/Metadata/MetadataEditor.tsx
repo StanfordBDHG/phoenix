@@ -15,7 +15,6 @@ import { TreeContext } from '../../store/treeStore/treeStore';
 import { updateQuestionnaireMetadataAction } from '../../store/treeStore/treeActions';
 import RadioBtn from '../RadioBtn/RadioBtn';
 import InputField from '../InputField/inputField';
-import { UseContextSystem } from '../../types/IQuestionnareItemType';
 
 const MetadataEditor = (): JSX.Element => {
     const { t } = useTranslation();
@@ -29,17 +28,6 @@ const MetadataEditor = (): JSX.Element => {
         value: string | Meta | Extension[] | ContactDetail[] | UsageContext[],
     ) => {
         dispatch(updateQuestionnaireMetadataAction(propName, value));
-    };
-
-    const getUseContextSystem = (): string => {
-        const system =
-            qMetadata.useContext &&
-            qMetadata.useContext.length > 0 &&
-            qMetadata.useContext[0].valueCodeableConcept?.coding &&
-            qMetadata.useContext[0].valueCodeableConcept.coding.length > 0 &&
-            qMetadata.useContext[0].valueCodeableConcept.coding[0].system;
-
-        return system || UseContextSystem.helsetjeneste_full;
     };
 
     return (

@@ -3,8 +3,6 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 import App from './App';
-import React from 'react';
-import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { UserProvider } from './contexts/UserContext';
 import './helpers/i18n';

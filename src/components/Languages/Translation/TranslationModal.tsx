@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from '../../Modal/Modal';
 import { OrderItem, TreeContext } from '../../../store/treeStore/treeStore';
@@ -262,7 +262,7 @@ const TranslationModal = (props: TranslationModalProps): JSX.Element => {
                                 )}
                                 <div>
                                     <div className="translation-section-header">{t('Elements')}</div>
-                                    {renderItems(flattOrder.filter((val, i) => i <= count))}
+                                    {renderItems(flattOrder.filter((_, i) => i <= count))}
                                 </div>
                                 <div
                                     id="bottom-translation-modal"

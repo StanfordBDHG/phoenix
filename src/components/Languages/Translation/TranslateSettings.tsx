@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActionType, Languages } from '../../../store/treeStore/treeStore';
 import FormField from '../../FormField/FormField';

@@ -1,8 +1,8 @@
 import './AnchorMenu.css';
-import { DndProvider, useDrag, DndProviderProps } from 'react-dnd';
+import { useState } from 'react';
+import { DndProvider, useDrag } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActionType, Items, MarkedItem, OrderItem } from '../../store/treeStore/treeStore';
 import { IQuestionnaireItemType } from '../../types/IQuestionnareItemType';
@@ -38,7 +38,7 @@ interface Node {
 
 interface ExtendedNode {
     node: Node;
-    path: string[];
+    path: any[];
 }
 
 // Event type definitions for moving nodes and toggling node visibility in the tree
@@ -46,8 +46,8 @@ interface NodeMoveEvent {
     treeData: Node[];
     nextParentNode: Node;
     node: Node;
-    nextPath: string[];
-    prevPath: string[];
+    nextPath: any[];
+    prevPath: any[];
 }
 
 interface NodeVisibilityToggleEvent {
@@ -108,7 +108,7 @@ const YourExternalNodeComponent = ({ node }: { node: Node }): JSX.Element | null
 // The main component "AnchorMenu"
 const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
     const { t } = useTranslation();
-    const [collapsedNodes, setCollapsedNodes] = React.useState<string[]>([]);
+    const [collapsedNodes, setCollapsedNodes] = useState<string[]>([]);
 
 
     const mapToTreeData = (item: OrderItem[], hierarchy: string, parentLinkId?: string): Node[] => {
@@ -132,6 +132,7 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
         return extendedNode.node.title;
     };
 
+    // Update treePathToOrderArray to use the helper
     const treePathToOrderArray = (treePath: string[]): string[] => {
         const newPath = [...treePath];
         newPath.splice(-1);

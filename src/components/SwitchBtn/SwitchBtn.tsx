@@ -1,4 +1,3 @@
-import React from 'react';
 import './SwitchBtn.css';
 
 type SwitchBtnProps = {

@@ -1,4 +1,4 @@
-import React, { forwardRef, ReactNode, useRef } from 'react';
+import { forwardRef, ReactNode, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import IconBtn from '../IconBtn/IconBtn';
 

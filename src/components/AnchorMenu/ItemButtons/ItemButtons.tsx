@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import { MouseEvent } from 'react';
 import { TFunction } from 'react-i18next';
 
 import { ActionType } from '../../../store/treeStore/treeStore';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { translatableMetadata } from '../../../helpers/LanguageHelper';
 import { ActionType, TreeState } from '../../../store/treeStore/treeStore';

@@ -21,7 +21,7 @@ import SwitchBtn from '../../SwitchBtn/SwitchBtn';
 import { createUriUUID } from '../../../helpers/uriHelper';
 import DraggableAnswerOptions from '../../AnswerOption/DraggableAnswerOptions';
 import PredefinedValueSets from './PredefinedValueSets';
-import { ItemControlType, isItemControlCheckbox, isItemControlDropDown } from '../../../helpers/itemControl';
+import { ItemControlType, isItemControlCheckbox } from '../../../helpers/itemControl';
 import { checkboxExtension } from '../../../helpers/QuestionHelper';
 
 type Props = {

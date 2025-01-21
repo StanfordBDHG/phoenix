@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { languageToIsoString, translateQuestionnaire } from '../../helpers/FhirToTreeStateMapper';
 import { generateMainQuestionnaire, getUsedValueSet } from '../../helpers/generateQuestionnaire';
@@ -25,7 +25,7 @@ const LanguageAccordion = (props: LanguageAccordionProps): JSX.Element => {
     const { t } = useTranslation();
     const { state, dispatch } = useContext(TreeContext);
     const { qItems, qMetadata, qContained, qAdditionalLanguages } = state;
-    const uploadRef = React.useRef<HTMLInputElement>(null);
+    const uploadRef = useRef<HTMLInputElement>(null);
 
     const [selectedLang, setSelectedLang] = useState('');
     const [fileUploadError, setFileUploadError] = useState<string>('');

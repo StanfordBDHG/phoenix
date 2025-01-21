@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MetadataProperty } from '../../../types/LanguageTypes';
 import { ActionType, TreeState } from '../../../store/treeStore/treeStore';

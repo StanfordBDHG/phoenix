@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useState } from 'react';
+import { useState } from 'react';
 // @ts-ignore
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 // @ts-ignore
@@ -16,10 +16,10 @@ interface MarkdownEditorProps {
 
 const MarkdownEditor = (props: MarkdownEditorProps): JSX.Element => {
     const [value, setValue] = useState<string>(props.data);
-    const handleChange = (event: Event, editor: Editor) => {
+    const handleChange = (_unused: unknown, editor: Editor) => {
         setValue(editor.getData());
     };
-    const handleBlur = (event: Event, editor: Editor) => {
+    const handleBlur = (_unused: unknown, editor: Editor) => {
         if (props.onBlur) {
             props.onBlur(editor.getData());
         }

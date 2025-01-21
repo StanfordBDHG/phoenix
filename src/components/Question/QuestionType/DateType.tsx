@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { removeItemExtension, setItemExtension } from '../../../helpers/extensionHelper';
 import { createItemControlExtension, ItemControlType } from '../../../helpers/itemControl';
