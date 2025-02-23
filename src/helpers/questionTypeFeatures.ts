@@ -40,6 +40,7 @@ export const getInitialItemConfig = (
     } as QuestionnaireItem;
     if (questionType === IQuestionnaireItemType.group) {
         newQuestionnaireItem.type = IQuestionnaireItemType.group;
+        // Groups are paginated by default
         const pageExtension = createItemControlExtension(ItemControlType.page);
         // Adds additional fields as included in the example shown in the Android FHIR docs: 
         // https://google.github.io/android-fhir/use/SDCL/Author-questionnaires/#questionnaire-basics
