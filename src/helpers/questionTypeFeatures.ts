@@ -40,6 +40,14 @@ export const getInitialItemConfig = (
     } as QuestionnaireItem;
     if (questionType === IQuestionnaireItemType.group) {
         newQuestionnaireItem.type = IQuestionnaireItemType.group;
+        const pageExtension = createItemControlExtension(ItemControlType.page);
+        if (pageExtension.valueCodeableConcept) {
+            pageExtension.valueCodeableConcept.text = 'Page';
+            if (pageExtension.valueCodeableConcept.coding && pageExtension.valueCodeableConcept.coding[0]) {
+                pageExtension.valueCodeableConcept.coding[0].display = 'Page';
+            }
+        }
+        newQuestionnaireItem.extension?.push(pageExtension);
     } else if (questionType === IQuestionnaireItemType.attachment) {
         const maxFileSizeExtension = {
             url: IExtentionType.maxSize,

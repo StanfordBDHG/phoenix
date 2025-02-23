@@ -16,7 +16,8 @@ export enum ItemControlType {
     year = 'year',
     receiverComponent = 'receiver-component',
     dynamic = 'dynamic',
-    slider = 'slider'
+    slider = 'slider',
+    page = 'page'
 }
 
 export const createItemControlExtension = (itemControlType: ItemControlType): Extension => {
@@ -90,6 +91,10 @@ export const isItemControlInline = (item?: QuestionnaireItem): boolean => {
 
 export const isItemControlSlider = (item?: QuestionnaireItem): boolean => {
     return getItemControlType(item) === ItemControlType.slider;
+};
+
+export const isItemControlPage = (item?: QuestionnaireItem): boolean => {
+    return getItemControlType(item) === ItemControlType.page;
 };
 
 export const getHelpText = (item: QuestionnaireItem): string => {
