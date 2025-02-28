@@ -11,6 +11,7 @@ import {
     newItemAction,
     reorderItemAction,
     updateMarkedLinkIdAction,
+    updateConditionalLogicAction,
 } from '../../store/treeStore/treeActions';
 import { ValidationErrors } from '../../helpers/orphanValidation';
 import { SortableTreeWithoutDndContext as SortableTree } from '@nosferatu500/react-sortable-tree';
@@ -18,6 +19,7 @@ import '@nosferatu500/react-sortable-tree/style.css';
 import { isIgnorableItem } from '../../helpers/itemControl';
 import { generateItemButtons } from './ItemButtons/ItemButtons';
 import { canTypeHaveChildren, getInitialItemConfig } from '../../helpers/questionTypeFeatures';
+import ConditionPopup from '../ConditionPopUp/ConditionPopup';
 
 interface AnchorMenuProps {
     qOrder: OrderItem[];
@@ -109,7 +111,9 @@ const YourExternalNodeComponent = ({ node }: { node: Node }): JSX.Element | null
 const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
     const { t } = useTranslation();
     const [collapsedNodes, setCollapsedNodes] = useState<string[]>([]);
-
+    const [showPopup, setShowPopup] = useState<boolean>(false);
+    const [currentNode, setCurrentNode] = useState<Node | null>(null);
+    const [initialCondition, setInitialCondition] = useState<string>('true');
 
     const mapToTreeData = (item: OrderItem[], hierarchy: string, parentLinkId?: string): Node[] => {
         return item
@@ -169,6 +173,20 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
                 }}
             />
         );
+    };
+
+    const handleConditionalLogic = (node: Node) => {
+        setCurrentNode(node);
+        const currentCondition = props.qItems[node.title]?.condition || 'true';
+        setInitialCondition(currentCondition);
+        setShowPopup(true);
+    };
+
+    const handleSaveCondition = (condition: string) => {
+        if (currentNode) {
+            props.dispatch(updateConditionalLogicAction(currentNode.title, condition));
+        }
+        setShowPopup(false);
     };
 
     const orderTreeData = mapToTreeData(props.qOrder, '');
@@ -262,6 +280,7 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
                             treePathToOrderArray(extendedNode.path),
                             false,
                             props.dispatch,
+                            () => handleConditionalLogic(extendedNode.node),
                         ),
                     })}
                 />
@@ -272,6 +291,14 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
                             {'Drag a question type here to start building your survey!'}
                         </div>
                     </div>
+                )}
+                {showPopup && (
+                    <ConditionPopup
+                        key="condition-popup"
+                        onClose={() => setShowPopup(false)}
+                        onSave={handleSaveCondition}
+                        initialCondition={initialCondition}
+                    />
                 )}
             </div>
         </DndProvider>

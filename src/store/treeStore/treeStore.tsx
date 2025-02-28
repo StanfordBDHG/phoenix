@@ -57,6 +57,8 @@ import {
     DeleteValueSetAction,
     UPDATE_SETTING_TRANSLATION_ACTION,
     UpdateSettingTranslationAction,
+    UPDATE_CONDITIONAL_LOGIC,
+    UpdateConditionalLogicAction,
 } from './treeActions';
 import { IQuestionnaireMetadata, IQuestionnaireMetadataType } from '../../types/IQuestionnaireMetadataType';
 import createUUID from '../../helpers/CreateUUID';
@@ -95,7 +97,8 @@ export type ActionType =
     | DeleteValueSetAction
     | RemoveItemAttributeAction
     | SaveAction
-    | UpdateMarkedLinkId;
+    | UpdateMarkedLinkId
+    | UpdateConditionalLogicAction;;
 
 export interface Items {
     [linkId: string]: QuestionnaireItem;
@@ -757,6 +760,12 @@ const reducer = produce((draft: TreeState, action: ActionType) => {
             break;
         case UPDATE_MARKED_LINK_ID:
             updateMarkedItemId(draft, action);
+            break;
+        case UPDATE_CONDITIONAL_LOGIC:
+            const { linkId, condition } = action.payload;
+            if (draft.qItems[linkId]) {
+                draft.qItems[linkId].condition = condition;
+            }
             break;
     }
 });

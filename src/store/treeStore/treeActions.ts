@@ -52,6 +52,8 @@ export const UPDATE_VALUESET_ACTION = 'UPDATE_VALUESET';
 export const DELETE_VALUESET_ACTION = 'DELETE_VALUESET';
 export const IMPORT_VALUESET_ACTION = 'IMPORT_VALUESET';
 export const SAVE_ACTION = 'save';
+export const UPDATE_CONDITIONAL_LOGIC = 'UPDATE_CONDITIONAL_LOGIC';
+
 
 type ItemValueType =
     | string
@@ -235,6 +237,18 @@ export interface ImportValueSetAction {
 export interface SaveAction {
     type: typeof SAVE_ACTION;
 }
+export interface UpdateConditionalLogicAction {
+    type: typeof UPDATE_CONDITIONAL_LOGIC;
+    payload: {
+        linkId: string;
+        condition: string;
+    };
+}
+
+export const updateConditionalLogicAction = (linkId: string, condition: string): UpdateConditionalLogicAction => ({
+    type: UPDATE_CONDITIONAL_LOGIC,
+    payload: { linkId, condition },
+});
 
 export const updateMarkedLinkIdAction = (markedLinkId?: string, parentArray?: Array<string>): UpdateMarkedLinkId => {
     return {
