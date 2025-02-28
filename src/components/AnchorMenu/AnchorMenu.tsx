@@ -177,7 +177,7 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
 
     const handleConditionalLogic = (node: Node) => {
         setCurrentNode(node);
-        const currentCondition = props.qItems[node.title]?.condition || 'true';
+        const currentCondition = props.qItems[node.title]?.conditions || 'true';
         setInitialCondition(currentCondition);
         setShowPopup(true);
     };

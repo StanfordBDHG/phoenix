@@ -460,6 +460,7 @@ export const newItemHelpIconAction = (order: Array<string>): NewItemAction => {
         repeats: false,
         readOnly: true,
         maxLength: 250,
+        conditions: '',
         _text: createMarkdownExtension(''),
         extension: [createItemControlExtension(ItemControlType.help)],
     } as QuestionnaireItem;

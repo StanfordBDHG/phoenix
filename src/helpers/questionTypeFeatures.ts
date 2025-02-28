@@ -22,6 +22,7 @@ export const createInlineItem = (): QuestionnaireItem => {
         code: [],
         item: [],
         required: false,
+        conditions: '',  
     };
 };
 
@@ -37,6 +38,7 @@ export const getInitialItemConfig = (
         code: [],
         item: [],
         required: false,
+        conditions: '',
     } as QuestionnaireItem;
     if (questionType === IQuestionnaireItemType.group) {
         newQuestionnaireItem.type = IQuestionnaireItemType.group;

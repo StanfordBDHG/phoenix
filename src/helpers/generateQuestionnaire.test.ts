@@ -33,8 +33,8 @@ describe(`generateQuestionnaire from state with items`, () => {
         const state: TreeState = {
             ...initialState,
             qItems: {
-                [linkId1]: { linkId: linkId1, type: 'Group', _text: {} },
-                [linkId2]: { linkId: linkId2, type: 'Group', _text: { extension: [] } },
+                [linkId1]: { linkId: linkId1, type: 'Group', _text: {} , conditions: ''},
+                [linkId2]: { linkId: linkId2, type: 'Group', _text: { extension: [] }, conditions: '' },
             },
             qOrder: [
                 { linkId: linkId1, items: [] },

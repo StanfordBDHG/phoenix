@@ -53,7 +53,7 @@ const QuestionDrawer = ({ validationErrors }: Props): JSX.Element | null => {
     };
 
     const handleConditionalLogic = (item: QuestionnaireItem) => {
-        const currentCondition = item.condition || 'true';
+        const currentCondition = item.conditions || 'true';
         setInitialCondition(currentCondition);
         setShowPopup(true);
     };

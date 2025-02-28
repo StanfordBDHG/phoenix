@@ -764,7 +764,7 @@ const reducer = produce((draft: TreeState, action: ActionType) => {
         case UPDATE_CONDITIONAL_LOGIC:
             const { linkId, condition } = action.payload;
             if (draft.qItems[linkId]) {
-                draft.qItems[linkId].condition = condition;
+                draft.qItems[linkId].conditions = condition;
             }
             break;
     }
