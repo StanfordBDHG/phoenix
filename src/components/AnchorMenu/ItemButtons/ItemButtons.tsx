@@ -1,11 +1,10 @@
 import { MouseEvent } from 'react';
 import { TFunction } from 'react-i18next';
-
+import React from 'react';
 import { ActionType } from '../../../store/treeStore/treeStore';
 import { QuestionnaireItem } from '../../../types/fhir';
-
-import './ItemButtons.css';
 import { deleteItemAction, duplicateItemAction } from '../../../store/treeStore/treeActions';
+import './ItemButtons.css';
 
 export const generateItemButtons = (
     t: TFunction<'translation'>,
@@ -13,10 +12,12 @@ export const generateItemButtons = (
     parentArray: Array<string>,
     showLabel: boolean,
     dispatch: React.Dispatch<ActionType>,
+    onConditionalLogic: () => void,
 ): JSX.Element[] => {
     if (!item) {
         return [];
     }
+
     const dispatchDeleteItem = (event: MouseEvent<HTMLButtonElement>): void => {
         event.stopPropagation();
         dispatch(deleteItemAction(item.linkId, parentArray));
@@ -51,6 +52,16 @@ export const generateItemButtons = (
         >
             <i className="trash-icon" />
             {showLabel && <label>{t('Delete')}</label>}
+        </button>,
+        <button
+            key="conditional-logic"
+            className={getClassNames()}
+            onClick={onConditionalLogic}
+            aria-label="Set Condition"
+            title={t('Set Condition')}
+        >
+            <i className="question-mark-icon"/>
+            {showLabel && <label>{t('Set Condition')}</label>}
         </button>,
     ];
 };
