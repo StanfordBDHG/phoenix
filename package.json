@@ -80,7 +80,7 @@
         "gh-pages": "^5.0.0",
         "prettier": "^2.2.1",
         "typescript": "^5.0.0",
-        "vite": "^6.0.11"
+        "vite": "^6.2.3"
     },
     "type": "module"
 }
