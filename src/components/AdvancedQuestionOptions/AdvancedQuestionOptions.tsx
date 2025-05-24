@@ -223,7 +223,7 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
             )}
             {canTypeHaveTextInput(item) && (
                 <>
-                <FormField label={t('Keyboard type (iOS only)')}>
+                <FormField label={t('Keyboard type (iOS)')}>
                     <select
                         defaultValue={item.extension?.find((x) => x.url === IExtentionType.iosKeyboardType)?.valueString}
                         onChange={(e) => {
@@ -252,7 +252,7 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
                         <option value="asciiCapableNumberPad">{t('ASCII Capable Number Pad')}</option>
                     </select>
                 </FormField>
-                <FormField label={t('Text Content Type (iOS only)')}>
+                <FormField label={t('Text Content Type (iOS)')}>
                     <select
                         defaultValue={item.extension?.find((x) => x.url === IExtentionType.iosTextContentType)?.valueString}
                         onChange={(e) => {
@@ -309,7 +309,7 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
                         <option value="birthdate">{t('Birthdate')}</option>
                     </select>
                 </FormField>
-                <FormField label={t('Text Autocapitalization Type (iOS only)')}>
+                <FormField label={t('Text Autocapitalization Type (iOS)')}>
                     <select
                         defaultValue={item.extension?.find((x) => x.url === IExtentionType.iosAutoCapitalizationType)?.valueString}
                         onChange={(e) => {
@@ -384,7 +384,7 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
             </div>
             {canTypeHavePrefix(item) && (
                 <div className="horizontal full">
-                    <FormField label={t('Prefix')} isOptional>
+                    <FormField label={t('Prefix')}>
                         <InputField
                             defaultValue={item.prefix}
                             onBlur={(e) => {
@@ -395,7 +395,7 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
                 </div>
             )}
             <div className="horizontal full">
-                <FormField label={t('Definition')} isOptional>
+                <FormField label={t('Definition')}>
                     <UriField
                         value={item.definition}
                         onBlur={(e) => {
