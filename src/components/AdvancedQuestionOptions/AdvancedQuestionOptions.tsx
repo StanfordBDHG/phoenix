@@ -29,6 +29,7 @@ import {
     canTypeHavePlaceholderText,
     canTypeHavePrefix,
     canTypeHaveSummary,
+    canTypeHaveTextInput
 } from '../../helpers/questionTypeFeatures';
 
 type AdvancedQuestionOptionsProps = {
@@ -219,6 +220,117 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
                         </>
                     )}
                 </FormField>
+            )}
+            {canTypeHaveTextInput(item) && (
+                <>
+                <FormField label={t('Keyboard type (iOS only)')}>
+                    <select
+                        defaultValue={item.extension?.find((x) => x.url === IExtentionType.iosKeyboardType)?.valueString}
+                        onChange={(e) => {
+                            if (e.target.value) {
+                                handleExtension({
+                                    url: IExtentionType.iosKeyboardType,
+                                    valueString: e.target.value,
+                                });
+                            } else {
+                                removeExtension(IExtentionType.iosKeyboardType);
+                            }
+                        }}
+                    >
+                        <option value="">{t('')}</option>
+                        <option value="default">{t('Default')}</option>
+                        <option value="asciiCapable">{t('ASCII Capable')}</option>
+                        <option value="numberAndPunctuation">{t('Numbers And Punctuation')}</option>
+                        <option value="url">{t('URL')}</option>
+                        <option value="numberPad">{t('Number Pad')}</option>
+                        <option value="phonePad">{t('Phone Pad')}</option>
+                        <option value="namePhonePad">{t('Name Phone Pad')}</option>
+                        <option value="emailAddress">{t('Email Address')}</option>
+                        <option value="decimalPad">{t('Decimal Pad')}</option>
+                        <option value="twitter">{t('Twitter')}</option>
+                        <option value="webSearch">{t('Web Search')}</option>
+                        <option value="asciiCapableNumberPad">{t('ASCII Capable Number Pad')}</option>
+                    </select>
+                </FormField>
+                <FormField label={t('Text Content Type (iOS only)')}>
+                    <select
+                        defaultValue={item.extension?.find((x) => x.url === IExtentionType.iosTextContentType)?.valueString}
+                        onChange={(e) => {
+                            if (e.target.value) {
+                                handleExtension({
+                                    url: IExtentionType.iosTextContentType,
+                                    valueString: e.target.value,
+                                });
+                            } else {
+                                removeExtension(IExtentionType.iosTextContentType);
+                            }
+                        }}
+                    >
+                        <option value="">{t('')}</option>
+                        <option value="URL">{t('URL')}</option>
+                        <option value="namePrefix">{t('Name Prefix')}</option>
+                        <option value="name">{t('Name')}</option>
+                        <option value="nameSuffix">{t('Name Suffix')}</option>
+                        <option value="givenName">{t('Given Name')}</option>
+                        <option value="middleName">{t('Middle Name')}</option>
+                        <option value="familyName">{t('Family Name')}</option>
+                        <option value="nickname">{t('Nickname')}</option>
+                        <option value="organizationName">{t('Organization Name')}</option>
+                        <option value="jobTitle">{t('Job Title')}</option>
+                        <option value="location">{t('Location')}</option>
+                        <option value="fullStreetAddress">{t('Full Street Address')}</option>
+                        <option value="streetAddressLine1">{t('Street Address Line 1')}</option>
+                        <option value="streetAddressLine2">{t('Street Address Line 2')}</option>
+                        <option value="addressCity">{t('Address City')}</option>
+                        <option value="addressCityAndState">{t('Address City and State')}</option>
+                        <option value="addressState">{t('Address State')}</option>
+                        <option value="postalCode">{t('Postal Code')}</option>
+                        <option value="sublocality">{t('Sublocality')}</option>
+                        <option value="countryName">{t('Country Name')}</option>
+                        <option value="username">{t('Username')}</option>
+                        <option value="password">{t('Password')}</option>
+                        <option value="newPassword">{t('New Password')}</option>
+                        <option value="oneTimeCode">{t('One-Time Code')}</option>
+                        <option value="emailAddress">{t('Email Address')}</option>
+                        <option value="telephoneNumber">{t('Telephone Number')}</option>
+                        <option value="creditCardNumber">{t('Credit Card Number')}</option>
+                        <option value="dateTime">{t('Date Time')}</option>
+                        <option value="flightNumber">{t('Flight Number')}</option>
+                        <option value="shipmentTrackingNumber">{t('Shipment Tracking Number')}</option>
+                        <option value="creditCardExpiration">{t('Credit Card Expiration')}</option>
+                        <option value="creditCardExpirationMonth">{t('Credit Card Expiration Month')}</option>
+                        <option value="creditCardExpirationYear">{t('Credit Card Expiration Year')}</option>
+                        <option value="creditCardSecurityCode">{t('Credit Card Security Code')}</option>
+                        <option value="creditCardType">{t('Credit Card Type')}</option>
+                        <option value="creditCardName">{t('Credit Card Name')}</option>
+                        <option value="creditCardGivenName">{t('Credit Card Given Name')}</option>
+                        <option value="creditCardMiddleName">{t('Credit Card Middle Name')}</option>
+                        <option value="creditCardFamilyName">{t('Credit Card Family Name')}</option>
+                        <option value="birthdate">{t('Birthdate')}</option>
+                    </select>
+                </FormField>
+                <FormField label={t('Text Content Type (iOS only)')}>
+                    <select
+                        defaultValue={item.extension?.find((x) => x.url === IExtentionType.iosAutoCapitalizationType)?.valueString}
+                        onChange={(e) => {
+                            if (e.target.value) {
+                                handleExtension({
+                                    url: IExtentionType.iosAutoCapitalizationType,
+                                    valueString: e.target.value,
+                                });
+                            } else {
+                                removeExtension(IExtentionType.iosAutoCapitalizationType);
+                            }
+                        }}
+                    >
+                        <option value="">{t('')}</option>
+                        <option value="none">{t('None')}</option>
+                        <option value="words">{t('Words')}</option>
+                        <option value="sentences">{t('Sentences')}</option>
+                        <option value="allCharacters">{t('All Characters')}</option>
+                    </select>
+                </FormField>
+                </>
             )}
             {canTypeHaveCalculatedExpressionExtension(item) && (
                 <CalculatedExpression item={item} updateExtension={handleExtension} removeExtension={removeExtension} />
