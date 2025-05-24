@@ -235,6 +235,13 @@ export const canTypeHaveChildren = (item: QuestionnaireItem): boolean => {
     );
 };
 
+export const canTypeHaveTextInput = (item: QuestionnaireItem): boolean => {
+    return (
+        item.type === IQuestionnaireItemType.string ||
+        item.type === IQuestionnaireItemType.text
+    );
+};
+
 export const getItemDisplayType = (item: QuestionnaireItem): string => {
     if (isItemControlReceiverComponent(item)) {
         return 'Recipient component';

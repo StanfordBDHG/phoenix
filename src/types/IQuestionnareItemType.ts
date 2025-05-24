@@ -114,6 +114,9 @@ export enum IExtentionType {
     saveCapability = 'http://helsenorge.no/fhir/StructureDefinition/sdf-save-capabilities',
     printVersion = 'http://helsenorge.no/fhir/StructureDefinition/sdf-questionnaire-print-version',
     hyperlinkTarget = 'http://helsenorge.no/fhir/StructureDefinition/sdf-hyperlink-target',
+    iosKeyboardType = 'http://bdh.stanford.edu/fhir/StructureDefinition/ios-keyboardtype',
+    iosTextContentType = 'http://bdh.stanford.edu/fhir/StructureDefinition/ios-textcontenttype',
+    iosAutoCapitalizationType = 'http://bdh.stanford.edu/fhir/StructureDefinition/ios-autocapitalizationtype',
 }
 
 export enum UseContextSystem {
