@@ -309,7 +309,7 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
                         <option value="birthdate">{t('Birthdate')}</option>
                     </select>
                 </FormField>
-                <FormField label={t('Text Content Type (iOS only)')}>
+                <FormField label={t('Text Autocapitalization Type (iOS only)')}>
                     <select
                         defaultValue={item.extension?.find((x) => x.url === IExtentionType.iosAutoCapitalizationType)?.valueString}
                         onChange={(e) => {
