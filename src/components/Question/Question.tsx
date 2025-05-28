@@ -36,7 +36,6 @@ import { ValidationErrors } from '../../helpers/orphanValidation';
 import {
     canTypeBeRequired,
     canTypeBeValidated,
-    canTypeHaveSublabel,
     getItemDisplayType,
 } from '../../helpers/questionTypeFeatures';
 import SliderSettings from './SliderSettings/SliderSettings';
@@ -72,10 +71,6 @@ const Question = (props: QuestionProps): JSX.Element => {
                 props.item._text?.extension?.find((x) => x.url === IExtentionType.markdown)?.valueMarkdown || '';
         }
         return labelText || props.item.text || '';
-    };
-
-    const getSublabelText = (): string => {
-        return props.item.extension?.find((x) => x.url === IExtentionType.sublabel)?.valueMarkdown || '';
     };
 
     const convertToPlaintext = (stringToBeConverted: string) => {
@@ -292,24 +287,6 @@ const Question = (props: QuestionProps): JSX.Element => {
                     </FormField>
                 }
                 {isSlider && <SliderSettings item={props.item} /> }
-                {canTypeHaveSublabel(props.item) && (
-                    <FormField label={t('Sublabel')} isOptional>
-                        <MarkdownEditor
-                            data={getSublabelText()}
-                            onBlur={(newValue: string) => {
-                                if (newValue) {
-                                    const newExtension = {
-                                        url: IExtentionType.sublabel,
-                                        valueMarkdown: newValue,
-                                    };
-                                    setItemExtension(props.item, newExtension, props.dispatch);
-                                } else {
-                                    removeItemExtension(props.item, IExtentionType.sublabel, props.dispatch);
-                                }
-                            }}
-                        />
-                    </FormField>
-                )}
                 {respondType()}
             </div>
             <div className="question-addons">
