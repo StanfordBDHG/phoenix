@@ -54,7 +54,6 @@ interface QuestionProps {
 
 const Question = (props: QuestionProps): JSX.Element => {
     const { t } = useTranslation();
-    const [isMarkdownActivated, setIsMarkdownActivated] = useState<boolean>(!!props.item._text);
     const codeElements = props.item.code ? `(${props.item.code.length})` : '(0)';
 
     const dispatchUpdateItem = (
@@ -66,10 +65,6 @@ const Question = (props: QuestionProps): JSX.Element => {
 
     const getLabelText = (): string => {
         let labelText = '';
-        if (isMarkdownActivated) {
-            labelText =
-                props.item._text?.extension?.find((x) => x.url === IExtentionType.markdown)?.valueMarkdown || '';
-        }
         return labelText || props.item.text || '';
     };
 
@@ -161,25 +156,6 @@ const Question = (props: QuestionProps): JSX.Element => {
                     {instructionType()}
                 </div>
                 <div className="horizontal">
-                     {/* 
-                     // Disabled because ResearchKit does not support markdown.
-                     <FormField>
-                        <SwitchBtn
-                            label={t('Text formatting')}
-                            value={isMarkdownActivated}
-                            onChange={() => {
-                                const newIsMarkdownEnabled = !isMarkdownActivated;
-                                setIsMarkdownActivated(newIsMarkdownEnabled);
-                                if (!newIsMarkdownEnabled) {
-                                    // remove markdown extension
-                                    dispatchUpdateItem(IItemProperty._text, undefined);
-                                } else {
-                                    // set existing text as markdown value
-                                    dispatchUpdateMarkdownLabel(props.item.text || '');
-                                }
-                            }} 
-                        /> 
-                    </FormField> */}
                     {canTypeBeRequired(props.item) && (
                         <FormField>
                             <SwitchBtn
