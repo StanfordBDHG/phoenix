@@ -161,6 +161,8 @@ const Question = (props: QuestionProps): JSX.Element => {
                     {instructionType()}
                 </div>
                 <div className="horizontal">
+                     {/* 
+                     // Disabled because ResearchKit does not support markdown.
                      <FormField>
                         <SwitchBtn
                             label={t('Text formatting')}
@@ -177,7 +179,7 @@ const Question = (props: QuestionProps): JSX.Element => {
                                 }
                             }} 
                         /> 
-                    </FormField>
+                    </FormField> */}
                     {canTypeBeRequired(props.item) && (
                         <FormField>
                             <SwitchBtn
