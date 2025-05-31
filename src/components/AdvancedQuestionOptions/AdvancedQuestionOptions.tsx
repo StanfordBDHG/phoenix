@@ -384,13 +384,15 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
             </div>
             {canTypeHavePrefix(item) && (
                 <div className="horizontal full">
-                    <FormField label={t('Prefix')}>
-                        <InputField
-                            defaultValue={item.prefix}
-                            onBlur={(e) => {
-                                dispatch(updateItemAction(item.linkId, IItemProperty.prefix, e.target.value));
-                            }}
-                        />
+                    <FormField 
+                        label={t('Prefix')} 
+                        tooltip={t('The label to be displayed in front of an option (e.g. "(a)", or "1.").')}>
+                            <InputField
+                                defaultValue={item.prefix}
+                                onBlur={(e) => {
+                                    dispatch(updateItemAction(item.linkId, IItemProperty.prefix, e.target.value));
+                                }}
+                            />
                     </FormField>
                 </div>
             )}
