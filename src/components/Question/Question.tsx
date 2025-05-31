@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Question.css';
 
@@ -215,16 +214,12 @@ const Question = (props: QuestionProps): JSX.Element => {
                     )}
                 </div>
                 <FormField label={t('Text')}>
-                    {isMarkdownActivated ? (
-                        <MarkdownEditor data={getLabelText()} onBlur={dispatchUpdateMarkdownLabel} />
-                    ) : (
-                        <textarea
-                            defaultValue={getLabelText()}
-                            onBlur={(e) => {
-                                dispatchUpdateItem(IItemProperty.text, e.target.value);
-                            }}
-                        />
-                    )}
+                    <textarea
+                        defaultValue={getLabelText()}
+                        onBlur={(e) => {
+                            dispatchUpdateItem(IItemProperty.text, e.target.value);
+                        }}
+                    />
                 </FormField>
                 <br />
                 {isNumber && !isDecimalOrQuantity &&
