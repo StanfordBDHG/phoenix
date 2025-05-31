@@ -13,7 +13,7 @@ import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../typ
 
 import { updateItemAction } from '../../store/treeStore/treeActions';
 import { isRecipientList } from '../../helpers/QuestionHelper';
-import { createMarkdownExtension, removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
+import { removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
 import { isItemControlInline, isItemControlHighlight } from '../../helpers/itemControl';
 
 import Accordion from '../Accordion/Accordion';
@@ -22,7 +22,6 @@ import AdvancedQuestionOptions from '../AdvancedQuestionOptions/AdvancedQuestion
 import Choice from './QuestionType/Choice';
 import EnableWhen from '../EnableWhen/EnableWhen';
 import Infotext from './QuestionType/Infotext';
-import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
 
 import SwitchBtn from '../SwitchBtn/SwitchBtn';
 import ValidationAnswerTypes from './ValidationAnswerTypes/ValidationAnswerTypes';
@@ -38,7 +37,6 @@ import {
     getItemDisplayType,
 } from '../../helpers/questionTypeFeatures';
 import SliderSettings from './SliderSettings/SliderSettings';
-import removeMd from 'remove-markdown';
 
 interface QuestionProps {
     item: QuestionnaireItem;
@@ -65,22 +63,6 @@ const Question = (props: QuestionProps): JSX.Element => {
     const getLabelText = (): string => {
         let labelText = '';
         return labelText || props.item.text || '';
-    };
-
-    const convertToPlaintext = (stringToBeConverted: string) => {
-        let plainText = removeMd(stringToBeConverted);
-        plainText = plainText.replaceAll('\\*', '*');
-        plainText = plainText.replaceAll('\\', '');
-        plainText = plainText.replaceAll(/([ \n])+/g, ' ');
-        return plainText;
-    };
-
-    const dispatchUpdateMarkdownLabel = (newLabel: string): void => {
-        const markdownValue = createMarkdownExtension(newLabel);
-
-        dispatchUpdateItem(IItemProperty._text, markdownValue);
-        // update text with same value. Text is used in condition in enableWhen
-        dispatchUpdateItem(IItemProperty.text, convertToPlaintext(newLabel));
     };
 
     const isNumber = props.item.type === IQuestionnaireItemType.decimal || props.item.type === IQuestionnaireItemType.integer || props.item.type === IQuestionnaireItemType.quantity;
