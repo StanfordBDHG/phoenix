@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Question.css';
 
@@ -14,7 +13,7 @@ import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../typ
 
 import { updateItemAction } from '../../store/treeStore/treeActions';
 import { isRecipientList } from '../../helpers/QuestionHelper';
-import { createMarkdownExtension, removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
+import { removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
 import { isItemControlInline, isItemControlHighlight } from '../../helpers/itemControl';
 
 import Accordion from '../Accordion/Accordion';
@@ -23,7 +22,6 @@ import AdvancedQuestionOptions from '../AdvancedQuestionOptions/AdvancedQuestion
 import Choice from './QuestionType/Choice';
 import EnableWhen from '../EnableWhen/EnableWhen';
 import Infotext from './QuestionType/Infotext';
-import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
 
 import SwitchBtn from '../SwitchBtn/SwitchBtn';
 import ValidationAnswerTypes from './ValidationAnswerTypes/ValidationAnswerTypes';
@@ -39,7 +37,6 @@ import {
     getItemDisplayType,
 } from '../../helpers/questionTypeFeatures';
 import SliderSettings from './SliderSettings/SliderSettings';
-import removeMd from 'remove-markdown';
 
 interface QuestionProps {
     item: QuestionnaireItem;
@@ -54,7 +51,6 @@ interface QuestionProps {
 
 const Question = (props: QuestionProps): JSX.Element => {
     const { t } = useTranslation();
-    const [isMarkdownActivated, setIsMarkdownActivated] = useState<boolean>(!!props.item._text);
     const codeElements = props.item.code ? `(${props.item.code.length})` : '(0)';
 
     const dispatchUpdateItem = (
@@ -66,27 +62,7 @@ const Question = (props: QuestionProps): JSX.Element => {
 
     const getLabelText = (): string => {
         let labelText = '';
-        if (isMarkdownActivated) {
-            labelText =
-                props.item._text?.extension?.find((x) => x.url === IExtentionType.markdown)?.valueMarkdown || '';
-        }
         return labelText || props.item.text || '';
-    };
-
-    const convertToPlaintext = (stringToBeConverted: string) => {
-        let plainText = removeMd(stringToBeConverted);
-        plainText = plainText.replaceAll('\\*', '*');
-        plainText = plainText.replaceAll('\\', '');
-        plainText = plainText.replaceAll(/([ \n])+/g, ' ');
-        return plainText;
-    };
-
-    const dispatchUpdateMarkdownLabel = (newLabel: string): void => {
-        const markdownValue = createMarkdownExtension(newLabel);
-
-        dispatchUpdateItem(IItemProperty._text, markdownValue);
-        // update text with same value. Text is used in condition in enableWhen
-        dispatchUpdateItem(IItemProperty.text, convertToPlaintext(newLabel));
     };
 
     const isNumber = props.item.type === IQuestionnaireItemType.decimal || props.item.type === IQuestionnaireItemType.integer || props.item.type === IQuestionnaireItemType.quantity;
@@ -161,23 +137,6 @@ const Question = (props: QuestionProps): JSX.Element => {
                     {instructionType()}
                 </div>
                 <div className="horizontal">
-                     <FormField>
-                        <SwitchBtn
-                            label={t('Text formatting')}
-                            value={isMarkdownActivated}
-                            onChange={() => {
-                                const newIsMarkdownEnabled = !isMarkdownActivated;
-                                setIsMarkdownActivated(newIsMarkdownEnabled);
-                                if (!newIsMarkdownEnabled) {
-                                    // remove markdown extension
-                                    dispatchUpdateItem(IItemProperty._text, undefined);
-                                } else {
-                                    // set existing text as markdown value
-                                    dispatchUpdateMarkdownLabel(props.item.text || '');
-                                }
-                            }} 
-                        /> 
-                    </FormField>
                     {canTypeBeRequired(props.item) && (
                         <FormField>
                             <SwitchBtn
@@ -237,16 +196,12 @@ const Question = (props: QuestionProps): JSX.Element => {
                     )}
                 </div>
                 <FormField label={t('Text')}>
-                    {isMarkdownActivated ? (
-                        <MarkdownEditor data={getLabelText()} onBlur={dispatchUpdateMarkdownLabel} />
-                    ) : (
-                        <textarea
-                            defaultValue={getLabelText()}
-                            onBlur={(e) => {
-                                dispatchUpdateItem(IItemProperty.text, e.target.value);
-                            }}
-                        />
-                    )}
+                    <textarea
+                        defaultValue={getLabelText()}
+                        onBlur={(e) => {
+                            dispatchUpdateItem(IItemProperty.text, e.target.value);
+                        }}
+                    />
                 </FormField>
                 <br />
                 {isNumber && !isDecimalOrQuantity &&
