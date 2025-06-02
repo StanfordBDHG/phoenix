@@ -1,0 +1,46 @@
+.form-field__tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+.form-field__help-icon {
+    margin-left: 2px;
+    margin-top: 2px;
+    width: 15px;
+    height: 15px;
+    cursor: help;
+}
+
+.form-field__tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 5px;
+    padding: 8px 12px;
+    background-color: #333;
+    color: white;
+    font-size: 12px;
+    border-radius: 4px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    min-width: 200px;
+    max-width: 500px;
+    white-space: normal;
+}
+
+.form-field__tooltip-arrow {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #333;
+}
+
+.form-field__sublabel {
+    text-align: left;
+}
