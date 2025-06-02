@@ -23,14 +23,23 @@ const FormField = ({ label, sublabel, tooltip, isOptional, children }: Props): J
                     {isOptional && <span className="form-field__optional">{` (${t('Optional')})`}</span>}
                     {tooltip && (
                         <span className="form-field__tooltip-container">
-                            <img 
-                                src={HelpIcon}
-                                alt="Help"
-                                className="form-field__help-icon"
+                            <button 
+                                type="button"
+                                className="form-field__help-button"
                                 onMouseEnter={() => setShowTooltip(true)}
                                 onMouseLeave={() => setShowTooltip(false)}
                                 onClick={() => setShowTooltip(!showTooltip)}
+                                aria-label="Show help information"
+                                aria-expanded={showTooltip}
+                                aria-describedby={showTooltip ? "tooltip-content" : undefined}
+                            >
+                                <img 
+                                    src={HelpIcon}
+                                    alt=""
+                                    className="form-field__help-icon"
+                                    aria-hidden="true"
                                 />
+                            </button>
                             {showTooltip && (
                                 <div className="form-field__tooltip">
                                     {tooltip}
