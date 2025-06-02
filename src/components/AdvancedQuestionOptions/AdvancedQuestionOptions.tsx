@@ -376,7 +376,7 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
                             {`${t('LinkId is already in use')} `}
                             <button onClick={resetLinkId}>
                                 <img src={UndoIcon} height={16} />
-                                {` ${t('Sett tilbake til opprinnelig verdi')}`}
+                                {` ${t('Reset to original value')}`}
                             </button>
                         </div>
                     )}
@@ -397,7 +397,9 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
                 </div>
             )}
             <div className="horizontal full">
-                <FormField label={t('Definition')}>
+                <FormField 
+                    label={t('Definition')} 
+                    tooltip={t('This element is a URI that refers to an ElementDefinition or to an ObservationDefinition that provides information about this item.')}>
                     <UriField
                         value={item.definition}
                         onBlur={(e) => {
