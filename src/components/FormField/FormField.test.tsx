@@ -56,35 +56,37 @@ describe('FormField', () => {
 
     it('renders tooltip icon when tooltip is provided', () => {
         renderWithI18n(<FormField label="Test Label" tooltip="Test tooltip" />);
-        const helpIcon = screen.getByAltText('Help');
+        const helpButton = screen.getByRole('button', { name: 'Show help information' });
+        expect(helpButton).toBeInTheDocument();
+        const helpIcon = helpButton.querySelector('.form-field__help-icon');
         expect(helpIcon).toBeInTheDocument();
         expect(helpIcon).toHaveClass('form-field__help-icon');
     });
 
     it('does not render tooltip icon when tooltip is not provided', () => {
         renderWithI18n(<FormField label="Test Label" />);
-        expect(screen.queryByAltText('Help')).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Show help information' })).not.toBeInTheDocument();
     });
 
     it('shows tooltip on mouse enter and hides on mouse leave', async () => {
         const user = userEvent.setup();
         renderWithI18n(<FormField label="Test Label" tooltip="Test tooltip content" />);
         
-        const helpIcon = screen.getByAltText('Help');
+        const helpButton = screen.getByRole('button', { name: 'Show help information' });
         
         // Tooltip should not be visible initially
         expect(screen.queryByText('Test tooltip content')).not.toBeInTheDocument();
         
         // Show tooltip on mouse enter
         await act(async () => {
-            await user.hover(helpIcon);
+            await user.hover(helpButton);
         });
         expect(screen.getByText('Test tooltip content')).toBeInTheDocument();
         expect(screen.getByText('Test tooltip content')).toHaveClass('form-field__tooltip');
         
         // Hide tooltip on mouse leave
         await act(async () => {
-            await user.unhover(helpIcon);
+            await user.unhover(helpButton);
         });
         expect(screen.queryByText('Test tooltip content')).not.toBeInTheDocument();
     });
@@ -93,20 +95,20 @@ describe('FormField', () => {
         const user = userEvent.setup();
         renderWithI18n(<FormField label="Test Label" tooltip="Test tooltip content" />);
         
-        const helpIcon = screen.getByAltText('Help');
+        const helpButton = screen.getByRole('button', { name: 'Show help information' });
         
         // Tooltip should not be visible initially
         expect(screen.queryByText('Test tooltip content')).not.toBeInTheDocument();
         
         // Show tooltip on click
         await act(async () => {
-            await user.click(helpIcon);
+            await user.click(helpButton);
         });
         expect(screen.getByText('Test tooltip content')).toBeInTheDocument();
         
         // Hide tooltip on second click
         await act(async () => {
-            await user.click(helpIcon);
+            await user.click(helpButton);
         });
         expect(screen.queryByText('Test tooltip content')).not.toBeInTheDocument();
     });
@@ -115,9 +117,9 @@ describe('FormField', () => {
         const user = userEvent.setup();
         renderWithI18n(<FormField label="Test Label" tooltip="Test tooltip content" />);
         
-        const helpIcon = screen.getByAltText('Help');
+        const helpButton = screen.getByRole('button', { name: 'Show help information' });
         await act(async () => {
-            await user.click(helpIcon);
+            await user.click(helpButton);
         });
         
         const tooltipArrow = document.querySelector('.form-field__tooltip-arrow');
@@ -140,12 +142,12 @@ describe('FormField', () => {
         expect(screen.getByText('Test Label')).toBeInTheDocument();
         expect(screen.getByText('Test sublabel')).toBeInTheDocument();
         expect(screen.getByText(/optional/i)).toBeInTheDocument();
-        expect(screen.getByAltText('Help')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Show help information' })).toBeInTheDocument();
         expect(screen.getByPlaceholderText('Test input')).toBeInTheDocument();
         
         // Show tooltip
         await act(async () => {
-            await user.click(screen.getByAltText('Help'));
+            await user.click(screen.getByRole('button', { name: 'Show help information' }));
         });
         expect(screen.getByText('Test tooltip')).toBeInTheDocument();
     });
