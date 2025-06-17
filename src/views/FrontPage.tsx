@@ -200,13 +200,14 @@ const FrontPage = (): JSX.Element => {
                             variant="secondary"
                         />
                     </div>
+                    <footer className="footer">
+                        <p className="footer-text">
+                            An <a href="https://github.com/StanfordBDHG/Phoenix">open-source project</a> of the <a href="https://bdh.stanford.edu">Biodesign Digital Health</a> team at Stanford University.
+                        </p>
+                    </footer>
                 </>
             )}
-            <footer className="footer">
-                <p className="footer-text">
-                    An <a href="https://github.com/StanfordBDHG/Phoenix">open-source project</a> of the <a href="https://bdh.stanford.edu">Biodesign Digital Health</a> team at Stanford University.
-                </p>
-            </footer>
+
         </>
     );
 };
