@@ -6,7 +6,7 @@
     "dependencies": {
         "@ckeditor/ckeditor5-react": "^3.0.0",
         "@helsenorge/ckeditor5-build-markdown": "^24.0.0",
-        "@nosferatu500/react-sortable-tree": "^4.4.0",
+        "@stanfordbdhg/react-sortable-tree": "^5.0.1",
         "@types/remove-markdown": "^0.3.4",
         "axios": "^1.8.2",
         "crypto-js": "^4.2.0",

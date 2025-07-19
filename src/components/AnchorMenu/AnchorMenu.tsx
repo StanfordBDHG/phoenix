@@ -13,8 +13,7 @@ import {
     updateMarkedLinkIdAction,
 } from '../../store/treeStore/treeActions';
 import { ValidationErrors } from '../../helpers/orphanValidation';
-import { SortableTreeWithoutDndContext as SortableTree } from '@nosferatu500/react-sortable-tree';
-import '@nosferatu500/react-sortable-tree/style.css';
+import { SortableTreeWithoutDndContext as SortableTree } from '@stanfordbdhg/react-sortable-tree';
 import { isIgnorableItem } from '../../helpers/itemControl';
 import { generateItemButtons } from './ItemButtons/ItemButtons';
 import { canTypeHaveChildren, getInitialItemConfig } from '../../helpers/questionTypeFeatures';

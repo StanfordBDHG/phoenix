@@ -1,1 +1,1 @@
-declare module '@nosferatu500/react-sortable-tree';
+declare module '@stanfordbdhg/react-sortable-tree';
