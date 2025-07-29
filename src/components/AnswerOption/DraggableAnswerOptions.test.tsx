@@ -4,7 +4,14 @@ import DraggableAnswerOptions from './DraggableAnswerOptions';
 import { QuestionnaireItem, QuestionnaireItemAnswerOption } from '../../types/fhir';
 import { IItemProperty } from '../../types/IQuestionnareItemType';
 
-// Mock drag and drop context
+// Mock translation hook
+jest.mock('react-i18next', () => ({
+    useTranslation: () => ({
+        t: (key: string) => key,
+    }),
+}));
+
+// Mock drag and drop context (minimal mocking for functionality)
 jest.mock('react-beautiful-dnd', () => ({
     DragDropContext: ({ children }: any) => children,
     Droppable: ({ children }: any) => children({
@@ -16,25 +23,6 @@ jest.mock('react-beautiful-dnd', () => ({
         draggableProps: {},
         dragHandleProps: {},
     }, { isDragging: false }),
-}));
-
-// Mock AnswerOption component
-jest.mock('./AnswerOption', () => ({
-    __esModule: true,
-    default: ({ changeDisplay, changeCode, answerOption }: any) => (
-        <div data-testid={`answer-option-${answerOption.valueCoding?.id}`}>
-            <input
-                data-testid={`display-input-${answerOption.valueCoding?.id}`}
-                defaultValue={answerOption.valueCoding?.display}
-                onBlur={changeDisplay}
-            />
-            <input
-                data-testid={`code-input-${answerOption.valueCoding?.id}`}
-                defaultValue={answerOption.valueCoding?.code}
-                onBlur={changeCode}
-            />
-        </div>
-    ),
 }));
 
 describe('DraggableAnswerOptions', () => {
@@ -113,7 +101,7 @@ describe('DraggableAnswerOptions', () => {
         );
 
         // Sync should be enabled by default
-        const displayInput = screen.getByTestId('display-input-1');
+        const displayInput = screen.getByDisplayValue('Option 1');
         await user.clear(displayInput);
         await user.type(displayInput, 'New Display Text');
         await user.tab(); // Trigger blur event
@@ -153,7 +141,7 @@ describe('DraggableAnswerOptions', () => {
         mockDispatchUpdateItem.mockClear();
 
         // Change display text
-        const displayInput = screen.getByTestId('display-input-1');
+        const displayInput = screen.getByDisplayValue('Option 1');
         await user.clear(displayInput);
         await user.type(displayInput, 'New Display Text');
         await user.tab(); // Trigger blur event
@@ -186,12 +174,10 @@ describe('DraggableAnswerOptions', () => {
             />
         );
 
-        expect(screen.getByTestId('answer-option-1')).toBeInTheDocument();
-        expect(screen.getByTestId('answer-option-2')).toBeInTheDocument();
-        expect(screen.getByTestId('display-input-1')).toBeInTheDocument();
-        expect(screen.getByTestId('code-input-1')).toBeInTheDocument();
-        expect(screen.getByTestId('display-input-2')).toBeInTheDocument();
-        expect(screen.getByTestId('code-input-2')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('Option 1')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('Option 2')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('opt1')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('opt2')).toBeInTheDocument();
     });
 
     it('handles empty answer options gracefully', () => {
