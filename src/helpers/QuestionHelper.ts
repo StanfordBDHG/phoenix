@@ -75,12 +75,12 @@ export const quantityUnitTypeGroups = [
             },
             {
                 system: 'http://unitsofmeasure.org',
-                code: 'oz',
+                code: '[oz_av]',
                 display: 'ounce',
             },
             {
                 system: 'http://unitsofmeasure.org',
-                code: 'lb',
+                code: '[lb_av]',
                 display: 'pound',
             },
         ],
@@ -235,12 +235,12 @@ export const quantityUnitTypeGroups = [
         options: [
             {
                 system: 'http://unitsofmeasure.org',
-                code: 'cal',
+                code: 'cal_th',
                 display: 'calorie',
             },
             {
                 system: 'http://unitsofmeasure.org',
-                code: 'kcal',
+                code: 'kcal_th',
                 display: 'kilocalorie',
             },
         ],
@@ -275,7 +275,7 @@ export const quantityUnitTypeGroups = [
             },
             {
                 system: 'http://unitsofmeasure.org',
-                code: 'IU/L',
+                code: '[iU]/L',
                 display: 'international unit per liter',
             },
             {
