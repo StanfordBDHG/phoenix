@@ -31,15 +31,17 @@ export const updateAnswerOption = (
     displayValue: string,
 ): QuestionnaireItemAnswerOption[] => {
     return values.map((x) => {
-        return x.valueCoding?.id === targetId
-            ? ({
-                  valueCoding: {
-                      ...x.valueCoding,
-                      display: displayValue,
-                      code: removeSpace(displayValue),
-                  },
-              } as QuestionnaireItemAnswerOption)
-            : x;
+        if (x.valueCoding?.id === targetId) {
+            const existingCode = x.valueCoding?.code;
+            return {
+                valueCoding: {
+                    ...x.valueCoding,
+                    display: displayValue,
+                    code: existingCode && existingCode.trim() !== '' ? existingCode : removeSpace(displayValue),
+                },
+            } as QuestionnaireItemAnswerOption;
+        }
+        return x;
     });
 };
 
