@@ -7,205 +7,257 @@ export const ATTACHMENT_DEFAULT_MAX_SIZE = 5.0;
 
 export const QUANTITY_UNIT_TYPE_NOT_SELECTED = 'QUANTITY_UNIT_TYPE_NOT_SELECTED';
 export const QUANTITY_UNIT_TYPE_CUSTOM = 'QUANTITY_UNIT_TYPE_CUSTOM';
-export const quantityUnitTypes = [
+
+
+export const quantityUnitTypeGroups = [
     {
-        system: '',
-        code: QUANTITY_UNIT_TYPE_NOT_SELECTED,
-        display: 'No unit',
-    },
-    // Length/Height measurements
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'cm',
-        display: 'centimeter',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'm',
-        display: 'meter',
+        label: 'General',
+        options: [
+            {
+                system: '',
+                code: QUANTITY_UNIT_TYPE_NOT_SELECTED,
+                display: 'No unit',
+            },
+        ],
     },
     {
-        system: 'http://unitsofmeasure.org',
-        code: 'mm',
-        display: 'millimeter',
+        label: 'Length/Distance',
+        options: [
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'mm',
+                display: 'millimeter',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'cm',
+                display: 'centimeter',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'm',
+                display: 'meter',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'in',
+                display: 'inch',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'ft',
+                display: 'foot',
+            },
+        ],
     },
     {
-        system: 'http://unitsofmeasure.org',
-        code: 'in',
-        display: 'inch',
+        label: 'Weight/Mass',
+        options: [
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'ug',
+                display: 'microgram',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'mg',
+                display: 'milligram',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'g',
+                display: 'gram',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'kg',
+                display: 'kilogram',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'oz',
+                display: 'ounce',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'lb',
+                display: 'pound',
+            },
+        ],
     },
     {
-        system: 'http://unitsofmeasure.org',
-        code: 'ft',
-        display: 'foot',
-    },
-    // Weight measurements
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'kg',
-        display: 'kilogram',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'g',
-        display: 'gram',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'mg',
-        display: 'milligram',
+        label: 'Temperature',
+        options: [
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'Cel',
+                display: 'degree Celsius',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: '[degF]',
+                display: 'degree Fahrenheit',
+            },
+        ],
     },
     {
-        system: 'http://unitsofmeasure.org',
-        code: 'lb',
-        display: 'pound',
+        label: 'Pressure',
+        options: [
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'mm[Hg]',
+                display: 'millimeters of mercury',
+            },
+        ],
     },
     {
-        system: 'http://unitsofmeasure.org',
-        code: 'oz',
-        display: 'ounce',
-    },
-    // Temperature
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'Cel',
-        display: 'degree Celsius',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: '[degF]',
-        display: 'degree Fahrenheit',
-    },
-    // Blood pressure
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'mm[Hg]',
-        display: 'millimeters of mercury',
-    },
-    // Heart rate and frequency
-    {
-        system: 'http://unitsofmeasure.org',
-        code: '/min',
-        display: 'per minute',
+        label: 'Frequency/Rate',
+        options: [
+            {
+                system: 'http://unitsofmeasure.org',
+                code: '/min',
+                display: 'per minute',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: '{beats}/min',
+                display: 'beats per minute',
+            },
+        ],
     },
     {
-        system: 'http://unitsofmeasure.org',
-        code: '{beats}/min',
-        display: 'beats per minute',
-    },
-    // Volume measurements
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'mL',
-        display: 'milliliter',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'L',
-        display: 'liter',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: '[fl_oz_us]',
-        display: 'fluid ounce (US)',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: '[cup_us]',
-        display: 'cup (US)',
-    },
-    // Time measurements
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 's',
-        display: 'second',
+        label: 'Volume',
+        options: [
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'mL',
+                display: 'milliliter',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'L',
+                display: 'liter',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: '[fl_oz_us]',
+                display: 'fluid ounce (US)',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: '[cup_us]',
+                display: 'cup (US)',
+            },
+        ],
     },
     {
-        system: 'http://unitsofmeasure.org',
-        code: 'min',
-        display: 'minute',
+        label: 'Time',
+        options: [
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 's',
+                display: 'second',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'min',
+                display: 'minute',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'h',
+                display: 'hour',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'd',
+                display: 'day',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'wk',
+                display: 'week',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'mo',
+                display: 'month',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'a',
+                display: 'year',
+            },
+        ],
     },
     {
-        system: 'http://unitsofmeasure.org',
-        code: 'h',
-        display: 'hour',
+        label: 'Scores & Ratios',
+        options: [
+            {
+                system: 'http://unitsofmeasure.org',
+                code: '{score}',
+                display: 'score',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: '1',
+                display: 'unity (dimensionless)',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: '%',
+                display: 'percent',
+            },
+        ],
     },
     {
-        system: 'http://unitsofmeasure.org',
-        code: 'd',
-        display: 'day',
+        label: 'Dosage & Medical',
+        options: [
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'mg/kg',
+                display: 'milligram per kilogram',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'mg/d',
+                display: 'milligram per day',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'kg/m2',
+                display: 'kilogram per square meter',
+            },
+        ],
     },
     {
-        system: 'http://unitsofmeasure.org',
-        code: 'wk',
-        display: 'week',
+        label: 'Energy',
+        options: [
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'cal',
+                display: 'calorie',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'kcal',
+                display: 'kilocalorie',
+            },
+        ],
     },
     {
-        system: 'http://unitsofmeasure.org',
-        code: 'mo',
-        display: 'month',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'a',
-        display: 'year',
-    },
-    // Pain scales and scores
-    {
-        system: 'http://unitsofmeasure.org',
-        code: '{score}',
-        display: 'score',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: '1',
-        display: 'unity (dimensionless)',
-    },
-    // Percentage and ratios
-    {
-        system: 'http://unitsofmeasure.org',
-        code: '%',
-        display: 'percent',
-    },
-    // Medication dosage
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'ug',
-        display: 'microgram',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'mg/kg',
-        display: 'milligram per kilogram',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'mg/d',
-        display: 'milligram per day',
-    },
-    // BMI
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'kg/m2',
-        display: 'kilogram per square meter',
-    },
-    // Energy/Calories
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'kcal',
-        display: 'kilocalorie',
-    },
-    {
-        system: 'http://unitsofmeasure.org',
-        code: 'cal',
-        display: 'calorie',
-    },
-    {
-        system: '',
-        code: QUANTITY_UNIT_TYPE_CUSTOM,
-        display: 'Custom',
+        label: 'Custom',
+        options: [
+            {
+                system: '',
+                code: QUANTITY_UNIT_TYPE_CUSTOM,
+                display: 'Custom',
+            },
+        ],
     },
 ];
+
+export const quantityUnitTypes = quantityUnitTypeGroups.flatMap(group => group.options);
 
 export const checkboxExtension = createItemControlExtension(ItemControlType.checkbox);
 export const dropdownExtension = createItemControlExtension(ItemControlType.dropdown);

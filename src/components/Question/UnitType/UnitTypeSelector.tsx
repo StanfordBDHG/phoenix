@@ -6,6 +6,7 @@ import {
     QUANTITY_UNIT_TYPE_CUSTOM,
     QUANTITY_UNIT_TYPE_NOT_SELECTED,
     quantityUnitTypes,
+    quantityUnitTypeGroups,
 } from '../../../helpers/QuestionHelper';
 import { removeItemExtension, setItemExtension } from '../../../helpers/extensionHelper';
 import { IExtentionType } from '../../../types/IQuestionnareItemType';
@@ -102,7 +103,7 @@ const UnitTypeSelector = (props: UnitTypeSelectorProps): JSX.Element => {
     return (
         <>
             <FormField label={t('Select unit')}>
-                <Select options={quantityUnitTypes} onChange={updateQuantityUnitType} value={selectedUnitType} />
+                <Select optionGroups={quantityUnitTypeGroups} onChange={updateQuantityUnitType} value={selectedUnitType} />
             </FormField>
             {isCustom && (
                 <>
