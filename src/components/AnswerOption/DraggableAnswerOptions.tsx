@@ -16,6 +16,7 @@ import {
 import { QuestionnaireItem, QuestionnaireItemAnswerOption } from '../../types/fhir';
 import { IItemProperty } from '../../types/IQuestionnareItemType';
 import AnswerOption from './AnswerOption';
+import SwitchBtn from '../SwitchBtn/SwitchBtn';
 
 interface DraggableAnswerOptionsProps {
     item: QuestionnaireItem;
@@ -57,16 +58,12 @@ const DraggableAnswerOptions = ({ item, dispatchUpdateItem }: DraggableAnswerOpt
 
     return (
         <div>
-            <div style={{ marginBottom: '10px' }}>
-                <label>
-                    <input
-                        type="checkbox"
-                        checked={syncDisplayWithCode}
-                        onChange={(e) => setSyncDisplayWithCode(e.target.checked)}
-                        style={{ marginRight: '8px' }}
-                    />
-                    Auto-generate values from title
-                </label>
+            <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'center' }}>
+                <SwitchBtn
+                    value={syncDisplayWithCode}
+                    onChange={() => setSyncDisplayWithCode(!syncDisplayWithCode)}
+                    label="Auto-generate values from title"
+                />
             </div>
             <DragDropContext onDragEnd={handleChange}>
                 <Droppable droppableId={`droppable-${item.linkId}-answer-options`} type="stuff">
