@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     DragDropContext,
     Draggable,
@@ -26,6 +26,7 @@ interface DraggableAnswerOptionsProps {
 }
 
 const DraggableAnswerOptions = ({ item, dispatchUpdateItem }: DraggableAnswerOptionsProps): JSX.Element => {
+    const [syncDisplayWithCode, setSyncDisplayWithCode] = useState(true);
     const handleChange = (result: DropResult) => {
         if (!result.source || !result.destination || !result.draggableId) {
             return;
@@ -55,8 +56,20 @@ const DraggableAnswerOptions = ({ item, dispatchUpdateItem }: DraggableAnswerOpt
     });
 
     return (
-        <DragDropContext onDragEnd={handleChange}>
-            <Droppable droppableId={`droppable-${item.linkId}-answer-options`} type="stuff">
+        <div>
+            <div style={{ marginBottom: '10px' }}>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={syncDisplayWithCode}
+                        onChange={(e) => setSyncDisplayWithCode(e.target.checked)}
+                        style={{ marginRight: '8px' }}
+                    />
+                    Auto-generate values from title
+                </label>
+            </div>
+            <DragDropContext onDragEnd={handleChange}>
+                <Droppable droppableId={`droppable-${item.linkId}-answer-options`} type="stuff">
                 {(provided, snapshot) => (
                     <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
                         {item.answerOption?.map((answerOption, index) => {
@@ -81,6 +94,7 @@ const DraggableAnswerOptions = ({ item, dispatchUpdateItem }: DraggableAnswerOpt
                                                         item.answerOption || [],
                                                         answerOption.valueCoding?.id || '',
                                                         event.target.value,
+                                                        syncDisplayWithCode,
                                                     );
                                                     dispatchUpdateItem(IItemProperty.answerOption, newArray);
                                                 }}
@@ -115,6 +129,7 @@ const DraggableAnswerOptions = ({ item, dispatchUpdateItem }: DraggableAnswerOpt
                 )}
             </Droppable>
         </DragDropContext>
+        </div>
     );
 };
 
