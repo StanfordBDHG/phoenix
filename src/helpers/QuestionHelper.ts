@@ -251,7 +251,7 @@ export const quantityUnitTypeGroups = [
             {
                 system: 'http://unitsofmeasure.org',
                 code: 'mg/dL',
-                display: 'milligram per deciliter (US)',
+                display: 'milligram per deciliter',
             },
             {
                 system: 'http://unitsofmeasure.org',
