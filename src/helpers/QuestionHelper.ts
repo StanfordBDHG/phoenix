@@ -246,6 +246,41 @@ export const quantityUnitTypeGroups = [
         ],
     },
     {
+        label: 'Laboratory Values',
+        options: [
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'mg/dL',
+                display: 'milligram per deciliter (US)',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'mmol/L',
+                display: 'millimole per liter',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'g/dL',
+                display: 'gram per deciliter',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'g/L',
+                display: 'gram per liter',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'U/L',
+                display: 'unit per liter',
+            },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'IU/L',
+                display: 'international unit per liter',
+            },
+        ],
+    },
+    {
         label: 'Custom',
         options: [
             {
