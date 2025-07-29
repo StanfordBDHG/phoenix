@@ -278,6 +278,11 @@ export const quantityUnitTypeGroups = [
                 code: 'IU/L',
                 display: 'international unit per liter',
             },
+            {
+                system: 'http://unitsofmeasure.org',
+                code: 'meq/L',
+                display: 'milliequivalent per liter',
+            },
         ],
     },
     {
