@@ -228,7 +228,7 @@ export const canTypeHavePlaceholderText = (item: QuestionnaireItem): boolean => 
 
 export const canTypeHaveChildren = (item: QuestionnaireItem): boolean => {
     return (
-        item.type !== IQuestionnaireItemType.display &&
+        item.type === IQuestionnaireItemType.group &&
         !isItemControlInline(item) &&
         !isItemControlHighlight(item) &&
         !isItemControlReceiverComponent(item)
