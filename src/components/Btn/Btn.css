@@ -52,6 +52,12 @@
     color: #FFFFFF;
 }
 
+.regular-btn.error {
+    background: #ff4d4f;
+    color: #FFFFFF;
+    cursor: not-allowed;
+}
+
 .btn-group button {
     margin-right: 10px;
 }
