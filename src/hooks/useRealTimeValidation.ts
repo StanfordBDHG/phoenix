@@ -17,15 +17,34 @@ interface UseRealTimeValidationProps {
 // Cache for validation results to avoid unnecessary re-runs
 const validationCache = new Map<string, { validationErrors: ValidationErrors[], translationErrors: ValidationErrors[] }>();
 
-function generateCacheKey(qOrder: OrderItem[], qItems: Items, qContained: ValueSet[], qAdditionalLanguages?: Languages): string {
-    // Create a hash-like key based on the current state
-    // This is a simple implementation - in production you might want to use a proper hash function
-    const orderKey = JSON.stringify(qOrder);
-    const itemsKey = JSON.stringify(qItems);
-    const containedKey = JSON.stringify(qContained);
-    const languagesKey = qAdditionalLanguages ? JSON.stringify(qAdditionalLanguages) : 'none';
+// Simple but effective hash function for objects
+function hashString(str: string): number {
+    let hash = 0;
+    if (str.length === 0) return hash;
     
-    return `${orderKey}|${itemsKey}|${containedKey}|${languagesKey}`;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32-bit integer
+    }
+    return hash;
+}
+
+function hashObject(obj: any): string {
+    // Sort keys to ensure consistent ordering
+    const sortedString = JSON.stringify(obj, Object.keys(obj).sort());
+    const hash = hashString(sortedString);
+    return hash.toString(36); // Base36 for shorter strings
+}
+
+function generateCacheKey(qOrder: OrderItem[], qItems: Items, qContained: ValueSet[], qAdditionalLanguages?: Languages): string {
+    // Generate compact hash keys for each part of the state
+    const orderHash = hashObject(qOrder);
+    const itemsHash = hashObject(qItems);
+    const containedHash = hashObject(qContained);
+    const languagesHash = qAdditionalLanguages ? hashObject(qAdditionalLanguages) : '0';
+    
+    return `${orderHash}.${itemsHash}.${containedHash}.${languagesHash}`;
 }
 
 export const useRealTimeValidation = ({
