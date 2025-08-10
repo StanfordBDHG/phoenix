@@ -13,15 +13,13 @@ import { Extension } from '../types/fhir';
 export const INITIAL_LANGUAGE: Language = { code: 'en-US', display: 'English', localDisplay: 'English' };
 
 export const supportedLanguages: Language[] = [
-    INITIAL_LANGUAGE,
-    { code: 'nn-NO', display: 'Nynorsk', localDisplay: 'Norsk nynorsk' },
-    { code: 'se-NO', display: 'Samisk', localDisplay: 'Davvisámegillii' },
-    { code: 'en-GB', display: 'Engelsk', localDisplay: 'English' },
-    { code: 'pl-PL', display: 'Polsk', localDisplay: 'Polskie' },
-    { code: 'ro-RO', display: 'Rumensk', localDisplay: 'Română' },
-    { code: 'lt-LT', display: 'Litauisk', localDisplay: 'Lietuvis' },
-    { code: 'ru-RU', display: 'Russisk', localDisplay: 'русский' },
-    { code: 'fr-FR', display: 'Fransk', localDisplay: 'Français' },
+    INITIAL_LANGUAGE, // en-US
+    { code: 'en-GB', display: 'English (UK)', localDisplay: 'English (UK)' },
+    { code: 'es-ES', display: 'Spanish (Spain)', localDisplay: 'Español (España)' },
+    { code: 'es-MX', display: 'Spanish (Mexico)', localDisplay: 'Español (México)' },
+    { code: 'es-US', display: 'Spanish (US)', localDisplay: 'Español (Estados Unidos)' },
+    { code: 'de-DE', display: 'German', localDisplay: 'Deutsch' },
+    { code: 'sv-SE', display: 'Swedish', localDisplay: 'Svenska' },
 ];
 
 export const getLanguageFromCode = (languageCode: string): Language | undefined => {
