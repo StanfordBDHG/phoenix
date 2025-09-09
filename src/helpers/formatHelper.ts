@@ -1,3 +1,3 @@
 export const removeSpace = (value: string): string => {
-    return value.replace(/\s/g, '-').toLocaleLowerCase();
+    return value.replace(/[^\w\s-]/g, '').replace(/\s/g, '-').toLowerCase();
 };
