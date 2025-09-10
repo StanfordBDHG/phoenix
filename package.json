@@ -86,7 +86,7 @@
         "prettier": "^2.2.1",
         "ts-jest": "^29.3.4",
         "typescript": "^5.0.0",
-        "vite": "^6.3.4"
+        "vite": "^6.3.6"
     },
     "type": "module"
 }
