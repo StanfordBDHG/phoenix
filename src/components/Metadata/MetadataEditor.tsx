@@ -144,7 +144,7 @@ const MetadataEditor = (): JSX.Element => {
             <FormField label={t('Language')}>
                 <Select
                     value={isCustomLanguage ? 'custom' : qMetadata.language || ''}
-                    options={supportedLanguages}
+                    options={[...supportedLanguages, { code: 'custom', display: 'Custom', localDisplay: 'Custom' }]}
                     onChange={(e) => {
                         if (e.target.value === 'custom') {
                             // Show custom fields
