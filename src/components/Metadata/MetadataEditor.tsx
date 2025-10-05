@@ -15,6 +15,8 @@ import { TreeContext } from '../../store/treeStore/treeStore';
 import { updateQuestionnaireMetadataAction } from '../../store/treeStore/treeActions';
 import RadioBtn from '../RadioBtn/RadioBtn';
 import InputField from '../InputField/inputField';
+import Select from '../Select/Select';
+import { supportedLanguages } from '../../helpers/LanguageHelper';
 
 const MetadataEditor = (): JSX.Element => {
     const { t } = useTranslation();
@@ -129,6 +131,30 @@ const MetadataEditor = (): JSX.Element => {
                     checked={qMetadata.status || ''}
                     options={questionnaireStatusOptions}
                     name={'status-radio'}
+                />
+            </FormField>
+
+            <FormField label={t('Language')}>
+                <Select
+                    value={qMetadata.language || ''}
+                    options={supportedLanguages}
+                    onChange={(e) => {
+                        const display = supportedLanguages.find((x) => x.code === e.target.value)?.localDisplay;
+                        const newMeta = {
+                            ...qMetadata.meta,
+                            tag: qMetadata.meta?.tag?.map((x) =>
+                                x.system === 'urn:ietf:bcp:47'
+                                    ? {
+                                          system: 'urn:ietf:bcp:47',
+                                          code: e.target.value,
+                                          display: display,
+                                      }
+                                    : x,
+                            ),
+                        };
+                        updateMeta(IQuestionnaireMetadataType.language, e.target.value);
+                        updateMeta(IQuestionnaireMetadataType.meta, newMeta);
+                    }}
                 />
             </FormField>
             <FormField label={t('Publisher')} tooltip={t('The name of the organization or individual responsible for the release and ongoing maintenance of the questionnaire.')} isOptional>
