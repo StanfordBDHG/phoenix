@@ -20,6 +20,7 @@ export const supportedLanguages: Language[] = [
     { code: 'es-US', display: 'Spanish (US)', localDisplay: 'Español (Estados Unidos)' },
     { code: 'de-DE', display: 'German', localDisplay: 'Deutsch' },
     { code: 'sv-SE', display: 'Swedish', localDisplay: 'Svenska' },
+    { code: 'custom', display: 'Custom', localDisplay: 'Custom' },
 ];
 
 export const getLanguageFromCode = (languageCode: string): Language | undefined => {
