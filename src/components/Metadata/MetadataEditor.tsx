@@ -15,6 +15,8 @@ import { TreeContext } from '../../store/treeStore/treeStore';
 import { updateQuestionnaireMetadataAction } from '../../store/treeStore/treeActions';
 import RadioBtn from '../RadioBtn/RadioBtn';
 import InputField from '../InputField/inputField';
+import Select from '../Select/Select';
+import { supportedLanguages } from '../../helpers/LanguageHelper';
 
 const MetadataEditor = (): JSX.Element => {
     const { t } = useTranslation();
@@ -22,6 +24,13 @@ const MetadataEditor = (): JSX.Element => {
     const { qMetadata } = state;
     const [displayIdValidationError, setDisplayIdValidationError] = useState(false);
     const [displayNameValidationError, setDisplayNameValidationError] = useState(false);
+    const [customLanguageCode, setCustomLanguageCode] = useState('');
+    const [customLanguageDisplay, setCustomLanguageDisplay] = useState('');
+
+    const [showCustomFields, setShowCustomFields] = useState(false);
+
+    // Check if current language is custom (not in supported list, excluding "custom" itself)
+    const isCustomLanguage = (qMetadata.language && qMetadata.language !== 'custom' && !supportedLanguages.find(x => x.code === qMetadata.language)) || showCustomFields;
 
     const updateMeta = (
         propName: IQuestionnaireMetadataType,
@@ -131,6 +140,98 @@ const MetadataEditor = (): JSX.Element => {
                     name={'status-radio'}
                 />
             </FormField>
+
+            <FormField label={t('Language')}>
+                <Select
+                    value={isCustomLanguage ? 'custom' : qMetadata.language || ''}
+                    options={[...supportedLanguages, { code: 'custom', display: 'Custom', localDisplay: 'Custom' }]}
+                    onChange={(e) => {
+                        if (e.target.value === 'custom') {
+                            // Show custom fields
+                            setShowCustomFields(true);
+                            setCustomLanguageCode('');
+                            setCustomLanguageDisplay('');
+                            return;
+                        }
+                        // Hide custom fields when selecting a supported language
+                        setShowCustomFields(false);
+                        const display = supportedLanguages.find((x) => x.code === e.target.value)?.localDisplay;
+                        const newMeta = {
+                            ...qMetadata.meta,
+                            tag: qMetadata.meta?.tag?.map((x) =>
+                                x.system === 'urn:ietf:bcp:47'
+                                    ? {
+                                          system: 'urn:ietf:bcp:47',
+                                          code: e.target.value,
+                                          display: display,
+                                      }
+                                    : x,
+                            ),
+                        };
+                        updateMeta(IQuestionnaireMetadataType.language, e.target.value);
+                        updateMeta(IQuestionnaireMetadataType.meta, newMeta);
+                    }}
+                />
+            </FormField>
+
+            {isCustomLanguage && (
+                <>
+                    <FormField label={t('Language Code')}>
+                        <InputField
+                            placeholder={t('e.g., fr-FR')}
+                            value={customLanguageCode || (qMetadata.language && qMetadata.language !== 'custom' ? qMetadata.language : '') || ''}
+                            onChange={(e) => setCustomLanguageCode(e.target.value)}
+                            onBlur={(e) => {
+                                const code = e.target.value.trim();
+                                const display = customLanguageDisplay.trim() || code;
+                                if (code) {
+                                    const newMeta = {
+                                        ...qMetadata.meta,
+                                        tag: qMetadata.meta?.tag?.map((x) =>
+                                            x.system === 'urn:ietf:bcp:47'
+                                                ? {
+                                                      system: 'urn:ietf:bcp:47',
+                                                      code: code,
+                                                      display: display,
+                                                  }
+                                                : x,
+                                        ),
+                                    };
+                                    updateMeta(IQuestionnaireMetadataType.language, code);
+                                    updateMeta(IQuestionnaireMetadataType.meta, newMeta);
+                                }
+                            }}
+                        />
+                    </FormField>
+                    <FormField label={t('Language Display')}>
+                        <InputField
+                            placeholder={t('e.g., French')}
+                            value={customLanguageDisplay || (qMetadata.meta?.tag?.find(x => x.system === 'urn:ietf:bcp:47')?.display || '')}
+                            onChange={(e) => setCustomLanguageDisplay(e.target.value)}
+                            onBlur={(e) => {
+                                const display = e.target.value.trim();
+                                const code = customLanguageCode.trim();
+                                if (code && display) {
+                                    const newMeta = {
+                                        ...qMetadata.meta,
+                                        tag: qMetadata.meta?.tag?.map((x) =>
+                                            x.system === 'urn:ietf:bcp:47'
+                                                ? {
+                                                      system: 'urn:ietf:bcp:47',
+                                                      code: code,
+                                                      display: display,
+                                                  }
+                                                : x,
+                                        ),
+                                    };
+                                    updateMeta(IQuestionnaireMetadataType.language, code);
+                                    updateMeta(IQuestionnaireMetadataType.meta, newMeta);
+                                }
+                            }}
+                        />
+                    </FormField>
+                </>
+            )}
             <FormField label={t('Publisher')} tooltip={t('The name of the organization or individual responsible for the release and ongoing maintenance of the questionnaire.')} isOptional>
                 <InputField
                     defaultValue={qMetadata.publisher || ''}
