@@ -144,7 +144,7 @@ const MetadataEditor = (): JSX.Element => {
             <FormField label={t('Language')}>
                 <Select
                     value={isCustomLanguage ? 'custom' : qMetadata.language || ''}
-                    options={[...supportedLanguages, { code: 'custom', display: 'Custom', localDisplay: 'Custom' }]}
+                    options={[...supportedLanguages, { code: 'custom', display: 'Custom' }]}
                     onChange={(e) => {
                         if (e.target.value === 'custom') {
                             // Show custom fields
@@ -155,7 +155,7 @@ const MetadataEditor = (): JSX.Element => {
                         }
                         // Hide custom fields when selecting a supported language
                         setShowCustomFields(false);
-                        const display = supportedLanguages.find((x) => x.code === e.target.value)?.localDisplay;
+                        const display = supportedLanguages.find((x) => x.code === e.target.value)?.display;
                         const newMeta = {
                             ...qMetadata.meta,
                             tag: qMetadata.meta?.tag?.map((x) =>

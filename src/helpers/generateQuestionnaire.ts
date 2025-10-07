@@ -209,7 +209,7 @@ function getLanguageData(qMetadata: IQuestionnaireMetadata, languageCode: string
         language: languageCode,
         meta: {
             ...qMetadata.meta,
-            tag: [{ ...tag[0], code: languageCode, display: getLanguageFromCode(languageCode)?.localDisplay }],
+            tag: [{ ...tag[0], code: languageCode, display: getLanguageFromCode(languageCode)?.display }],
         },
     };
 }
