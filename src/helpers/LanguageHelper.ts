@@ -10,6 +10,8 @@ import { isValidId } from './MetadataHelper';
 import { IExtentionType } from '../types/IQuestionnareItemType';
 import { Extension, Languages as SupportedLanguages } from '../types/fhir';
 
+export const INITIAL_LANGUAGE: Language = { code: 'en-US', display: 'English' };
+
 export const supportedLanguages: Language[] = Object.values(SupportedLanguages).reduce((acc, lang) => {
     if (lang.code !== undefined && lang.display !== undefined) {
         return [...acc, {
