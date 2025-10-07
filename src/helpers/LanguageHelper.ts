@@ -21,7 +21,13 @@ export const supportedLanguages: Language[] = Object.values(SupportedLanguages).
     } else {
         return acc;
     }
-}, [] as Language[])
+}, [{
+    code: 'es-US',
+    display: 'Spanish (United States)'
+}, {
+    code: 'es-MX',
+    display: 'Spanish (Mexico)'
+}] as Language[])
 
 export const getLanguageFromCode = (languageCode: string): Language | undefined => {
     return supportedLanguages.find((x) => x.code.toLowerCase() === languageCode.toLowerCase());
