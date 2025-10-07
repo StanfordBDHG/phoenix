@@ -8,19 +8,26 @@ import {
 import { Languages, TreeState } from '../store/treeStore/treeStore';
 import { isValidId } from './MetadataHelper';
 import { IExtentionType } from '../types/IQuestionnareItemType';
-import { Extension } from '../types/fhir';
+import { Extension, Languages as SupportedLanguages } from '../types/fhir';
 
-export const INITIAL_LANGUAGE: Language = { code: 'en-US', display: 'English', localDisplay: 'English' };
+export const INITIAL_LANGUAGE: Language = { code: 'en-US', display: 'English' };
 
-export const supportedLanguages: Language[] = [
-    INITIAL_LANGUAGE, // en-US
-    { code: 'en-GB', display: 'English (UK)', localDisplay: 'English (UK)' },
-    { code: 'es-ES', display: 'Spanish (Spain)', localDisplay: 'Español (España)' },
-    { code: 'es-MX', display: 'Spanish (Mexico)', localDisplay: 'Español (México)' },
-    { code: 'es-US', display: 'Spanish (US)', localDisplay: 'Español (Estados Unidos)' },
-    { code: 'de-DE', display: 'German', localDisplay: 'Deutsch' },
-    { code: 'sv-SE', display: 'Swedish', localDisplay: 'Svenska' },
-];
+export const supportedLanguages: Language[] = Object.values(SupportedLanguages).reduce((acc, lang) => {
+    if (lang.code !== undefined && lang.display !== undefined) {
+        return [...acc, {
+            code: lang.code!,
+            display: lang.display!
+        } as Language];
+    } else {
+        return acc;
+    }
+}, [{
+    code: 'es-US',
+    display: 'Spanish (United States)'
+}, {
+    code: 'es-MX',
+    display: 'Spanish (Mexico)'
+}] as Language[])
 
 export const getLanguageFromCode = (languageCode: string): Language | undefined => {
     return supportedLanguages.find((x) => x.code.toLowerCase() === languageCode.toLowerCase());

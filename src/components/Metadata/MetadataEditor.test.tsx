@@ -4,13 +4,13 @@ describe('Language Selector - Supported Languages', () => {
     it('includes English (US) as default', () => {
         const englishUS = supportedLanguages.find(lang => lang.code === 'en-US');
         expect(englishUS).toBeDefined();
-        expect(englishUS?.display).toBe('English');
+        expect(englishUS?.display).toBe('English (United States)');
     });
 
     it('includes English (UK)', () => {
         const englishUK = supportedLanguages.find(lang => lang.code === 'en-GB');
         expect(englishUK).toBeDefined();
-        expect(englishUK?.display).toBe('English (UK)');
+        expect(englishUK?.display).toBe('English (Great Britain)');
     });
 
     it('includes Spanish variants', () => {
@@ -26,15 +26,13 @@ describe('Language Selector - Supported Languages', () => {
     it('includes German', () => {
         const german = supportedLanguages.find(lang => lang.code === 'de-DE');
         expect(german).toBeDefined();
-        expect(german?.display).toBe('German');
-        expect(german?.localDisplay).toBe('Deutsch');
+        expect(german?.display).toBe('German (Germany)');
     });
 
     it('includes Swedish', () => {
         const swedish = supportedLanguages.find(lang => lang.code === 'sv-SE');
         expect(swedish).toBeDefined();
-        expect(swedish?.display).toBe('Swedish');
-        expect(swedish?.localDisplay).toBe('Svenska');
+        expect(swedish?.display).toBe('Swedish (Sweden)');
     });
 
     it('does not include custom as a supported language', () => {
@@ -46,17 +44,15 @@ describe('Language Selector - Supported Languages', () => {
         supportedLanguages.forEach(lang => {
             expect(lang).toHaveProperty('code');
             expect(lang).toHaveProperty('display');
-            expect(lang).toHaveProperty('localDisplay');
             expect(typeof lang.code).toBe('string');
             expect(typeof lang.display).toBe('string');
-            expect(typeof lang.localDisplay).toBe('string');
         });
     });
 });
 
 describe('Language Selector - Custom Language Detection', () => {
     it('detects when language is not in supported list', () => {
-        const customLanguage = 'fr-FR';
+        const customLanguage = 'uz-UZ';
         const found = getLanguageFromCode(customLanguage);
         expect(found).toBeUndefined();
     });
@@ -66,12 +62,20 @@ describe('Language Selector - Custom Language Detection', () => {
         const found = getLanguageFromCode(germanCode);
         expect(found).toBeDefined();
         expect(found?.code).toBe('de-DE');
+        expect(found?.display).toBe('German (Germany)');
+    });
+
+    it('finds supported language by short code', () => {
+        const germanCode = 'de';
+        const found = getLanguageFromCode(germanCode);
+        expect(found).toBeDefined();
+        expect(found?.code).toBe('de');
         expect(found?.display).toBe('German');
     });
 
     it('identifies custom language that should trigger custom fields', () => {
         const testCases = [
-            { code: 'fr-FR', shouldBeCustom: true, description: 'French' },
+            { code: 'uz-UZ', shouldBeCustom: true, description: 'Uzbek (Uzbekistan)' },
             { code: 'ja-JP', shouldBeCustom: true, description: 'Japanese' },
             { code: 'en-US', shouldBeCustom: false, description: 'English US (supported)' },
             { code: 'de-DE', shouldBeCustom: false, description: 'German (supported)' },
@@ -94,7 +98,7 @@ describe('Language Selector - Custom Language Detection', () => {
 describe('Language Selector - Custom Language Behavior', () => {
     it('custom option should be added to dropdown options at runtime', () => {
         // Simulate what happens in the UI
-        const dropdownOptions = [...supportedLanguages, { code: 'custom', display: 'Custom', localDisplay: 'Custom' }];
+        const dropdownOptions = [...supportedLanguages, { code: 'custom', display: 'Custom' }];
 
         const customOption = dropdownOptions.find(opt => opt.code === 'custom');
         expect(customOption).toBeDefined();
@@ -102,7 +106,7 @@ describe('Language Selector - Custom Language Behavior', () => {
     });
 
     it('dropdown value should be "custom" when language is not supported', () => {
-        const currentLanguage = 'fr-FR';
+        const currentLanguage = 'uz-UZ';
         const isCustomLanguage = currentLanguage && !supportedLanguages.find(x => x.code === currentLanguage);
         const dropdownValue = isCustomLanguage ? 'custom' : currentLanguage;
 
@@ -119,7 +123,7 @@ describe('Language Selector - Custom Language Behavior', () => {
 
     it('should show custom fields when language is not in supported list', () => {
         const testLanguages = [
-            { code: 'fr-FR', shouldShowCustomFields: true },
+            { code: 'uz-UZ', shouldShowCustomFields: true },
             { code: 'ja-JP', shouldShowCustomFields: true },
             { code: 'en-US', shouldShowCustomFields: false },
             { code: 'es-ES', shouldShowCustomFields: false },

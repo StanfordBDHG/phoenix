@@ -135,7 +135,7 @@ const LanguageAccordion = (props: LanguageAccordionProps): JSX.Element => {
                         value={qMetadata.language || ''}
                         options={supportedLanguages}
                         onChange={(e) => {
-                            const display = supportedLanguages.find((x) => x.code === e.target.value)?.localDisplay;
+                            const display = supportedLanguages.find((x) => x.code === e.target.value)?.display;
                             const newMeta = {
                                 ...qMetadata.meta,
                                 tag: qMetadata.meta?.tag?.map((x) =>
