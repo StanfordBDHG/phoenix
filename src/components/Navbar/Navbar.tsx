@@ -72,6 +72,13 @@ const Navbar = ({
     };
 
     function exportToJsonAndDownload() {
+        // Check if there are validation errors that should prevent download
+        if (validationErrors.length > 0) {
+            // Show validation errors modal instead of downloading
+            setShowValidationErrors(true);
+            return;
+        }
+
         const questionnaire = generateQuestionnaire(state);
         const filename = `${getFileName()}.${fileExtension}`;
         const contentType = 'application/json;charset=utf-8;';
@@ -133,7 +140,11 @@ const Navbar = ({
                         );
                         setShowJSONView(!showJSONView);
                     }} />
-                    <Btn title={t('Download')} onClick={() => exportToJsonAndDownload()} />
+                    <Btn 
+                        title={validationErrors.length > 0 ? t('Fix validation errors before downloading') : t('Download')} 
+                        onClick={() => exportToJsonAndDownload()}
+                        variant={validationErrors.length > 0 ? 'error' : undefined}
+                    />
                     <div
                         className="more-menu"
                         tabIndex={0}

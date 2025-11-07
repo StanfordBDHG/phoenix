@@ -15,7 +15,7 @@ export const ValidationErrorsModal = (props: ValidationErrorsModalProps): JSX.El
         <Modal close={props.onClose} title={t('Validation')} bottomCloseText={t('Close')}>
             {props.validationErrors.length > 0 ? (
                 <div className="msg-error">
-                    {t('Found {0} errors. Questions with errors are marked with a red border.').replace(
+                    {t('Found {0} errors. Questions with errors are marked with a red border. Fix these errors to enable downloading.').replace(
                         '{0}',
                         props.validationErrors.length.toString(),
                     )}

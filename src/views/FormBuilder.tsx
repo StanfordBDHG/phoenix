@@ -9,7 +9,8 @@ import './FormBuilder.css';
 import { ValidationErrors } from '../helpers/orphanValidation';
 import TranslationModal from '../components/Languages/Translation/TranslationModal';
 import MetadataEditor from '../components/Metadata/MetadataEditor';
-import SurveySetup from './SurveySetup'
+import SurveySetup from './SurveySetup';
+import { useRealTimeValidation } from '../hooks/useRealTimeValidation';
 
 type FormBuilderProps = {
     close: () => void
@@ -23,6 +24,19 @@ const FormBuilder = (props: FormBuilderProps): JSX.Element => {
     const [validationErrors, setValidationErrors] = useState<Array<ValidationErrors>>([]);
     const [translationErrors, setTranslationErrors] = useState<Array<ValidationErrors>>([]);
     const [translateLang, setTranslateLang] = useState('');
+
+    // Real-time validation hook
+    useRealTimeValidation({
+        qOrder: state.qOrder,
+        qItems: state.qItems,
+        qContained: state.qContained || [],
+        qAdditionalLanguages: state.qAdditionalLanguages,
+        t,
+        onValidationChange: (newValidationErrors, newTranslationErrors) => {
+            setValidationErrors(newValidationErrors);
+            setTranslationErrors(newTranslationErrors);
+        }
+    });
 
 
     const toggleFormDetails = useCallback(() => {
