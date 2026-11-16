@@ -1,5 +1,7 @@
 import './SwitchBtn.css';
 
+import type { JSX } from 'react';
+
 type SwitchBtnProps = {
     onChange: () => void;
     value: boolean;

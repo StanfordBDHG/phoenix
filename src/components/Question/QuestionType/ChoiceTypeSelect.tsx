@@ -8,6 +8,8 @@ import { QuestionnaireItem } from '../../../types/fhir';
 import FormField from '../../FormField/FormField';
 import RadioBtn from '../../RadioBtn/RadioBtn';
 
+import type { JSX } from 'react';
+
 interface Props {
     item: QuestionnaireItem;
     dispatchExtentionUpdate: (newValue: ItemControlType) => void;

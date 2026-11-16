@@ -1,4 +1,4 @@
-import { FocusEvent, useContext } from 'react';
+import { FocusEvent, useContext, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getGuidanceAction } from '../../../helpers/QuestionHelper';

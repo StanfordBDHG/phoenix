@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState, type JSX } from 'react';
 import { ValueSetComposeIncludeConcept } from '../../types/fhir';
 import './Typeahead.css';
 

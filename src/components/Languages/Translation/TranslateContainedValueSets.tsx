@@ -5,6 +5,8 @@ import FormField from '../../FormField/FormField';
 import { updateContainedValueSetTranslationAction } from '../../../store/treeStore/treeActions';
 import { getValueSetValues } from '../../../helpers/valueSetHelper';
 
+import type { JSX } from 'react';
+
 type TranslateContainedValueSetsProps = {
     qContained?: ValueSet[];
     targetLanguage: string;

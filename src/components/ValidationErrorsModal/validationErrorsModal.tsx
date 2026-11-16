@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { ValidationErrors } from '../../helpers/orphanValidation';
 import Modal from '../Modal/Modal';
 
+import type { JSX } from 'react';
+
 interface ValidationErrorsModalProps {
     validationErrors: ValidationErrors[];
     translationErrors: ValidationErrors[];

@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { QuestionnaireItem, QuestionnaireItemEnableBehaviorCodes } from '../../types/fhir';
 import RadioBtn from '../RadioBtn/RadioBtn';
 
+import type { JSX } from 'react';
+
 type Props = {
     currentItem: QuestionnaireItem;
     dispatchUpdateItemEnableBehavior: (value: QuestionnaireItemEnableBehaviorCodes | undefined) => void;

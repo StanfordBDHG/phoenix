@@ -8,6 +8,8 @@ import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../../
 import FormField from '../../FormField/FormField';
 import RadioBtn from '../../RadioBtn/RadioBtn';
 
+import type { JSX } from 'react';
+
 type Props = {
     item: QuestionnaireItem;
     dispatch: React.Dispatch<ActionType>;

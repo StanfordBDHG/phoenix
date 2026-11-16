@@ -11,6 +11,8 @@ import FormField from '../../FormField/FormField';
 import Select from '../../Select/Select';
 import Typeahead from '../../Typeahead/Typeahead';
 
+import type { JSX } from 'react';
+
 interface PredefinedValueSetsProps {
     item: QuestionnaireItem;
     qContained: ValueSet[] | undefined;

@@ -14,6 +14,8 @@ import createUUID from '../../helpers/CreateUUID';
 import { format } from 'date-fns';
 import { getValueSetValues } from '../../helpers/valueSetHelper';
 
+import type { JSX } from 'react';
+
 type OperatorMapType = {
     [key: string]: string;
 };

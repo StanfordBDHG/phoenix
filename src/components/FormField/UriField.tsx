@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isUriValid } from '../../helpers/uriHelper';
 

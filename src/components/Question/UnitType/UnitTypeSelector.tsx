@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext } from 'react';
+import { ChangeEvent, useContext, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import FormField from '../../FormField/FormField';
 import Select from '../../Select/Select';

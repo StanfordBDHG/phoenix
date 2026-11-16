@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from 'react';
+import { ReactNode, createContext, useState, type JSX } from 'react';
 
 const defaultLocale = 'en_US';
 

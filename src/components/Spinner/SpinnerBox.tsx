@@ -1,5 +1,7 @@
 import './SpinnerBox.css';
 
+import type { JSX } from 'react';
+
 const SpinnerBox = (): JSX.Element => {
     return (
         <div className="spinner-box">

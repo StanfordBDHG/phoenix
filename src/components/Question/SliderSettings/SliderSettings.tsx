@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TreeContext } from '../../../store/treeStore/treeStore';
 import { removeItemExtension, setItemExtension } from '../../../helpers/extensionHelper';

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useState, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TreeContext } from '../store/treeStore/treeStore';
 import AnchorMenu from '../components/AnchorMenu/AnchorMenu';

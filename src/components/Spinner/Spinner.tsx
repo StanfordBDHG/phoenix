@@ -1,5 +1,7 @@
 import './Spinner.css';
 
+import type { JSX } from 'react';
+
 type Props = {
     state: 'loading' | 'success' | 'error' | '';
 };

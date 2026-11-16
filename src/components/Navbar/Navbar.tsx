@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useRef, useState, type JSX } from 'react';
 import { generateQuestionnaire } from '../../helpers/generateQuestionnaire';
 import { Languages, TreeContext } from '../../store/treeStore/treeStore';
 import Btn from '../Btn/Btn';

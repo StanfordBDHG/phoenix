@@ -3,6 +3,8 @@ import { translatableMetadata } from '../../../helpers/LanguageHelper';
 import { ActionType, TreeState } from '../../../store/treeStore/treeStore';
 import TranslateMetaDataRow from './TranslateMetaDataRow';
 
+import type { JSX } from 'react';
+
 type TranslateMetaDataProps = {
     state: TreeState;
     targetLanguage: string;

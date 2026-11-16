@@ -1,4 +1,4 @@
-import { useContext, useState, useRef } from 'react';
+import { useContext, useState, useRef, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { BundleEntry, ValueSet } from '../../types/fhir';

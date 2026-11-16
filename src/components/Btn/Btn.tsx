@@ -1,5 +1,7 @@
 import './Btn.css';
 
+import type { JSX } from 'react';
+
 type BtnProps = {
     title: string;
     onClick?: () => void;
