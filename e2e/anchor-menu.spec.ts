@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { closeEditorDrawer, createSurvey, dragOntoTree, rows, toolboxItem, tree } from './helpers';
+import { closeEditorDrawer, createSurvey, dragOntoTree, importQuestionnaire, rows, toolboxItem, tree } from './helpers';
 
 // End-to-end tests for the survey tree (AnchorMenu), which is built on react-sortable-tree + react-dnd.
 // These exercise real HTML5 drag and drop, so they catch regressions in the tree library's drop handling
@@ -48,5 +48,33 @@ test.describe('survey tree drag and drop', () => {
 
         await page.locator('.rst__expandButton').click();
         await expect(hierarchy(page)).toHaveText(['1.', '1.1.']);
+    });
+
+    test('activates row buttons with the keyboard', async ({ page }) => {
+        // A group with one child, so the tree also has a row it could expand or collapse.
+        await importQuestionnaire(page, {
+            resourceType: 'Questionnaire',
+            language: 'en-US',
+            title: 'Keyboard',
+            status: 'draft',
+            item: [
+                { linkId: 'group', type: 'group', text: 'Group', item: [{ linkId: 'child', type: 'string', text: 'Child' }] },
+                { linkId: 'second', type: 'string', text: 'Second' },
+            ],
+        });
+        await expect(hierarchy(page)).toHaveText(['1. Group', '1.1. Child', '2. Second']);
+
+        for (const key of ['Enter', 'Space']) {
+            const groupRow = rows(page).filter({ hasText: 'Group' }).first();
+            await groupRow.hover();
+            await groupRow.getByTitle('Duplicate').focus();
+            await page.keyboard.press(key);
+            // Duplicating opens the new copy in the editor drawer.
+            await closeEditorDrawer(page);
+        }
+        // Each key press duplicated the group (with its child) instead of collapsing it.
+        await expect(hierarchy(page)).toHaveText([
+            '1. Group', '1.1. Child', '2. Group', '2.1. Child', '3. Group', '3.1. Child', '4. Second',
+        ]);
     });
 });
