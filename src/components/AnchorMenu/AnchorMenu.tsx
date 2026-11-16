@@ -1,7 +1,8 @@
+import '@nosferatu500/react-sortable-tree/style.css';
 import './AnchorMenu.css';
 import { useState, type JSX } from 'react';
-import { DndProvider, useDrag } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider, useDrag } from '@nosferatu500/react-dnd';
+import { HTML5Backend } from '@nosferatu500/react-dnd-html5-backend';
 
 import { useTranslation } from 'react-i18next';
 import { ActionType, Items, MarkedItem, OrderItem } from '../../store/treeStore/treeStore';
@@ -14,7 +15,7 @@ import {
 } from '../../store/treeStore/treeActions';
 import { ValidationErrors } from '../../helpers/orphanValidation';
 import { SortableTreeWithoutDndContext as SortableTree } from '@nosferatu500/react-sortable-tree';
-import type { TreeItem } from '@nosferatu500/react-sortable-tree';
+import type { GenerateNodePropsParams, TreeItem } from '@nosferatu500/react-sortable-tree';
 import { isIgnorableItem } from '../../helpers/itemControl';
 import { generateItemButtons } from './ItemButtons/ItemButtons';
 import { canTypeHaveChildren, getInitialItemConfig } from '../../helpers/questionTypeFeatures';
@@ -40,11 +41,6 @@ interface Node {
 // and since getNodeKey returns the linkId (title), paths are actually arrays of linkIds.
 const asNode = (item: TreeItem | null | undefined): Node | undefined => item as unknown as Node | undefined;
 const asLinkIdPath = (path: number[] | undefined): string[] => (path ?? []) as unknown as string[];
-
-// The library does not export its GenerateNodePropsParams type, so derive it from the component props.
-type GenerateNodePropsParams = Parameters<
-    NonNullable<React.ComponentProps<typeof SortableTree>['generateNodeProps']>
->[0];
 
 const newNodeLinkId = 'NEW';
 const externalNodeType = 'yourNodeType';
@@ -88,10 +84,7 @@ const YourExternalNodeComponent = ({ node }: { node: Node }): JSX.Element | null
     return (
         <div
             className="anchor-menu__dragcomponent"
-            ref={(element) => {
-                // React 19 treats a returned value as a cleanup function, so don't return drag()'s result.
-                drag(element);
-            }}
+            ref={drag}
             style={{ opacity }}
         >
             <i className={getRelevantIcon(node.nodeType)} /> &nbsp; {node.nodeReadableType}
@@ -167,7 +160,7 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
 
     const orderTreeData = mapToTreeData(props.qOrder, '');
     return (
-        <DndProvider backend={HTML5Backend} {...({} as any)}>
+        <DndProvider backend={HTML5Backend}>
             <div className="questionnaire-overview">
                 <div className="questionnaire-overview__toolbox">
                     {createTypeComponent(IQuestionnaireItemType.display, t('Instruction'))}
