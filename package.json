@@ -5,6 +5,7 @@
     "homepage": "https://stanfordbdhg.github.io/phoenix",
     "dependencies": {
         "@ckeditor/ckeditor5-react": "^3.0.0",
+        "@hello-pangea/dnd": "^18.0.1",
         "@helsenorge/ckeditor5-build-markdown": "^24.0.0",
         "@nosferatu500/react-sortable-tree": "5.0.0",
         "@types/remove-markdown": "^0.3.4",
@@ -16,7 +17,6 @@
         "immer": "^10.1.1",
         "qs": "^6.10.1",
         "react": "^18.3.1",
-        "react-beautiful-dnd": "^13.0.0",
         "react-datepicker": "^3.5.0",
         "react-device-detect": "^2.2.2",
         "react-dnd": "^16.0.1",
@@ -64,7 +64,6 @@
         "@types/jest": "^26.0.24",
         "@types/node": "^20.0.0",
         "@types/react": "^18.3.18",
-        "@types/react-beautiful-dnd": "^13.0.0",
         "@types/react-datepicker": "^3.1.2",
         "@types/react-dom": "^18.3.5",
         "@types/react-router-dom": "^5.3.0",

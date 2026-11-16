@@ -14,7 +14,7 @@ import {
     Droppable,
     DropResult,
     NotDraggingStyle,
-} from 'react-beautiful-dnd';
+} from '@hello-pangea/dnd';
 import InputField from '../../InputField/inputField';
 
 type Props = {

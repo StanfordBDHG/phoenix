@@ -6,7 +6,7 @@ import {
     Droppable,
     DropResult,
     NotDraggingStyle,
-} from 'react-beautiful-dnd';
+} from '@hello-pangea/dnd';
 import {
     removeOptionFromAnswerOptionArray,
     reorderPositions,
