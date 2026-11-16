@@ -11,7 +11,7 @@ import { IOperator } from '../../types/IQuestionnareItemType';
 import Infobox from './Infobox';
 import { useTranslation } from 'react-i18next';
 import createUUID from '../../helpers/CreateUUID';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { getValueSetValues } from '../../helpers/valueSetHelper';
 
 import type { JSX } from 'react';
@@ -100,10 +100,12 @@ const EnableWhenInfoBox = ({ getItem, linkId, enableWhen, containedResources, en
         } else if (qItemEnableWhen.hasOwnProperty('answerInteger')) {
             answerCondition = qItemEnableWhen.answerInteger.toString();
         } else if (qItemEnableWhen.hasOwnProperty('answerDate')) {
-            answerCondition = qItemEnableWhen.answerDate ? format(new Date(qItemEnableWhen.answerDate), 'dd.MM.yyyy') : '';
+            // Month-first, like the date picker. parseISO reads a date-only value as a local date
+            // (new Date() would read it as UTC midnight, which is the previous day in the Americas).
+            answerCondition = qItemEnableWhen.answerDate ? format(parseISO(qItemEnableWhen.answerDate), 'MM.dd.yyyy') : '';
         } else if (qItemEnableWhen.hasOwnProperty('answerDateTime')) {
             answerCondition = qItemEnableWhen.answerDateTime
-                ? format(new Date(qItemEnableWhen.answerDateTime), "dd.MM.yyyy' 'HH:mm")
+                ? format(parseISO(qItemEnableWhen.answerDateTime), 'MM.dd.yyyy HH:mm')
                 : '';
         } else if (qItemEnableWhen.hasOwnProperty('answerTime')) {
             answerCondition = qItemEnableWhen.answerTime;
