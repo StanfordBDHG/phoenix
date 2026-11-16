@@ -1,0 +1,66 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en-US",
+  "title": "Legacy item controls",
+  "status": "draft",
+  "item": [
+    {
+      "linkId": "question-with-help",
+      "type": "string",
+      "text": "What is your name?",
+      "item": [
+        {
+          "linkId": "help-text",
+          "type": "text",
+          "text": "Your full legal name",
+          "_text": {
+            "extension": [
+              { "url": "http://hl7.org/fhir/StructureDefinition/rendering-markdown", "valueMarkdown": "Your **full** legal name" }
+            ]
+          },
+          "readOnly": true,
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": { "coding": [{ "system": "http://hl7.org/fhir/ValueSet/questionnaire-item-control", "code": "help" }] }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "inline-text",
+      "type": "text",
+      "text": "Read more about this study",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": { "coding": [{ "system": "http://hl7.org/fhir/ValueSet/questionnaire-item-control", "code": "inline" }] }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "inline-text-expanded",
+          "type": "display",
+          "text": "The study runs for _six_ weeks.",
+          "_text": {
+            "extension": [
+              { "url": "http://hl7.org/fhir/StructureDefinition/rendering-markdown", "valueMarkdown": "The study runs for _six_ weeks." }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "highlighted-note",
+      "type": "display",
+      "text": "Please answer honestly.",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": { "coding": [{ "system": "http://hl7.org/fhir/ValueSet/questionnaire-item-control", "code": "highlight" }] }
+        }
+      ]
+    }
+  ]
+}

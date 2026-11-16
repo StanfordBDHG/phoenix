@@ -5,7 +5,6 @@ import {
     canTypeBeRequired,
     canTypeBeHighlight,
     canTypeBeBeriket,
-    canTypeHaveHelp,
     canTypeHaveSummary,
     canTypeHavePrefix,
     canTypeHaveInitialValue,
@@ -15,7 +14,6 @@ import {
     canTypeHavePlaceholderText,
     canTypeHaveTextInput,
     getItemDisplayType,
-    createInlineItem,
     getInitialItemConfig
 } from './questionTypeFeatures';
 import { IExtentionType, IQuestionnaireItemType } from '../types/IQuestionnareItemType';
@@ -257,37 +255,6 @@ describe('canTypeBeBeriket', () => {
             };
             expect(canTypeBeBeriket(item)).toBe(false);
         });
-    });
-});
-
-describe('canTypeHaveHelp', () => {
-    it('should allow help for most types except display', () => {
-        const typesWithHelp = [
-            IQuestionnaireItemType.string,
-            IQuestionnaireItemType.text,
-            IQuestionnaireItemType.integer,
-            IQuestionnaireItemType.choice,
-            IQuestionnaireItemType.group,
-            IQuestionnaireItemType.boolean,
-        ];
-
-        typesWithHelp.forEach(type => {
-            const item: QuestionnaireItem = {
-                linkId: `test-${type}`,
-                type: type,
-                text: `Test ${type}`,
-            };
-            expect(canTypeHaveHelp(item)).toBe(true);
-        });
-    });
-
-    it('should not allow help for display types', () => {
-        const item: QuestionnaireItem = {
-            linkId: 'test-display',
-            type: IQuestionnaireItemType.display,
-            text: 'Test Display',
-        };
-        expect(canTypeHaveHelp(item)).toBe(false);
     });
 });
 
@@ -609,21 +576,6 @@ describe('getItemDisplayType', () => {
             text: 'Test Unknown',
         };
         expect(getItemDisplayType(item)).toBe('');
-    });
-});
-
-describe('createInlineItem', () => {
-    it('should create an inline display item with correct properties', () => {
-        const inlineItem = createInlineItem();
-        
-        expect(inlineItem.type).toBe(IQuestionnaireItemType.display);
-        expect(inlineItem.text).toBe('');
-        expect(inlineItem.extension).toEqual([]);
-        expect(inlineItem.code).toEqual([]);
-        expect(inlineItem.item).toEqual([]);
-        expect(inlineItem.required).toBe(false);
-        expect(inlineItem.linkId).toBeDefined();
-        expect(typeof inlineItem.linkId).toBe('string');
     });
 });
 

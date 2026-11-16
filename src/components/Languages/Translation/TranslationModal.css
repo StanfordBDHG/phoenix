@@ -92,10 +92,6 @@
 }
 
 .translation-row textarea:disabled {
-    cursor: not-allowed;
-}
-
-.ck.ck-editor__main > .ck-editor__editable.ck-read-only {
     background: #f8f8f8;
     cursor: not-allowed;
 }

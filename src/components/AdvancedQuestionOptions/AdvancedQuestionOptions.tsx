@@ -1,13 +1,8 @@
 import { FocusEvent, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { findTreeArray, TreeContext } from '../../store/treeStore/treeStore';
+import { TreeContext } from '../../store/treeStore/treeStore';
 import { Extension, QuestionnaireItem } from '../../types/fhir';
-import {
-    deleteItemAction,
-    newItemHelpIconAction,
-    updateItemAction,
-    updateLinkIdAction,
-} from '../../store/treeStore/treeActions';
+import { updateItemAction, updateLinkIdAction } from '../../store/treeStore/treeActions';
 import UriField from '../FormField/UriField';
 import UndoIcon from '../../images/icons/arrow-undo-outline.svg';
 import './AdvancedQuestionOptions.css';
@@ -15,16 +10,14 @@ import { IExtentionType, IItemProperty } from '../../types/IQuestionnareItemType
 import SwitchBtn from '../SwitchBtn/SwitchBtn';
 import Initial from './Initial/Initial';
 import FormField from '../FormField/FormField';
-import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
-import { createItemControlExtension, getHelpText, isItemControlHelp, ItemControlType } from '../../helpers/itemControl';
+import { createItemControlExtension, ItemControlType } from '../../helpers/itemControl';
 import CalculatedExpression from './CalculatedExpression/CalculatedExpression';
-import { createMarkdownExtension, removeItemExtension, setItemExtension } from '../../helpers/extensionHelper';
+import { removeItemExtension, setItemExtension } from '../../helpers/extensionHelper';
 import InputField from '../InputField/inputField';
 import {
     canTypeBeReadonly,
     canTypeBeRepeatable,
     canTypeHaveCalculatedExpressionExtension,
-    canTypeHaveHelp,
     canTypeHaveInitialValue,
     canTypeHavePlaceholderText,
     canTypeHavePrefix,
@@ -42,24 +35,10 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
     const { state, dispatch } = useContext(TreeContext);
     const [isDuplicateLinkId, setDuplicateLinkId] = useState(false);
     const [linkId, setLinkId] = useState(item.linkId);
-    const { qItems, qOrder } = state;
+    const { qItems } = state;
 
     const dispatchUpdateItem = (name: IItemProperty, value: boolean) => {
         dispatch(updateItemAction(item.linkId, name, value));
-    };
-
-    const dispatchUpdateItemHelpText = (id: string, value: string) => {
-        const newValue = createMarkdownExtension(value);
-        dispatch(updateItemAction(id, IItemProperty._text, newValue));
-    };
-
-    const dispatchHelpText = () => {
-        const helpItem = getHelpTextItem();
-        if (helpItem) {
-            dispatch(deleteItemAction(helpItem.linkId, [...parentArray, item.linkId]));
-        } else {
-            dispatch(newItemHelpIconAction([...parentArray, item.linkId]));
-        }
     };
 
     function dispatchUpdateLinkId(event: FocusEvent<HTMLInputElement>): void {
@@ -80,25 +59,6 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
         validateLinkId(item.linkId);
     }
 
-    const handleHelpText = (markdown: string): void => {
-        const helpItem = getHelpTextItem();
-        if (helpItem) {
-            dispatchUpdateItemHelpText(helpItem.linkId, markdown);
-        }
-    };
-
-    const getHelpTextForItem = (): string => {
-        const helpItem = getHelpTextItem();
-        return helpItem ? getHelpText(helpItem) : '';
-    };
-
-    const getHelpTextItem = (): QuestionnaireItem | undefined => {
-        const selfArray = findTreeArray(parentArray, qOrder);
-        const selfOrder = selfArray.find((node) => node.linkId === item.linkId)?.items || [];
-        const helpItem = selfOrder.find((child) => isItemControlHelp(qItems[child.linkId]));
-        return helpItem ? qItems[helpItem.linkId] : undefined;
-    };
-
     const handleExtension = (extension: Extension) => {
         setItemExtension(item, extension, dispatch);
     };
@@ -115,7 +75,6 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
         x.valueCodeableConcept?.coding?.filter((y) => y.code === ItemControlType.summary),
     );
 
-    const helpTextItem = getHelpTextItem();
     const isHiddenItem = item.extension?.some((ext) => ext.url === IExtentionType.hidden && ext.valueBoolean);
 
     return (
@@ -408,23 +367,6 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
                     />
                 </FormField>
             </div>
-            {canTypeHaveHelp(item) && (
-                <div>
-                    <FormField>
-                        <SwitchBtn
-                            onChange={() => dispatchHelpText()}
-                            value={!!helpTextItem}
-                            label={t('Enable help button')}
-                        />
-                    </FormField>
-                    {!!helpTextItem && (
-                        <FormField label={t('Enter a helping text')}>
-                            <MarkdownEditor data={getHelpTextForItem()} onBlur={handleHelpText} />
-                        </FormField>
-                    )}
-                </div>
-            )}
-
             {canTypeHaveSummary(item) && (
                 <FormField>
                     <SwitchBtn

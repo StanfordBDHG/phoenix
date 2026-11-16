@@ -65,17 +65,6 @@ export const createOptionReferenceExtensions = [
     },
 ];
 
-export const createMarkdownExtension = (markdownValue: string): Element => {
-    return {
-        extension: [
-            {
-                url: IExtentionType.markdown,
-                valueMarkdown: markdownValue,
-            },
-        ],
-    };
-};
-
 export const hasExtension = (extensionParent: Element | undefined, extensionType: IExtentionType): boolean => {
     if (extensionParent && extensionParent.extension) {
         return extensionParent.extension.some((ext) => ext.url === extensionType);

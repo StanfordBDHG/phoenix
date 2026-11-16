@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QuestionnaireItem, QuestionnaireItemAnswerOption } from '../../../types/fhir';
 import FormField from '../../FormField/FormField';
-import MarkdownEditor from '../../MarkdownEditor/MarkdownEditor';
+import TextAreaField from '../../TextAreaField/TextAreaField';
 import { updateItemOptionTranslationAction, updateItemTranslationAction } from '../../../store/treeStore/treeActions';
 import { ItemTranslation, TreeContext } from '../../../store/treeStore/treeStore';
 import TranslateOptionRow from './TranslateOptionRow';
@@ -49,7 +49,7 @@ const TranslateItemRow = ({ targetLanguage, item, itemHeading }: TranslationRowP
     function getInputField(): JSX.Element {
         if (isMarkdown) {
             return (
-                <MarkdownEditor
+                <TextAreaField
                     data={translatedText}
                     onBlur={(text) => dispatchUpdateItemTranslation(text, TranslatableItemProperty.text)}
                 />
@@ -68,7 +68,7 @@ const TranslateItemRow = ({ targetLanguage, item, itemHeading }: TranslationRowP
         if (isMarkdown) {
             const valueMarkdown = item._text?.extension?.find((extension) => extension.url === IExtentionType.markdown)
                 ?.valueMarkdown;
-            return <MarkdownEditor data={valueMarkdown || item.text || ''} disabled={true} />;
+            return <TextAreaField data={valueMarkdown || item.text || ''} disabled={true} />;
         }
         return <textarea defaultValue={item.text} disabled={true} />;
     }
@@ -108,14 +108,14 @@ const TranslateItemRow = ({ targetLanguage, item, itemHeading }: TranslationRowP
                 <div className="translation-row">
                     <FormField>
                         {isMarkdownField ? (
-                            <MarkdownEditor data={textValue} disabled={true} />
+                            <TextAreaField data={textValue} disabled={true} />
                         ) : (
                             <textarea defaultValue={textValue} disabled={true} />
                         )}
                     </FormField>
                     <FormField>
                         {isMarkdownField ? (
-                            <MarkdownEditor
+                            <TextAreaField
                                 data={itemPropertyTranslation}
                                 onBlur={(newValue: string) => dispatchUpdateItemTranslation(newValue, propertyName)}
                             />

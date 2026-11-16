@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { MetadataProperty } from '../../../types/LanguageTypes';
 import { ActionType, TreeState } from '../../../store/treeStore/treeStore';
 import FormField from '../../FormField/FormField';
-import MarkdownEditor from '../../MarkdownEditor/MarkdownEditor';
+import TextAreaField from '../../TextAreaField/TextAreaField';
 import { updateMetadataTranslationAction } from '../../../store/treeStore/treeActions';
 
 type TranslateMetaDataRowProps = {
@@ -37,7 +37,7 @@ const TranslateMetaDataRow = ({
 
     const renderBaseValue = () => (
         <>
-            {markdown && <MarkdownEditor data={baseValue || ''} disabled={true} />}
+            {markdown && <TextAreaField data={baseValue || ''} disabled={true} />}
             {!markdown && <textarea defaultValue={baseValue} disabled={true} />}
         </>
     );
@@ -45,7 +45,7 @@ const TranslateMetaDataRow = ({
     const renderTranslation = () => (
         <>
             {markdown ? (
-                <MarkdownEditor
+                <TextAreaField
                     data={translatedValue}
                     onBlur={(value) => {
                         dispatchPropertyUpdate(value);

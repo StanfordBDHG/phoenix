@@ -13,18 +13,6 @@ import {
 import { ATTACHMENT_DEFAULT_MAX_SIZE, dropdownExtension, isRecipientList, valueSetTqqcCoding } from './QuestionHelper';
 import { createUriUUID } from './uriHelper';
 
-export const createInlineItem = (): QuestionnaireItem => {
-    return {
-        linkId: CreateUUID(),
-        type: IQuestionnaireItemType.display,
-        text: '',
-        extension: [],
-        code: [],
-        item: [],
-        required: false,
-    };
-};
-
 export const getInitialItemConfig = (
     questionType: IQuestionnaireItemType,
     recipientComponentText: string,
@@ -84,11 +72,6 @@ export const getInitialItemConfig = (
         newQuestionnaireItem.type = IQuestionnaireItemType.decimal;
     } else if (questionType === IQuestionnaireItemType.display) {
         newQuestionnaireItem.type = IQuestionnaireItemType.display;
-    } else if (questionType === IQuestionnaireItemType.inline) {
-        newQuestionnaireItem.type = IQuestionnaireItemType.text;
-        const inlineExtension = createItemControlExtension(ItemControlType.inline);
-        newQuestionnaireItem.extension?.push(inlineExtension);
-        newQuestionnaireItem.item?.push(createInlineItem());
     } else if (questionType === IQuestionnaireItemType.integer) {
         newQuestionnaireItem.type = IQuestionnaireItemType.integer;
     } else if (questionType === IQuestionnaireItemType.openChoice) {
@@ -161,15 +144,6 @@ export const canTypeBeBeriket = (item: QuestionnaireItem): boolean => {
             item.type === IQuestionnaireItemType.dateTime ||
             item.type === IQuestionnaireItemType.time) &&
         !isItemControlInline(item)
-    );
-};
-
-export const canTypeHaveHelp = (item: QuestionnaireItem): boolean => {
-    return (
-        item.type !== IQuestionnaireItemType.display &&
-        !isItemControlInline(item) &&
-        !isItemControlHighlight(item) &&
-        !isItemControlReceiverComponent(item)
     );
 };
 
