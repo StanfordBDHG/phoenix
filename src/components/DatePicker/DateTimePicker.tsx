@@ -3,6 +3,7 @@ import './DatePicker.css';
 
 import DatePicker from 'react-datepicker';
 import { useState, type JSX } from 'react';
+import { isValid } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
 type DateTimePickerProps = {
@@ -21,7 +22,8 @@ const DateTimePicker = ({ disabled = true, callback, nowButton, selected }: Date
             <DatePicker
                 disabled={disabled}
                 placeholderText={t('mm.dd.yyyy 00:00')}
-                selected={selected || startDate}
+                // An invalid date (e.g. an unparseable value from an imported survey) would crash the picker.
+                selected={selected && isValid(selected) ? selected : startDate}
                 onChange={(date: Date | null) => {
                     setStartDate(date ?? undefined);
                     callback?.(date);
