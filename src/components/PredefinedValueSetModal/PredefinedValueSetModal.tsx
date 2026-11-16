@@ -7,7 +7,7 @@ import {
     Droppable,
     DropResult,
     NotDraggingStyle,
-} from 'react-beautiful-dnd';
+} from '@hello-pangea/dnd';
 import createUUID from '../../helpers/CreateUUID';
 import { predefinedValueSetUri } from '../../helpers/initPredefinedValueSet';
 import { TreeContext } from '../../store/treeStore/treeStore';

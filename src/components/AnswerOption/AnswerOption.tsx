@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
+import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
 import { QuestionnaireItemAnswerOption } from '../../types/fhir';
 import './AnswerOption.css';
 import InputField from '../InputField/inputField';
 
 type Props = {
     answerOption?: QuestionnaireItemAnswerOption;
-    handleDrag?: DraggableProvidedDragHandleProps;
+    handleDrag?: DraggableProvidedDragHandleProps | null;
     changeDisplay: (event: React.ChangeEvent<HTMLInputElement>) => void;
     changeCode: (event: React.ChangeEvent<HTMLInputElement>) => void;
     deleteItem?: () => void;
