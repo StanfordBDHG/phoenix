@@ -98,9 +98,11 @@ const EnableWhenInfoBox = ({ getItem, linkId, enableWhen, containedResources, en
         } else if (qItemEnableWhen.hasOwnProperty('answerInteger')) {
             answerCondition = qItemEnableWhen.answerInteger.toString();
         } else if (qItemEnableWhen.hasOwnProperty('answerDate')) {
-            answerCondition = format(new Date(qItemEnableWhen.answerDate), 'dd.MM.yyyy');
+            answerCondition = qItemEnableWhen.answerDate ? format(new Date(qItemEnableWhen.answerDate), 'dd.MM.yyyy') : '';
         } else if (qItemEnableWhen.hasOwnProperty('answerDateTime')) {
-            answerCondition = format(new Date(qItemEnableWhen.answerDateTime), "dd.MM.yyyy' 'HH:mm");
+            answerCondition = qItemEnableWhen.answerDateTime
+                ? format(new Date(qItemEnableWhen.answerDateTime), "dd.MM.yyyy' 'HH:mm")
+                : '';
         } else if (qItemEnableWhen.hasOwnProperty('answerTime')) {
             answerCondition = qItemEnableWhen.answerTime;
         } else if (qItemEnableWhen.hasOwnProperty('answerString')) {

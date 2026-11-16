@@ -1,0 +1,22 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en-US",
+  "title": "Date conditions",
+  "status": "draft",
+  "item": [
+    { "linkId": "visit-date", "type": "date", "text": "Date of visit" },
+    { "linkId": "visit-time", "type": "time", "text": "Time of visit" },
+    { "linkId": "symptom-start", "type": "dateTime", "text": "When did symptoms start?" },
+    {
+      "linkId": "follow-up",
+      "type": "boolean",
+      "text": "Follow-up needed?",
+      "enableBehavior": "all",
+      "enableWhen": [
+        { "question": "visit-date", "operator": "=", "answerDate": "2026-03-15" },
+        { "question": "visit-time", "operator": "=", "answerTime": "14:30:00" },
+        { "question": "symptom-start", "operator": "=", "answerDateTime": "2026-03-15T14:30:00" }
+      ]
+    }
+  ]
+}
