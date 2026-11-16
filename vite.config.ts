@@ -25,7 +25,7 @@ export default defineConfig({
         manualChunks: {
           'drag-drop': ['@hello-pangea/dnd', '@nosferatu500/react-sortable-tree'],
           'vendor': ['react', 'react-dom', 'react-router-dom'],
-          'utils': ['immer', 'date-fns', 'crypto-js', 'axios'],
+          'utils': ['immer', 'date-fns'],
           'i18n': ['react-i18next', 'i18next']
         }
       }
