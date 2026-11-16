@@ -24,7 +24,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           'ckeditor': ['@helsenorge/ckeditor5-build-markdown'],
-          'drag-drop': ['react-beautiful-dnd', '@stanfordbdhg/react-sortable-tree'],
+          'drag-drop': ['react-beautiful-dnd', '@nosferatu500/react-sortable-tree'],
           'vendor': ['react', 'react-dom', 'react-router-dom'],
           'utils': ['immer', 'date-fns', 'crypto-js', 'axios'],
           'i18n': ['react-i18next', 'i18next']

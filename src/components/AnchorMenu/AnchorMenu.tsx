@@ -13,7 +13,8 @@ import {
     updateMarkedLinkIdAction,
 } from '../../store/treeStore/treeActions';
 import { ValidationErrors } from '../../helpers/orphanValidation';
-import { SortableTreeWithoutDndContext as SortableTree } from '@stanfordbdhg/react-sortable-tree';
+import { SortableTreeWithoutDndContext as SortableTree } from '@nosferatu500/react-sortable-tree';
+import type { GenerateNodePropsParams, TreeItem } from '@nosferatu500/react-sortable-tree';
 import { isIgnorableItem } from '../../helpers/itemControl';
 import { generateItemButtons } from './ItemButtons/ItemButtons';
 import { canTypeHaveChildren, getInitialItemConfig } from '../../helpers/questionTypeFeatures';
@@ -35,24 +36,10 @@ interface Node {
     children: Node[];
 }
 
-interface ExtendedNode {
-    node: Node;
-    path: any[];
-}
-
-// Event type definitions for moving nodes and toggling node visibility in the tree
-interface NodeMoveEvent {
-    treeData: Node[];
-    nextParentNode: Node;
-    node: Node;
-    nextPath: any[];
-    prevPath: any[];
-}
-
-interface NodeVisibilityToggleEvent {
-    node: Node;
-    expanded: boolean;
-}
+// The tree library types nodes as TreeItem and paths as number[]. Our nodes are always Node,
+// and since getNodeKey returns the linkId (title), paths are actually arrays of linkIds.
+const asNode = (item: TreeItem | null | undefined): Node | undefined => item as unknown as Node | undefined;
+const asLinkIdPath = (path: number[] | undefined): string[] => (path ?? []) as unknown as string[];
 
 const newNodeLinkId = 'NEW';
 const externalNodeType = 'yourNodeType';
@@ -127,8 +114,8 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
             });
     };
 
-    const getNodeKey = (extendedNode: ExtendedNode): string => {
-        return extendedNode.node.title;
+    const getNodeKey = ({ node }: { node: TreeItem }): string => {
+        return asNode(node)?.title ?? '';
     };
 
     // Update treePathToOrderArray to use the helper
@@ -188,12 +175,17 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
                 <SortableTree
                     className="questionnaire-overview__treeview"
                     dndType={externalNodeType}
-                    treeData={orderTreeData}
+                    treeData={orderTreeData as unknown as TreeItem[]}
                     onChange={() => {
                         /* dummy */
                     }}
                     getNodeKey={getNodeKey}
-                    onMoveNode={({ treeData, nextParentNode, node, nextPath, prevPath }: NodeMoveEvent) => {
+                    onMoveNode={(params) => {
+                        const treeData = params.treeData as unknown as Node[];
+                        const nextParentNode = asNode(params.nextParentNode);
+                        const node = asNode(params.node) as Node;
+                        const nextPath = asLinkIdPath(params.nextPath);
+                        const prevPath = asLinkIdPath(params.prevPath);
                         const newPath = treePathToOrderArray(nextPath);
                         // find parent node:
                         const moveIndex = nextParentNode
@@ -218,51 +210,55 @@ const AnchorMenu = (props: AnchorMenuProps): JSX.Element => {
                             }
                         }
                     }}
-                    onVisibilityToggle={({ node, expanded }: NodeVisibilityToggleEvent) => {
-                        const filteredNodes = collapsedNodes.filter((x) => x !== node.title);
+                    onVisibilityToggle={({ node: treeItem, expanded }) => {
+                        const title = asNode(treeItem)?.title ?? '';
+                        const filteredNodes = collapsedNodes.filter((x) => x !== title);
                         if (!expanded) {
-                            filteredNodes.push(node.title);
+                            filteredNodes.push(title);
                         }
                         setCollapsedNodes(filteredNodes);
                     }}
-                    canNodeHaveChildren={(node: Node): boolean => {
-                        const item = props.qItems[node.title];
+                    canNodeHaveChildren={(treeItem: TreeItem): boolean => {
+                        const item = props.qItems[asNode(treeItem)?.title ?? ''];
                         return item ? canTypeHaveChildren(item) : false;
                     }}
-                    generateNodeProps={(extendedNode: ExtendedNode) => ({
-                        className: `anchor-menu__item 
-                            ${hasValidationError(extendedNode.node.title) ? 'validation-error' : ''} 
-                            ${extendedNode.path.length === 1 ? 'anchor-menu__topitem' : ''} 
-                            ${isSelectedItem(extendedNode.node.title) ? 'anchor-menu__item--selected' : ''}
-                        `,
-                        title: (
-                            <span
-                                className="anchor-menu__inneritem"
-                                onClick={() => {
-                                    props.dispatch(
-                                        updateMarkedLinkIdAction(
-                                            extendedNode.node.title,
-                                            treePathToOrderArray(extendedNode.path),
-                                        ),
-                                    );
-                                }}
-                            >
-                                <span className={getRelevantIcon(props.qItems[extendedNode.node.title]?.type)} />
-                                <span className="anchor-menu__title">
-                                    {extendedNode.node.hierarchy}
-                                    {` `}
-                                    {props.qItems[extendedNode.node.title]?.text}
+                    generateNodeProps={(params: GenerateNodePropsParams) => {
+                        const extendedNode = { node: asNode(params.node) as Node, path: asLinkIdPath(params.path) };
+                        return {
+                            className: `anchor-menu__item 
+                                ${hasValidationError(extendedNode.node.title) ? 'validation-error' : ''} 
+                                ${extendedNode.path.length === 1 ? 'anchor-menu__topitem' : ''} 
+                                ${isSelectedItem(extendedNode.node.title) ? 'anchor-menu__item--selected' : ''}
+                            `,
+                            title: (
+                                <span
+                                    className="anchor-menu__inneritem"
+                                    onClick={() => {
+                                        props.dispatch(
+                                            updateMarkedLinkIdAction(
+                                                extendedNode.node.title,
+                                                treePathToOrderArray(extendedNode.path),
+                                            ),
+                                        );
+                                    }}
+                                >
+                                    <span className={getRelevantIcon(props.qItems[extendedNode.node.title]?.type)} />
+                                    <span className="anchor-menu__title">
+                                        {extendedNode.node.hierarchy}
+                                        {` `}
+                                        {props.qItems[extendedNode.node.title]?.text}
+                                    </span>
                                 </span>
-                            </span>
-                        ),
-                        buttons: generateItemButtons(
-                            t,
-                            props.qItems[extendedNode.node.title],
-                            treePathToOrderArray(extendedNode.path),
-                            false,
-                            props.dispatch,
-                        ),
-                    })}
+                            ),
+                            buttons: generateItemButtons(
+                                t,
+                                props.qItems[extendedNode.node.title],
+                                treePathToOrderArray(extendedNode.path),
+                                false,
+                                props.dispatch,
+                            ),
+                        };
+                    }}
                 />
                 {props.qOrder.length === 0 && (
                     <div className="anchor-menu__placeholder">

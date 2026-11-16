@@ -1,1 +1,0 @@
-declare module '@stanfordbdhg/react-sortable-tree';
