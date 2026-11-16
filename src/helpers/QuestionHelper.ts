@@ -301,8 +301,6 @@ export const quantityUnitTypes = quantityUnitTypeGroups.flatMap(group => group.o
 
 export const checkboxExtension = createItemControlExtension(ItemControlType.checkbox);
 export const dropdownExtension = createItemControlExtension(ItemControlType.dropdown);
-export const radiobuttonExtension = createItemControlExtension(ItemControlType.radioButton);
-
 export const enableWhenOperatorBoolean: ValueSetComposeIncludeConcept[] = [
     {
         code: IOperator.exists,
@@ -411,13 +409,6 @@ export const enableWhenOperator: ValueSetComposeIncludeConcept[] = [
     },
 ];
 
-export const elementSaveCapability = [
-    { code: '0', display: 'Not set' },
-    { code: '1', display: 'Save submitted questionnaire and intermediate save (standard setting)' },
-    { code: '2', display: 'Only submitted questionnaire is saved' },
-    { code: '3', display: 'No saving' },
-];
-
 export const getInitialText = (item?: QuestionnaireItem): string => {
     if (
         (item?.type === IQuestionnaireItemType.text || item?.type === IQuestionnaireItemType.string) &&
@@ -451,19 +442,6 @@ export const getPlaceHolderText = (item?: QuestionnaireItem): string => {
 
 export const getMarkdownText = (extensions?: Extension[]): string => {
     return extensions?.find((extension) => extension.url === IExtentionType.markdown)?.valueMarkdown || '';
-};
-
-export const getGuidanceAction = (item?: QuestionnaireItem): string => {
-    return item?.extension?.find((extension) => extension.url === IExtentionType.guidanceAction)?.valueString || '';
-};
-
-export const getGuidanceParameterName = (item?: QuestionnaireItem): string => {
-    return item?.extension?.find((extension) => extension.url === IExtentionType.guidanceParam)?.valueString || '';
-};
-
-export const isValidGuidanceParameterName = (name: string): boolean => {
-    const regExp = /^[A-Za-z0-9_]{1,254}$/;
-    return regExp.test(name);
 };
 
 export const valueSetTqqcCoding: Coding = {

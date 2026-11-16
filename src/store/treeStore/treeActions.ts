@@ -29,13 +29,11 @@ export const UPDATE_QUESTIONNAIRE_METADATA_ACTION = 'updateQuestionnaireMetadata
 export const NEW_ITEM_ACTION = 'newItem';
 export const REMOVE_ITEM_ATTRIBUTE_ACTION = 'removeItemAttribute';
 export const DELETE_ITEM_ACTION = 'deleteItem';
-export const DELETE_CHILD_ITEMS_ACTION = 'deleteChildItems';
 export const UPDATE_ITEM_ACTION = 'updateItem';
 export const DUPLICATE_ITEM_ACTION = 'duplicateItem';
 export const RESET_QUESTIONNAIRE_ACTION = 'resetQuestionnaire';
 export const REORDER_ITEM_ACTION = 'reorderItem';
 export const MOVE_ITEM_ACTION = 'moveItem';
-export const APPEND_VALUESET_ACTION = 'appendValueSet';
 export const UPDATE_LINK_ID_ACTION = 'updateLinkId';
 export const UPDATE_MARKED_LINK_ID = 'updateMarkedLinkId';
 export const UPDATE_VALUESET_ACTION = 'UPDATE_VALUESET';
@@ -158,12 +156,6 @@ export interface NewItemAction {
 
 export interface DeleteItemAction {
     type: typeof DELETE_ITEM_ACTION;
-    linkId: string;
-    order: Array<string>;
-}
-
-export interface DeleteChildItemsAction {
-    type: typeof DELETE_CHILD_ITEMS_ACTION;
     linkId: string;
     order: Array<string>;
 }
@@ -407,14 +399,6 @@ export const newItemAction = (
 export const deleteItemAction = (linkId: string, order: Array<string>): DeleteItemAction => {
     return {
         type: DELETE_ITEM_ACTION,
-        linkId,
-        order,
-    };
-};
-
-export const deleteChildItemsAction = (linkId: string, order: Array<string>): DeleteChildItemsAction => {
-    return {
-        type: DELETE_CHILD_ITEMS_ACTION,
         linkId,
         order,
     };

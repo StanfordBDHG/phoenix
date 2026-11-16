@@ -13,7 +13,6 @@ import { IQuestionnaireMetadata } from '../types/IQuestionnaireMetadataType';
 import { getLanguageFromCode, translatableMetadata, translatableSettings } from './LanguageHelper';
 import { isItemControlSidebar } from './itemControl';
 import { emptyPropertyReplacer } from './emptyPropertyReplacer';
-import { FhirpathAgeExpression, FhirpathGenderExpression } from './EnrichmentSet';
 import { getValueSetValues } from './valueSetHelper';
 
 const getExtension = (extensions: Extension[] | undefined, extensionType: IExtentionType): Extension | undefined => {
@@ -332,36 +331,4 @@ const setEnrichmentValues = (
         });
         setEnrichmentValues(qItem.item || [], replacementValues);
     });
-};
-
-export const generateQuestionnaireForPreview = (
-    state: TreeState,
-    language?: string,
-    selectedGender?: string,
-    selectedAge?: string,
-): Questionnaire => {
-    const { qAdditionalLanguages } = state;
-    const questionnaire =
-        language && qAdditionalLanguages && qAdditionalLanguages[language]
-            ? generateTranslatedQuestionnaire(state, language, qAdditionalLanguages)
-            : generateMainQuestionnaire(state);
-
-    // replace enrichment values with inital values set in preview:
-    const enrichmentValues = [];
-    if (selectedGender) {
-        enrichmentValues.push({
-            expression: FhirpathGenderExpression,
-            initialValue: { valueString: selectedGender },
-        });
-    }
-    if (selectedAge) {
-        enrichmentValues.push({
-            expression: FhirpathAgeExpression,
-            initialValue: { valueInteger: parseInt(selectedAge) },
-        });
-    }
-
-    setEnrichmentValues(questionnaire.item || [], enrichmentValues);
-
-    return questionnaire;
 };

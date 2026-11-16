@@ -57,18 +57,6 @@ export const isItemControlReceiverComponent = (item: QuestionnaireItem): boolean
     return getItemControlType(item) === ItemControlType.receiverComponent;
 };
 
-export const isItemControlDropDown = (item: QuestionnaireItem): boolean => {
-    return getItemControlType(item) === ItemControlType.dropdown;
-};
-
-export const isItemControlRadioButton = (item: QuestionnaireItem): boolean => {
-    return getItemControlType(item) === ItemControlType.radioButton;
-};
-
-export const isItemControlAutocomplete = (item: QuestionnaireItem): boolean => {
-    return getItemControlType(item) === ItemControlType.autocomplete;
-};
-
 export const isItemControlCheckbox = (item: QuestionnaireItem): boolean => {
     return getItemControlType(item) === ItemControlType.checkbox;
 };
@@ -87,12 +75,4 @@ export const isItemControlSidebar = (item: QuestionnaireItem): boolean => {
 
 export const isItemControlInline = (item?: QuestionnaireItem): boolean => {
     return item?.type === IQuestionnaireItemType.text && getItemControlType(item) === ItemControlType.inline;
-};
-
-export const isItemControlSlider = (item?: QuestionnaireItem): boolean => {
-    return getItemControlType(item) === ItemControlType.slider;
-};
-
-export const isItemControlPage = (item?: QuestionnaireItem): boolean => {
-    return getItemControlType(item) === ItemControlType.page;
 };

@@ -1,9 +1,5 @@
 import createUUID from './CreateUUID';
 
-export const createUrlUUID = (): string => {
-    return `http://spezi.health/fhir/questionnaire/${createUUID()}`;
-}
-
 export const createUriUUID = (): string => {
     return `urn:uuid:${createUUID()}`;
 };
