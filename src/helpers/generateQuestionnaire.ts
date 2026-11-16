@@ -310,25 +310,3 @@ export const generateQuestionnaire = (state: TreeState): string => {
 
     return JSON.stringify(generateMainQuestionnaire(state), emptyPropertyReplacer);
 };
-
-const setEnrichmentValues = (
-    items: QuestionnaireItem[],
-    replacementValues: {
-        expression: string;
-        initialValue: QuestionnaireItemInitial;
-    }[],
-) => {
-    items.forEach((qItem) => {
-        (qItem.extension || []).forEach((extension) => {
-            replacementValues.forEach((replacementValue) => {
-                if (
-                    extension.url === IExtentionType.fhirPath &&
-                    extension.valueString?.replace(' ', '') === replacementValue.expression.replace(' ', '')
-                ) {
-                    qItem.initial = [replacementValue.initialValue];
-                }
-            });
-        });
-        setEnrichmentValues(qItem.item || [], replacementValues);
-    });
-};
