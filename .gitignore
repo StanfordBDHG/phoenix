@@ -105,3 +105,8 @@ dist
 
 # React build folder
 build/
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
