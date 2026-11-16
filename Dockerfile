@@ -1,7 +1,7 @@
 # We are using a multi-stage build to keep our final image clean and small
 
 # Stage 1: Build a temporary image
-FROM node:18 as build
+FROM node:24 AS build
 
 # Set working directory
 WORKDIR /app
