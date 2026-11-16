@@ -1,4 +1,4 @@
-import{r as e,R as t}from"./drag-drop-CdM4PgVu.js";
+import{r as e,R as t}from"./drag-drop--AmsyooA.js";
 /**
  * @remix-run/router v1.7.2
  *
