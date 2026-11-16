@@ -7,19 +7,19 @@ on:
   pull_request:
 
 jobs:
+  # `main` requires this job's check to pass before merging, so keep the job name stable.
+  # Don't add a version matrix: matrix values become part of the check name.
   build_test:
+    name: build_test
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [24.x]
-
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - name: Use Node.js from .nvmrc
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: .nvmrc
+          cache: npm
       - name: Install dependencies
         run: npm ci
         env:
