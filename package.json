@@ -6,7 +6,7 @@
     "dependencies": {
         "@ckeditor/ckeditor5-react": "^3.0.0",
         "@helsenorge/ckeditor5-build-markdown": "^24.0.0",
-        "@nosferatu500/react-sortable-tree": "^5.1.0",
+        "@nosferatu500/react-sortable-tree": "5.0.0",
         "@types/remove-markdown": "^0.3.4",
         "axios": "^1.12.0",
         "crypto-js": "^4.2.0",
@@ -32,7 +32,8 @@
         "build": "tsc && vite build",
         "serve": "vite preview",
         "test": "jest",
-        "test:watch": "jest --watch"
+        "test:watch": "jest --watch",
+        "test:e2e": "playwright test"
     },
     "eslintConfig": {
         "extends": [
@@ -56,6 +57,7 @@
         ]
     },
     "devDependencies": {
+        "@playwright/test": "^1.65.1",
         "@testing-library/jest-dom": "^5.11.9",
         "@testing-library/react": "^15.0.6",
         "@testing-library/user-event": "^14.6.1",

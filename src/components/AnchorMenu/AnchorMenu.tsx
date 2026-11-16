@@ -14,7 +14,7 @@ import {
 } from '../../store/treeStore/treeActions';
 import { ValidationErrors } from '../../helpers/orphanValidation';
 import { SortableTreeWithoutDndContext as SortableTree } from '@nosferatu500/react-sortable-tree';
-import type { GenerateNodePropsParams, TreeItem } from '@nosferatu500/react-sortable-tree';
+import type { TreeItem } from '@nosferatu500/react-sortable-tree';
 import { isIgnorableItem } from '../../helpers/itemControl';
 import { generateItemButtons } from './ItemButtons/ItemButtons';
 import { canTypeHaveChildren, getInitialItemConfig } from '../../helpers/questionTypeFeatures';
@@ -40,6 +40,11 @@ interface Node {
 // and since getNodeKey returns the linkId (title), paths are actually arrays of linkIds.
 const asNode = (item: TreeItem | null | undefined): Node | undefined => item as unknown as Node | undefined;
 const asLinkIdPath = (path: number[] | undefined): string[] => (path ?? []) as unknown as string[];
+
+// The library does not export its GenerateNodePropsParams type, so derive it from the component props.
+type GenerateNodePropsParams = Parameters<
+    NonNullable<React.ComponentProps<typeof SortableTree>['generateNodeProps']>
+>[0];
 
 const newNodeLinkId = 'NEW';
 const externalNodeType = 'yourNodeType';
