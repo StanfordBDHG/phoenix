@@ -13,13 +13,13 @@ A web application that allows you to build healthcare surveys using the [HL7® F
 - Set skip logic and validation rules
 
 ## Requirements
-- Node.js & npm
+- Node.js (version 24 or greater) & npm
 
 ## Getting Started
 - To use the application online, visit [https://stanfordbdhg.github.io/phoenix](https://stanfordbdhg.github.io/phoenix).
 
 ## Run for Development
-First, ensure that Node.js (version 18 or greater) and npm are installed on your system.
+First, ensure that Node.js (version 24 or greater) and npm are installed on your system.
 
 In your terminal, clone this repository from GitHub to your local computer.
 
@@ -42,7 +42,7 @@ npm run dev
 You should see the following message in your terminal if the application is running successfully.
 
 ```bash
-  VITE v5.4.12  ready in 133 ms
+  VITE v6.4.1  ready in 133 ms
 
   ➜  Local:   http://localhost:3000/
   ➜  Network: use --host to expose
@@ -51,8 +51,31 @@ You should see the following message in your terminal if the application is runn
 
 You can now open [http://localhost:3000/phoenix](http://localhost:3000/phoenix) in your browser to view the application.
 
+## Testing
+Run the unit tests with Jest:
+
+```bash
+npm test
+```
+
+The end-to-end tests in `e2e/` use [Playwright](https://playwright.dev) to drive the app in a real browser, covering drag-and-drop in the survey tree and the reordering of answer options. They start their own development server. The first time, install Playwright's browser:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+To run them against your installed Google Chrome instead, use `PLAYWRIGHT_CHANNEL=chrome npm run test:e2e`.
+
+### Updating the README demo
+The animated demo at the top of this README (`figures/survey-builder-demo.gif`) is recorded by `scripts/record-readme-demo.mjs`. To re-record it after UI changes, start the development server with `npm run dev`, then run the following in a second terminal. This requires [ffmpeg](https://ffmpeg.org).
+
+```bash
+npm run record:demo
+```
+
 ## Build for Production
-First, ensure that Node.js (version 16 or greater) and npm are installed on your system.
+First, ensure that Node.js (version 24 or greater) and npm are installed on your system.
 
 In your terminal, clone this repository from GitHub to your local computer.
 

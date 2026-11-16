@@ -33,7 +33,8 @@
         "serve": "vite preview",
         "test": "jest",
         "test:watch": "jest --watch",
-        "test:e2e": "playwright test"
+        "test:e2e": "playwright test",
+        "record:demo": "node scripts/record-readme-demo.mjs"
     },
     "eslintConfig": {
         "extends": [

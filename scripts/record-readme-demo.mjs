@@ -1,11 +1,11 @@
 // Records the animated demo in the README (figures/survey-builder-demo.gif).
 //
 // Usage:
-//   1. Start the dev server:   npx vite --port 5199
-//   2. Record the GIF:         node scripts/record-readme-demo.mjs
+//   1. Start the dev server:   npm run dev
+//   2. Record the GIF:         npm run record:demo
 //
 // Options (environment variables):
-//   BASE_URL            app URL (default http://localhost:5199/phoenix/)
+//   BASE_URL            app URL (default http://localhost:3000/phoenix/, the dev server)
 //   PLAYWRIGHT_CHANNEL  e.g. "chrome" to use a locally installed Chrome instead of Playwright's Chromium
 //
 // Frames are captured with Chrome's screencast (DevTools protocol), so this needs a Chromium-based browser.
@@ -13,15 +13,16 @@
 
 import { chromium } from '@playwright/test';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { linkSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-const BASE_URL = process.env.BASE_URL ?? 'http://localhost:5199/phoenix/';
+const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3000/phoenix/';
 const OUTPUT = path.resolve('figures/survey-builder-demo.gif');
 const VIEWPORT = { width: 1280, height: 800 };
 const GIF_WIDTH = 960;
-const GIF_FPS = 12;
+// GIF frame delays are whole hundredths of a second, so use a rate that divides evenly (12.5 fps = 8 cs).
+const GIF_FPS = 12.5;
 
 // Playwright's video does not show the mouse pointer, so draw one that follows mouse and drag events.
 const fakeCursor = () => {
@@ -51,7 +52,7 @@ await context.addInitScript(fakeCursor);
 const page = await context.newPage();
 
 // Capture frames with Chrome's screencast. Frames only arrive when the page changes, so each frame
-// is shown until the next one (see the ffmpeg concat list below).
+// is shown until the next one arrives (see the resampling below).
 const frames = [];
 let recording = false;
 const cdp = await context.newCDPSession(page);
@@ -161,29 +162,37 @@ await pause(3500);
 // --- Convert the frames to a GIF ---------------------------------------------------------------------
 
 recording = false;
+// Screencast frame timestamps are in seconds since the epoch, like Date.now() / 1000.
+const captureEnd = Date.now() / 1000;
 await cdp.send('Page.stopScreencast');
 await browser.close();
 if (frames.length < 2) {
     throw new Error(`only captured ${frames.length} frame(s)`);
 }
-const list = frames
-    .map((frame, i) => {
-        const duration = i + 1 < frames.length ? frames[i + 1].time - frame.time : 1;
-        return `file '${frame.file}'\nduration ${Math.max(duration, 0.001).toFixed(3)}`;
-    })
-    .join('\n');
-// The concat demuxer ignores the last entry's duration unless the file is listed again.
-const listFile = path.join(frameDir, 'frames.txt');
-writeFileSync(listFile, `${list}\nfile '${frames[frames.length - 1].file}'\n`);
 
-const filters = `fps=${GIF_FPS},scale=${GIF_WIDTH}:-1:flags=lanczos,split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle`;
+// Resample to a constant frame rate: for each tick, use the frame that was on screen at that moment.
+// This keeps the GIF in real time. (Handing ffmpeg the raw frames with per-frame durations does not:
+// it pads each image to at least 1/25 s, which slows down fast sequences like drags and typing.)
+// The last frame stays on screen until capture stopped, so a final pause without repaints keeps its length.
+const start = frames[0].time;
+const tickCount = Math.ceil((captureEnd - start) * GIF_FPS);
+let current = 0;
+for (let tick = 0; tick < tickCount; tick++) {
+    const t = start + tick / GIF_FPS;
+    while (current + 1 < frames.length && frames[current + 1].time <= t) {
+        current++;
+    }
+    linkSync(frames[current].file, path.join(frameDir, `tick-${String(tick).padStart(5, '0')}.jpg`));
+}
+
+const filters = `scale=${GIF_WIDTH}:-1:flags=lanczos,split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle`;
 const ffmpeg = spawnSync(
     'ffmpeg',
-    ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', listFile, '-filter_complex', filters, '-loop', '0', OUTPUT],
+    ['-y', '-loglevel', 'error', '-framerate', String(GIF_FPS), '-i', path.join(frameDir, 'tick-%05d.jpg'), '-filter_complex', filters, '-loop', '0', OUTPUT],
     { stdio: 'inherit' },
 );
 rmSync(frameDir, { recursive: true, force: true });
 if (ffmpeg.status !== 0) {
     throw new Error('ffmpeg failed to convert the frames to a GIF');
 }
-console.log(`Wrote ${path.relative(process.cwd(), OUTPUT)} from ${frames.length} frames`);
+console.log(`Wrote ${path.relative(process.cwd(), OUTPUT)}: ${(tickCount / GIF_FPS).toFixed(1)} s from ${frames.length} captured frames`);
