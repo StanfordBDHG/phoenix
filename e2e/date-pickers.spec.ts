@@ -143,6 +143,19 @@ test.describe('date pickers', () => {
             await expect(summary).toContainText('Date of visit is equal to 03.15.2026');
             await expect(summary).toContainText('When did symptoms start? is equal to 03.15.2026 14:30');
         });
+
+        test('shows non-ISO dates from imported surveys as they are', async ({ page }) => {
+            const errors: string[] = [];
+            page.on('pageerror', (error) => errors.push(error.message));
+            const survey = structuredClone(dateConditions);
+            survey.item[3].enableWhen[0].answerDate = '03/15/2026';
+            await importQuestionnaire(page, survey);
+            await page.locator('.anchor-menu__inneritem', { hasText: 'Follow-up needed?' }).click();
+            await page.getByText('Enable when').click();
+            const summary = page.locator('.infobox', { hasText: 'Element will be shown if:' });
+            await expect(summary).toContainText('Date of visit is equal to 03/15/2026');
+            expect(errors).toEqual([]);
+        });
     });
 
     test('clearing a date removes it without errors', async ({ page }) => {

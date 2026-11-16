@@ -11,7 +11,7 @@ import { IOperator } from '../../types/IQuestionnareItemType';
 import Infobox from './Infobox';
 import { useTranslation } from 'react-i18next';
 import createUUID from '../../helpers/CreateUUID';
-import { format, parseISO } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { getValueSetValues } from '../../helpers/valueSetHelper';
 
 import type { JSX } from 'react';
@@ -37,6 +37,17 @@ interface Props {
     containedResources?: Array<ValueSet>;
     enableBehavior?: QuestionnaireItemEnableBehaviorCodes;
 }
+
+// Formats an ISO date or date-time month-first, like the date picker. parseISO reads a date-only value
+// as a local date (new Date() would read it as UTC midnight, the previous day in the Americas).
+// Values that aren't valid ISO dates (e.g. from imported surveys) are shown as they are.
+const formatDateValue = (value: string | undefined, pattern: string): string => {
+    if (!value) {
+        return '';
+    }
+    const date = parseISO(value);
+    return isValid(date) ? format(date, pattern) : value;
+};
 
 const EnableWhenInfoBox = ({ getItem, linkId, enableWhen, containedResources, enableBehavior }: Props): JSX.Element => {
     const { t } = useTranslation();
@@ -100,13 +111,9 @@ const EnableWhenInfoBox = ({ getItem, linkId, enableWhen, containedResources, en
         } else if (qItemEnableWhen.hasOwnProperty('answerInteger')) {
             answerCondition = qItemEnableWhen.answerInteger.toString();
         } else if (qItemEnableWhen.hasOwnProperty('answerDate')) {
-            // Month-first, like the date picker. parseISO reads a date-only value as a local date
-            // (new Date() would read it as UTC midnight, which is the previous day in the Americas).
-            answerCondition = qItemEnableWhen.answerDate ? format(parseISO(qItemEnableWhen.answerDate), 'MM.dd.yyyy') : '';
+            answerCondition = formatDateValue(qItemEnableWhen.answerDate, 'MM.dd.yyyy');
         } else if (qItemEnableWhen.hasOwnProperty('answerDateTime')) {
-            answerCondition = qItemEnableWhen.answerDateTime
-                ? format(parseISO(qItemEnableWhen.answerDateTime), 'MM.dd.yyyy HH:mm')
-                : '';
+            answerCondition = formatDateValue(qItemEnableWhen.answerDateTime, 'MM.dd.yyyy HH:mm');
         } else if (qItemEnableWhen.hasOwnProperty('answerTime')) {
             answerCondition = qItemEnableWhen.answerTime;
         } else if (qItemEnableWhen.hasOwnProperty('answerString')) {
