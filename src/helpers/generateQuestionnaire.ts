@@ -5,7 +5,6 @@ import {
     Questionnaire,
     QuestionnaireItem,
     QuestionnaireItemAnswerOption,
-    QuestionnaireItemInitial,
     ValueSet,
 } from '../types/fhir';
 import { IExtentionType, IQuestionnaireItemType } from '../types/IQuestionnareItemType';
