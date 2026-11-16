@@ -36,7 +36,7 @@ export const exportTranslations = (
 
     const a = document.createElement('a');
     a.download = `${qMetadata.name}.csv`;
-    a.href = 'data:' + 'text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(returnString);
+    a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(returnString);
     a.target = '_blank';
     document.body.appendChild(a);
     a.click();

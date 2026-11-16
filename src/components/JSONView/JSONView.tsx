@@ -24,7 +24,7 @@ const JSONView = ({ showJSONView, validationErrors }: Props): JSX.Element => {
                         <IconBtn type="x" title={t('Back')} onClick={showJSONView} />
                         <h1>{t('FHIR R4 Questionnaire JSON')}</h1>
                     </span>
-                    {validationErrors.length == 0 && <span>
+                    {validationErrors.length === 0 && <span>
                         <Btn title='Copy to Clipboard' onClick={() => navigator.clipboard.writeText(jsonText)}/>
                     </span>}
                 </div>

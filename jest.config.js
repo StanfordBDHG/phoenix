@@ -1,4 +1,4 @@
-export default {
+const config = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
@@ -22,3 +22,5 @@ export default {
   ],
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
 };
+
+export default config;

@@ -55,5 +55,11 @@ header p {
 }
 
 .survey-title-button {
-    cursor: pointer
+    /* A button that looks like the heading text it sits in. */
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
 }

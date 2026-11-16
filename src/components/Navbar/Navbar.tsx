@@ -113,7 +113,7 @@ const Navbar = ({
         <>
             <header ref={navBarRef}>
                 <div className="pull-left form-title">
-                    <h1><IconBtn type="x" title={t('Close')} onClick={() => {close()}} /><a className="survey-title-button" onClick={toggleFormDetails}>{title || 'Phoenix Survey Builder'}</a></h1>
+                    <h1><IconBtn type="x" title={t('Close')} onClick={() => {close()}} /><button type="button" className="survey-title-button" onClick={toggleFormDetails}>{title || 'Phoenix Survey Builder'}</button></h1>
                 </div>
 
                 <div className="pull-right">
