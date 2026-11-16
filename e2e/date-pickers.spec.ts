@@ -51,6 +51,12 @@ async function typeIntoPicker(page: Page, picker: Locator, value: string): Promi
     await page.keyboard.press('Enter');
 }
 
+// Clears a picker. Escape closes the popup without selecting the highlighted date or time (Enter would).
+async function clearPicker(page: Page, picker: Locator): Promise<void> {
+    await picker.fill('');
+    await page.keyboard.press('Escape');
+}
+
 test.describe('date pickers', () => {
     test('sets the survey date by typing and with the Today button', async ({ page }) => {
         await createSurvey(page);
@@ -124,6 +130,32 @@ test.describe('date pickers', () => {
         expect(dateCondition.answerDate).toBe('2026-03-15');
         expect(timeCondition.answerTime).toBe('14:30:00');
         expect(dateTimeCondition.answerDateTime).toMatch(/^2026-04-20T09:15:00/);
+    });
+
+    test('clearing a date removes it without errors', async ({ page }) => {
+        const errors: string[] = [];
+        page.on('pageerror', (error) => errors.push(error.message));
+        await importQuestionnaire(page, { ...dateConditions, date: '2026-03-01T00:00:00Z' });
+
+        await page.locator('.anchor-menu__inneritem', { hasText: 'Follow-up needed?' }).click();
+        await page.getByText('Enable when').click();
+        for (let i = 0; i < 3; i++) {
+            await clearPicker(page, pickerInputs(page).nth(i));
+        }
+        await closeEditorDrawer(page);
+
+        await page.getByText('Edit Metadata', { exact: true }).click();
+        const surveyDate = page.locator('.form-field', { hasText: 'Date last updated' }).locator('.datepicker input');
+        await clearPicker(page, surveyDate);
+        await page.locator('.overlay', { hasText: 'Survey Metadata' }).getByTitle('Close').first().click();
+
+        const exported = await downloadQuestionnaire(page);
+        expect(exported.date).toBeUndefined();
+        const [dateCondition, timeCondition, dateTimeCondition] = exported.item[3].enableWhen;
+        expect(dateCondition.answerDate).toBeUndefined();
+        expect(timeCondition.answerTime).toBeUndefined();
+        expect(dateTimeCondition.answerDateTime).toBeUndefined();
+        expect(errors).toEqual([]);
     });
 
     test('sets a minimum date for date validation', async ({ page }) => {

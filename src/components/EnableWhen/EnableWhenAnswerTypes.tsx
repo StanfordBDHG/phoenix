@@ -179,9 +179,10 @@ const EnableWhenAnswerTypes = ({
                     }
                     disabled={false}
                     type="date"
-                    callback={(date: Date) => {
+                    callback={(date) => {
+                        const answerDate = date ? format(date, 'yyyy-MM-dd') : '';
                         const copy = itemEnableWhen?.map((x, ewIndex) => {
-                            return index === ewIndex ? { ...x, answerDate: format(date, 'yyyy-MM-dd') } : x;
+                            return index === ewIndex ? { ...x, answerDate } : x;
                         });
                         dispatchUpdateItemEnableWhen(copy);
                     }}
@@ -191,9 +192,10 @@ const EnableWhenAnswerTypes = ({
                 <DateTimePicker
                     selected={enableWhen.answerDateTime ? parseISO(enableWhen.answerDateTime) : undefined}
                     disabled={false}
-                    callback={(date: Date) => {
+                    callback={(date) => {
+                        const answerDateTime = date ? formatISO(date) : '';
                         const copy = itemEnableWhen?.map((x, ewIndex) => {
-                            return index === ewIndex ? { ...x, answerDateTime: formatISO(date) } : x;
+                            return index === ewIndex ? { ...x, answerDateTime } : x;
                         });
                         dispatchUpdateItemEnableWhen(copy);
                     }}
@@ -204,9 +206,10 @@ const EnableWhenAnswerTypes = ({
                     selected={enableWhen.answerTime ? parse(enableWhen.answerTime, 'HH:mm:ss', new Date()) : undefined}
                     type="time"
                     disabled={false}
-                    callback={(date: Date) => {
+                    callback={(date) => {
+                        const answerTime = date ? format(date, 'HH:mm:ss') : '';
                         const copy = itemEnableWhen?.map((x, ewIndex) => {
-                            return index === ewIndex ? { ...x, answerTime: format(date, 'HH:mm:ss') } : x;
+                            return index === ewIndex ? { ...x, answerTime } : x;
                         });
                         dispatchUpdateItemEnableWhen(copy);
                     }}

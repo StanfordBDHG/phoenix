@@ -126,8 +126,8 @@ const MetadataEditor = (): JSX.Element => {
                     selected={qMetadata.date ? parseISO(qMetadata.date) : undefined}
                     disabled={false}
                     nowButton={true}
-                    callback={(date: Date) => {
-                        updateMeta(IQuestionnaireMetadataType.date, formatISO(date));
+                    callback={(date) => {
+                        updateMeta(IQuestionnaireMetadataType.date, date ? formatISO(date) : '');
                     }}
                 />
             </FormField>
