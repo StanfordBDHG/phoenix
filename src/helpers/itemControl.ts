@@ -96,10 +96,3 @@ export const isItemControlSlider = (item?: QuestionnaireItem): boolean => {
 export const isItemControlPage = (item?: QuestionnaireItem): boolean => {
     return getItemControlType(item) === ItemControlType.page;
 };
-
-export const getHelpText = (item: QuestionnaireItem): string => {
-    if (!isItemControlHelp(item)) {
-        return '';
-    }
-    return item._text?.extension?.find((ex) => ex.url === IExtentionType.markdown)?.valueMarkdown || item.text || '';
-};

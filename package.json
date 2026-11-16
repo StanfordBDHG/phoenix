@@ -4,9 +4,7 @@
     "private": true,
     "homepage": "https://stanfordbdhg.github.io/phoenix",
     "dependencies": {
-        "@ckeditor/ckeditor5-react": "^3.0.0",
         "@hello-pangea/dnd": "^18.0.1",
-        "@helsenorge/ckeditor5-build-markdown": "^24.0.0",
         "@nosferatu500/react-sortable-tree": "5.0.0",
         "@types/remove-markdown": "^0.3.4",
         "axios": "^1.12.0",

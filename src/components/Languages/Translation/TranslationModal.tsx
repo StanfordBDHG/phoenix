@@ -2,24 +2,18 @@ import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from '../../Modal/Modal';
 import { OrderItem, TreeContext } from '../../../store/treeStore/treeStore';
-import { updateItemTranslationAction } from '../../../store/treeStore/treeActions';
 import './TranslationModal.css';
 import TranslateItemRow from './TranslateItemRow';
-import { getItemPropertyTranslation, getLanguageFromCode } from '../../../helpers/LanguageHelper';
+import { getLanguageFromCode } from '../../../helpers/LanguageHelper';
 import { QuestionnaireItem } from '../../../types/fhir';
 import TranslateMetaData from './TranslateMetaData';
 import TranslateContainedValueSets from './TranslateContainedValueSets';
 import {
-    getHelpText,
     isIgnorableItem,
     isItemControlHelp,
     isItemControlInline,
     isItemControlSidebar,
 } from '../../../helpers/itemControl';
-import TranslateSidebar from './TranslateSidebar';
-import FormField from '../../FormField/FormField';
-import MarkdownEditor from '../../MarkdownEditor/MarkdownEditor';
-import { TranslatableItemProperty } from '../../../types/LanguageTypes';
 import { IExtentionType } from '../../../types/IQuestionnareItemType';
 import { getUsedValueSet } from '../../../helpers/generateQuestionnaire';
 import TranslateSettings from './TranslateSettings';
@@ -32,8 +26,6 @@ type TranslationModalProps = {
 interface FlattOrderTranslation {
     linkId: string;
     path: string;
-    helpItemLinkId?: string;
-    inlineItemLinkId?: string;
 }
 
 const TranslationModal = (props: TranslationModalProps): JSX.Element => {
@@ -70,73 +62,15 @@ const TranslationModal = (props: TranslationModalProps): JSX.Element => {
         </div>
     );
 
-    const renderInlineText = (linkId: string): JSX.Element | null => {
-        if (!qAdditionalLanguages) {
-            return null;
-        }
-        const inlineItem = qItems[linkId];
-        if (!inlineItem) {
-            return null;
-        }
-        return (
-            <TranslateItemRow targetLanguage={props.targetLanguage} item={inlineItem} itemHeading={'Expanded text'} />
-        );
-    };
-
-    const renderHelpText = (linkId: string): JSX.Element | null => {
-        if (!qAdditionalLanguages) {
-            return null;
-        }
-        const helpText = getHelpText(qItems[linkId]);
-        const translatedHelpText = getItemPropertyTranslation(
-            props.targetLanguage,
-            qAdditionalLanguages,
-            linkId,
-            TranslatableItemProperty.text,
-        );
-        return (
-            <>
-                <div className="translation-group-header">{t('Help text')}</div>
-                <div className="translation-row">
-                    <FormField>
-                        <MarkdownEditor data={helpText} disabled={true} />
-                    </FormField>
-                    <FormField>
-                        <MarkdownEditor
-                            data={translatedHelpText}
-                            onBlur={(value) =>
-                                dispatch(
-                                    updateItemTranslationAction(
-                                        props.targetLanguage,
-                                        linkId,
-                                        TranslatableItemProperty.text,
-                                        value,
-                                    ),
-                                )
-                            }
-                        />
-                    </FormField>
-                </div>
-            </>
-        );
-    };
-
     useEffect(() => {
         const handleChild = (items: OrderItem[], path: string, tempHierarchy: FlattOrderTranslation[]) => {
             let index = 1;
+            // Help, sidebar and inline child items (from imported surveys) are not translated here.
             items
                 .filter((x) => !isItemControlSidebar(qItems[x.linkId]))
                 .forEach((item) => {
-                    const itemHasHelpChild = item.items.find((child) => isItemControlHelp(qItems[child.linkId]));
-                    const inlineItem = isItemControlInline(qItems[item.linkId]) ? item.items[0]?.linkId : undefined;
                     const childPath = `${path}.${index}`;
                     const tempItem = { linkId: item.linkId, path: childPath } as FlattOrderTranslation;
-                    if (itemHasHelpChild) {
-                        tempItem.helpItemLinkId = itemHasHelpChild.linkId;
-                    }
-                    if (inlineItem) {
-                        tempItem.inlineItemLinkId = inlineItem;
-                    }
                     if (!isItemControlHelp(qItems[item.linkId])) {
                         tempHierarchy.push(tempItem);
                         index++;
@@ -154,16 +88,8 @@ const TranslationModal = (props: TranslationModalProps): JSX.Element => {
                 .forEach((item, index) => {
                     const itemPath = `${index + 1}`;
                     const tempItem = { linkId: item.linkId, path: itemPath } as FlattOrderTranslation;
-                    const helpItem = item.items.find((child) => isItemControlHelp(qItems[child.linkId]));
-                    if (helpItem) {
-                        tempItem.helpItemLinkId = helpItem.linkId;
-                    }
-                    const inlineItem = isItemControlInline(qItems[item.linkId]) ? item.items[0]?.linkId : undefined;
-                    if (inlineItem) {
-                        tempItem.inlineItemLinkId = inlineItem;
-                    }
                     temp.push(tempItem);
-                    if (item.items && !inlineItem) {
+                    if (item.items && !isItemControlInline(qItems[item.linkId])) {
                         handleChild(item.items, itemPath, temp);
                     }
                 });
@@ -210,8 +136,6 @@ const TranslationModal = (props: TranslationModalProps): JSX.Element => {
                                     targetLanguage={props.targetLanguage}
                                     itemHeading={`${t('Element')} ${orderItem.path}`}
                                 />
-                                {orderItem.helpItemLinkId && renderHelpText(orderItem.helpItemLinkId)}
-                                {orderItem.inlineItemLinkId && renderInlineText(orderItem.inlineItemLinkId)}
                             </div>
                         </div>
                     );
@@ -244,12 +168,6 @@ const TranslationModal = (props: TranslationModalProps): JSX.Element => {
                                     targetLanguage={props.targetLanguage}
                                     translations={qAdditionalLanguages}
                                     extensions={qMetadata.extension}
-                                    dispatch={dispatch}
-                                />
-                                <TranslateSidebar
-                                    targetLanguage={props.targetLanguage}
-                                    translations={qAdditionalLanguages}
-                                    items={qItems}
                                     dispatch={dispatch}
                                 />
                                 {!!qContained && qContained?.length > 0 && (

@@ -1,12 +1,4 @@
-import CreateUUID from '../../helpers/CreateUUID';
-import {
-    ICodingProperty,
-    IEnableWhen,
-    IExtentionType,
-    IItemProperty,
-    IQuestionnaireItemType,
-    IValueSetSystem,
-} from '../../types/IQuestionnareItemType';
+import { ICodingProperty, IEnableWhen, IExtentionType, IItemProperty } from '../../types/IQuestionnareItemType';
 import {
     QuestionnaireItem,
     Extension,
@@ -21,8 +13,6 @@ import {
 import { IQuestionnaireMetadataType } from '../../types/IQuestionnaireMetadataType';
 import { TranslatableItemProperty } from '../../types/LanguageTypes';
 import { Translation, TreeState } from './treeStore';
-import { createItemControlExtension, ItemControlType } from '../../helpers/itemControl';
-import { createMarkdownExtension } from '../../helpers/extensionHelper';
 
 export const ADD_ITEM_CODE_ACTION = 'addItemCode';
 export const ADD_QUESTIONNAIRE_LANGUAGE_ACTION = 'addQuestionnaireLanguage';
@@ -411,48 +401,6 @@ export const newItemAction = (
         item: newQuestionnaireItem,
         order,
         index,
-    };
-};
-
-export const newItemSidebar = (order: Array<string>): NewItemAction => {
-    const sidebar = {
-        extension: [createItemControlExtension(ItemControlType.sidebar)],
-        linkId: CreateUUID(),
-        code: [
-            {
-                system: IValueSetSystem.sotHeader,
-                code: '',
-                display: '',
-            },
-        ],
-        _text: createMarkdownExtension(''),
-        type: IQuestionnaireItemType.text,
-        required: false,
-        repeats: false,
-        readOnly: false,
-    } as QuestionnaireItem;
-    return {
-        type: NEW_ITEM_ACTION,
-        item: sidebar,
-        order,
-    };
-};
-
-export const newItemHelpIconAction = (order: Array<string>): NewItemAction => {
-    const newQuestionnaireItem = {
-        linkId: CreateUUID(),
-        type: IQuestionnaireItemType.text,
-        required: false,
-        repeats: false,
-        readOnly: true,
-        maxLength: 250,
-        _text: createMarkdownExtension(''),
-        extension: [createItemControlExtension(ItemControlType.help)],
-    } as QuestionnaireItem;
-    return {
-        type: NEW_ITEM_ACTION,
-        item: newQuestionnaireItem,
-        order,
     };
 };
 

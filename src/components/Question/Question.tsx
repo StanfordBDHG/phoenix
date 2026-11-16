@@ -14,14 +14,12 @@ import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../typ
 import { updateItemAction } from '../../store/treeStore/treeActions';
 import { isRecipientList } from '../../helpers/QuestionHelper';
 import { removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
-import { isItemControlInline, isItemControlHighlight } from '../../helpers/itemControl';
 
 import Accordion from '../Accordion/Accordion';
 import { ActionType } from '../../store/treeStore/treeStore';
 import AdvancedQuestionOptions from '../AdvancedQuestionOptions/AdvancedQuestionOptions';
 import Choice from './QuestionType/Choice';
 import EnableWhen from '../EnableWhen/EnableWhen';
-import Infotext from './QuestionType/Infotext';
 
 import SwitchBtn from '../SwitchBtn/SwitchBtn';
 import ValidationAnswerTypes from './ValidationAnswerTypes/ValidationAnswerTypes';
@@ -84,12 +82,8 @@ const Question = (props: QuestionProps): JSX.Element => {
     }
 
     const respondType = (): JSX.Element => {
-        if (
-            isItemControlInline(props.item) ||
-            isItemControlHighlight(props.item) ||
-            props.item.type === IQuestionnaireItemType.display
-        ) {
-            return <Infotext item={props.item} parentArray={props.parentArray} />;
+        if (props.item.type === IQuestionnaireItemType.display) {
+            return <></>;
         }
         if (isRecipientList(props.item)) {
             return <OptionReference item={props.item} />;

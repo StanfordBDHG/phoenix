@@ -23,7 +23,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'ckeditor': ['@helsenorge/ckeditor5-build-markdown'],
           'drag-drop': ['@hello-pangea/dnd', '@nosferatu500/react-sortable-tree'],
           'vendor': ['react', 'react-dom', 'react-router-dom'],
           'utils': ['immer', 'date-fns', 'crypto-js', 'axios'],

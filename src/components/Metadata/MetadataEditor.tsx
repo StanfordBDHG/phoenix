@@ -9,7 +9,7 @@ import {
 import DatePicker from '../DatePicker/DatePicker';
 import FormField from '../FormField/FormField';
 import { IQuestionnaireMetadataType } from '../../types/IQuestionnaireMetadataType';
-import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
+import TextAreaField from '../TextAreaField/TextAreaField';
 import { ContactDetail, Extension, Meta, UsageContext } from '../../types/fhir';
 import { TreeContext } from '../../store/treeStore/treeStore';
 import { updateQuestionnaireMetadataAction } from '../../store/treeStore/treeActions';
@@ -247,13 +247,13 @@ const MetadataEditor = (): JSX.Element => {
                 />
             </FormField>
             <FormField label={t('Purpose')} tooltip={t('Explanation of why this questionnaire is needed and why it has been designed as it has.')} isOptional>
-                <MarkdownEditor
+                <TextAreaField
                     data={qMetadata.purpose || ''}
                     onBlur={(purpose: string) => updateMeta(IQuestionnaireMetadataType.purpose, purpose)}
                 />
             </FormField>
             <FormField label={t('Copyright')} tooltip={t('A copyright statement relating to the questionnaire and/or its contents. Copyright statements are generally legal restrictions on the use and publishing of the questionnaire.')} isOptional>
-                <MarkdownEditor
+                <TextAreaField
                     data={qMetadata.copyright || ''}
                     onBlur={(copyright: string) => updateMeta(IQuestionnaireMetadataType.copyright, copyright)}
                 />

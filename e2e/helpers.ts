@@ -52,7 +52,15 @@ export async function mouseDragHandleBelow(page: Page, handle: Locator, target: 
     await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
     await page.mouse.down();
     await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2 + 10, { steps: 5 });
-    await page.mouse.move(to.x + to.width / 2, to.y + to.height / 2 + 15, { steps: 20 });
+    const x = to.x + to.width / 2;
+    const y = to.y + to.height / 2 + 15;
+    await page.mouse.move(x, y, { steps: 20 });
+    // Pause over the target so the list can finish moving the other items out of the way. Releasing
+    // immediately can drop the item one position short when the browser is busy.
+    for (let i = 0; i < 4; i++) {
+        await page.mouse.move(x + (i % 2), y, { steps: 2 });
+        await page.waitForTimeout(50);
+    }
     await page.mouse.up();
 }
 
@@ -71,4 +79,28 @@ export async function expectInputValues(inputs: Locator, expected: string[]): Pr
     await expect
         .poll(() => inputs.evaluateAll((els) => els.map((el) => (el as HTMLInputElement).value)))
         .toEqual(expected);
+}
+
+// Imports a FHIR Questionnaire through the home page's "Paste JSON" dialog.
+export async function importQuestionnaire(page: Page, questionnaire: unknown): Promise<void> {
+    await page.goto('');
+    await page.getByText('Paste JSON').click();
+    await page.locator('textarea').fill(JSON.stringify(questionnaire));
+    await page.getByTitle('Import').click();
+    await expect(page.locator('.questionnaire-overview__toolbox')).toBeVisible();
+}
+
+// Clicks "Download" and returns the exported FHIR Questionnaire.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function downloadQuestionnaire(page: Page): Promise<any> {
+    const [download] = await Promise.all([
+        page.waitForEvent('download'),
+        page.getByText('Download', { exact: true }).click(),
+    ]);
+    const stream = await download.createReadStream();
+    const chunks: Buffer[] = [];
+    for await (const chunk of stream) {
+        chunks.push(chunk as Buffer);
+    }
+    return JSON.parse(Buffer.concat(chunks).toString('utf8'));
 }
