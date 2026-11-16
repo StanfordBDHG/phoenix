@@ -4,7 +4,7 @@
 
 A web application that allows you to build healthcare surveys using the [HL7® FHIR® Questionnaire](https://www.hl7.org/fhir/questionnaire.html) international data standard using an interactive, drag-and-drop interface, and export JSON to be used in [Stanford Spezi](https://github.com/StanfordSpezi) iOS and Android applications to deliver surveys to patients.
 
-<img src="figures/home_screenshot.png" />
+<img src="figures/survey-builder-demo.gif" alt="Creating a survey in Phoenix: dragging Multiple Choice, Number, and Text questions into a new survey, filling in their text and answer options, and previewing the generated FHIR Questionnaire JSON" />
 
 ## Features
 - Drag and drop survey creation
