@@ -3,6 +3,8 @@ import Btn from '../Btn/Btn';
 import IconBtn from '../IconBtn/IconBtn';
 import './Modal.css';
 
+import type { JSX } from 'react';
+
 type Props = {
     close?: () => void;
     title?: string;

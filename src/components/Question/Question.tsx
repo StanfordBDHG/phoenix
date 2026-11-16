@@ -36,6 +36,8 @@ import {
 } from '../../helpers/questionTypeFeatures';
 import SliderSettings from './SliderSettings/SliderSettings';
 
+import type { JSX } from 'react';
+
 interface QuestionProps {
     item: QuestionnaireItem;
     formExtensions: Array<Extension> | undefined;

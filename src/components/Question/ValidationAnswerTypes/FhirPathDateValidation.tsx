@@ -3,6 +3,8 @@ import { format, parse } from 'date-fns';
 import Picker from '../../DatePicker/DatePicker';
 import Select from '../../Select/Select';
 
+import type { JSX } from 'react';
+
 export enum FhirPathDateOperator {
     NOVALIDATION = 'no_validation',
     ABSOLUTE = 'abs',

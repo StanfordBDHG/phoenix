@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { QuestionnaireItemAnswerOption } from '../../../types/fhir';
 import FormField from '../../FormField/FormField';
 import InputField from '../../InputField/inputField';

@@ -4,6 +4,7 @@ import ValidationAnswerTypeString from './ValidationAnswerTypeString';
 import ValidationAnswerTypeDate from './ValidationAnswerTypeDate';
 import { QuestionnaireItem } from '../../../types/fhir';
 import ValidationAnswerTypeAttachment from './ValidationAnswerTypeAttachment';
+import type { JSX } from 'react';
 interface ValidationTypeProp {
     item: QuestionnaireItem;
 }

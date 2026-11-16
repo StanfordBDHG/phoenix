@@ -3,6 +3,8 @@ import { Extension, QuestionnaireItem } from '../../../types/fhir';
 import { IExtentionType } from '../../../types/IQuestionnareItemType';
 import FormField from '../../FormField/FormField';
 
+import type { JSX } from 'react';
+
 type CalculatedExpressionProps = {
     item: QuestionnaireItem;
     updateExtension: (extension: Extension) => void;

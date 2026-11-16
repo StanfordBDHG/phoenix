@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     addItemCodeAction,

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, type JSX } from 'react';
 import { TreeContext } from '../../../store/treeStore/treeStore';
 import { QuestionnaireItem, QuestionnaireItemInitial } from '../../../types/fhir';
 import { IItemProperty, IQuestionnaireItemType } from '../../../types/IQuestionnareItemType';

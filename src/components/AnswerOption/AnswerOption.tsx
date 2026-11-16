@@ -4,6 +4,8 @@ import { QuestionnaireItemAnswerOption } from '../../types/fhir';
 import './AnswerOption.css';
 import InputField from '../InputField/inputField';
 
+import type { JSX } from 'react';
+
 type Props = {
     answerOption?: QuestionnaireItemAnswerOption;
     handleDrag?: DraggableProvidedDragHandleProps | null;

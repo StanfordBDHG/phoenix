@@ -1,5 +1,5 @@
 import './AnchorMenu.css';
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { DndProvider, useDrag } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -88,7 +88,10 @@ const YourExternalNodeComponent = ({ node }: { node: Node }): JSX.Element | null
     return (
         <div
             className="anchor-menu__dragcomponent"
-            ref={drag}
+            ref={(element) => {
+                // React 19 treats a returned value as a cleanup function, so don't return drag()'s result.
+                drag(element);
+            }}
             style={{ opacity }}
         >
             <i className={getRelevantIcon(node.nodeType)} /> &nbsp; {node.nodeReadableType}

@@ -3,6 +3,8 @@ import MetadataEditor from '../../Metadata/MetadataEditor';
 import Drawer from '../Drawer';
 import { useKeyPress } from '../../../hooks/useKeyPress';
 
+import type { JSX } from 'react';
+
 type FormDetailsDrawerProps = {
     setTranslateLang: (language: string) => void;
     closeDrawer: () => void;

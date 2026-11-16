@@ -2,7 +2,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './DatePicker.css';
 
 import DatePicker from 'react-datepicker';
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type DateTimePickerProps = {

@@ -6,6 +6,8 @@ import { Extension } from '../../../types/fhir';
 import { translatableSettings } from '../../../helpers/LanguageHelper';
 import { updateSettingTranslationAction } from '../../../store/treeStore/treeActions';
 
+import type { JSX } from 'react';
+
 type TranslateSettingsProps = {
     targetLanguage: string;
     translations: Languages;

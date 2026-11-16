@@ -1,5 +1,7 @@
 import './IconBtn.css';
 
+import type { JSX } from 'react';
+
 type IconBtnProps = {
     type?: 'back' | 'forward' | 'x' | 'info' | 'check';
     title?: string;

@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode, useRef } from 'react';
+import { ReactNode, useRef, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import IconBtn from '../IconBtn/IconBtn';
 
@@ -35,4 +35,4 @@ const Drawer = (props: DrawerProps): JSX.Element => {
     );
 };
 
-export default forwardRef(Drawer);
+export default Drawer;

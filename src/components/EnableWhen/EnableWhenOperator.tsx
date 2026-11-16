@@ -9,6 +9,8 @@ import {
 } from '../../helpers/QuestionHelper';
 import { QuestionnaireItem, QuestionnaireItemEnableWhen, ValueSetComposeIncludeConcept } from '../../types/fhir';
 
+import type { JSX } from 'react';
+
 interface EnableWhenOperatorProps {
     conditionItem: QuestionnaireItem;
     thisItem: QuestionnaireItem;
