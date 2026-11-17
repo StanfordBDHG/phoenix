@@ -26,6 +26,7 @@
         "test": "jest",
         "test:watch": "jest --watch",
         "test:e2e": "playwright test",
+        "lint": "eslint . --ext .ts,.tsx,.js,.cjs,.mjs --max-warnings 0",
         "record:demo": "node scripts/record-readme-demo.mjs"
     },
     "browserslist": {
@@ -41,6 +42,7 @@
         ]
     },
     "devDependencies": {
+        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@playwright/test": "^1.65.1",
         "@testing-library/dom": "^10.4.2",
         "@testing-library/jest-dom": "^5.11.9",

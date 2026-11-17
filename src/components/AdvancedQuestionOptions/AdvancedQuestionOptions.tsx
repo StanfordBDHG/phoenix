@@ -334,7 +334,7 @@ const AdvancedQuestionOptions = ({ item, parentArray }: AdvancedQuestionOptionsP
                         <div className="msg-error" aria-live="polite">
                             {`${t('LinkId is already in use')} `}
                             <button onClick={resetLinkId}>
-                                <img src={UndoIcon} height={16} />
+                                <img src={UndoIcon} height={16} alt="" />
                                 {` ${t('Reset to original value')}`}
                             </button>
                         </div>

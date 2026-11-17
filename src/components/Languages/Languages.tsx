@@ -22,7 +22,7 @@ const Languages = (props: LanguagesProps): JSX.Element => {
             <div className="additional-languages">
                 {qAdditionalLanguages && Object.keys(qAdditionalLanguages).map((lang) => <div key={lang}>{lang}</div>)}
                 <button className="language-button" onClick={() => props.showTranslationEditor()}>
-                    <img src={PlusIcon} height="25" width="25" />
+                    <img src={PlusIcon} height="25" width="25" alt={t('Add language')} />
                 </button>
             </div>
         );
