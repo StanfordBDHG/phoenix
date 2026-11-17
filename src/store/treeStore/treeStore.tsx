@@ -7,10 +7,8 @@ import {
     ADD_QUESTIONNAIRE_LANGUAGE_ACTION,
     AddItemCodeAction,
     AddQuestionnaireLanguageAction,
-    DELETE_CHILD_ITEMS_ACTION,
     DELETE_ITEM_ACTION,
     DELETE_ITEM_CODE_ACTION,
-    DeleteChildItemsAction,
     DeleteItemAction,
     DeleteItemCodeAction,
     DUPLICATE_ITEM_ACTION,
@@ -81,7 +79,6 @@ export type ActionType =
     | UpdateQuestionnaireMetadataAction
     | NewItemAction
     | DeleteItemAction
-    | DeleteChildItemsAction
     | UpdateItemAction
     | DuplicateItemAction
     | ReorderItemAction
@@ -330,22 +327,6 @@ function deleteItemTranslations(linkIdToDelete: string, languages?: Languages) {
     Object.values(languages).forEach((translation) => {
         delete translation.items[linkIdToDelete];
     });
-}
-
-function deleteChildItems(draft: TreeState, action: DeleteChildItemsAction): void {
-    const itemToDeleteChildrenFrom = findTreeArray(action.order, draft.qOrder).find(
-        (item) => item.linkId === action.linkId,
-    );
-    if (!itemToDeleteChildrenFrom) {
-        return;
-    }
-    const itemsToDelete = getLinkIdOfAllSubItems(itemToDeleteChildrenFrom.items, []);
-    itemsToDelete.forEach((linkIdToDelete: string) => {
-        delete draft.qItems[linkIdToDelete];
-        deleteItemTranslations(linkIdToDelete, draft.qAdditionalLanguages);
-    });
-    // delete node from qOrder
-    itemToDeleteChildrenFrom.items = [];
 }
 
 function deleteItem(draft: TreeState, action: DeleteItemAction): void {
@@ -706,9 +687,6 @@ const reducer = produce((draft: TreeState, action: ActionType) => {
             break;
         case DELETE_ITEM_ACTION:
             deleteItem(draft, action);
-            break;
-        case DELETE_CHILD_ITEMS_ACTION:
-            deleteChildItems(draft, action);
             break;
         case UPDATE_ITEM_ACTION:
             updateItem(draft, action);
