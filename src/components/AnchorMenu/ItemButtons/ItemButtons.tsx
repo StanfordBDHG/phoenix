@@ -1,4 +1,4 @@
-import { MouseEvent, type JSX } from 'react';
+import { KeyboardEvent, MouseEvent, type JSX } from 'react';
 import { TFunction } from 'react-i18next';
 
 import { ActionType } from '../../../store/treeStore/treeStore';
@@ -27,6 +27,14 @@ export const generateItemButtons = (
         dispatch(duplicateItemAction(item.linkId, parentArray));
     };
 
+    // These buttons also render inside survey tree rows. The tree handles Enter and Space itself (to expand or
+    // collapse a row) and prevents their default action, which would stop the key press from clicking the button.
+    const keepKeyPressOnButton = (event: KeyboardEvent<HTMLButtonElement>): void => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.stopPropagation();
+        }
+    };
+
     const getClassNames = () => {
         return `item-button ${showLabel ? 'item-button--visible' : ''}`;
     };
@@ -36,6 +44,7 @@ export const generateItemButtons = (
             key="duplicate-item-button"
             className={getClassNames()}
             onClick={dispatchDuplicateItem}
+            onKeyDown={keepKeyPressOnButton}
             aria-label="Duplicate element"
             title={t('Duplicate')}
         >
@@ -46,6 +55,7 @@ export const generateItemButtons = (
             key="delete-item-button"
             className={getClassNames()}
             onClick={dispatchDeleteItem}
+            onKeyDown={keepKeyPressOnButton}
             aria-label="Delete element"
             title={t('Delete')}
         >
