@@ -1,0 +1,35 @@
+{
+    "description": "The renderer versions the compatibility rules were last checked against. scripts/watch-renderer-releases.ts compares these with each repository and opens an issue when something newer appears. After re-checking the rules against a new version, update its entry here.",
+    "renderers": [
+        {
+            "name": "ResearchKitOnFHIR",
+            "repo": "StanfordBDHG/ResearchKitOnFHIR",
+            "watch": "tags",
+            "verified": "3.0.0-beta.2",
+            "rules": "src/compatibility/researchKitOnFHIR.ts (RKOF_VERSIONS)"
+        },
+        {
+            "name": "FHIRModelsExtensions",
+            "repo": "StanfordBDHG/FHIRModelsExtensions",
+            "watch": "tags",
+            "verified": "0.2.0",
+            "rules": "src/compatibility/researchKitOnFHIR.ts (extension parsing, used by ResearchKitOnFHIR 3.x)"
+        },
+        {
+            "name": "SpeziQuestionnaire",
+            "repo": "StanfordSpezi/SpeziQuestionnaire",
+            "watch": "tags",
+            "verified": "2.0.0-beta.3",
+            "rules": "not covered yet: 2.x has its own converter (SpeziQuestionnaireFHIR); 1.x uses ResearchKitOnFHIR"
+        },
+        {
+            "name": "SpeziVibe React Native questionnaire package",
+            "repo": "StanfordSpezi/SpeziVibeReactNativeTemplate",
+            "watch": "commits",
+            "branch": "main",
+            "path": "packages/questionnaire",
+            "verified": "0762807",
+            "rules": "src/compatibility/speziVibeReactNative.ts (RN_VERSIONS)"
+        }
+    ]
+}

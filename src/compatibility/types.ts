@@ -26,6 +26,8 @@ export interface Target {
     /** Human-readable name, e.g. `ResearchKitOnFHIR 2.0.10 (SpeziQuestionnaire 1.x)`. */
     name: string;
     check: (questionnaire: Questionnaire) => Issue[];
+    /** Set when the requested version wasn't one the checker lists, explaining which rules were used. */
+    note?: string;
 }
 
 export const URLS = {

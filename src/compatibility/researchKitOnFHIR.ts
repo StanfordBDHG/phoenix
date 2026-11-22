@@ -1,5 +1,6 @@
 import type { Questionnaire, QuestionnaireItem, QuestionnaireItemAnswerOption, QuestionnaireItemEnableWhen, ValueSet } from '../types/fhir';
 import { MAX_SLIDER_STEPS, MAX_SLIDER_VALUE, MIN_SLIDER_VALUE, suggestSliderStep } from '../helpers/sliderHelper';
+import { compareVersions, resolveVersion } from './versions';
 import { checkStructure, findExtension, Issue, issue, itemControlCode, label, Target, URLS, walkItems } from './types';
 
 // Rules for ResearchKitOnFHIR (https://github.com/StanfordBDHG/ResearchKitOnFHIR), which SpeziQuestionnaire 1.x uses
@@ -11,22 +12,6 @@ import { checkStructure, findExtension, Issue, issue, itemControlCode, label, Ta
 export const RKOF_VERSIONS = ['2.0.0', '2.0.1', '2.0.2', '2.0.3', '2.0.4', '2.0.5', '2.0.6', '2.0.7', '2.0.10', '3.0.0-beta.2'];
 /** What SpeziQuestionnaire 1.3.x resolves to today (it allows 2.0.4 up to, but not including, 3.0.0). */
 export const RKOF_DEFAULT_VERSION = '2.0.10';
-
-/** Compares `major.minor.patch[-beta.n]` versions; a pre-release sorts before its release. */
-export const compareVersions = (a: string, b: string): number => {
-    const parse = (v: string) => {
-        const [core, pre] = v.split('-');
-        const nums = core.split('.').map(Number);
-        const preNum = pre ? Number(pre.replace(/\D+/g, '')) || 0 : Infinity;
-        return [...nums, preNum];
-    };
-    const [pa, pb] = [parse(a), parse(b)];
-    for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
-        const diff = (pa[i] ?? 0) - (pb[i] ?? 0);
-        if (diff !== 0) return diff;
-    }
-    return 0;
-};
 
 const QUESTION_TYPES = ['boolean', 'decimal', 'integer', 'date', 'dateTime', 'time', 'string', 'text', 'url', 'choice', 'open-choice', 'reference', 'quantity', 'question'];
 
@@ -237,8 +222,12 @@ export const checkResearchKitOnFHIR = (questionnaire: Questionnaire, version: st
     return issues;
 };
 
-export const researchKitOnFHIRTarget = (version: string = RKOF_DEFAULT_VERSION): Target => ({
-    id: `researchkit-on-fhir@${version}`,
-    name: `ResearchKitOnFHIR ${version} (iOS, SpeziQuestionnaire 1.x)`,
-    check: (questionnaire) => checkResearchKitOnFHIR(questionnaire, version),
-});
+export const researchKitOnFHIRTarget = (requested: string = RKOF_DEFAULT_VERSION): Target => {
+    const { version, note } = resolveVersion('ResearchKitOnFHIR', RKOF_VERSIONS, requested);
+    return {
+        id: `researchkit-on-fhir@${version}`,
+        name: `ResearchKitOnFHIR ${version} (iOS, SpeziQuestionnaire 1.x)`,
+        check: (questionnaire) => checkResearchKitOnFHIR(questionnaire, version),
+        note,
+    };
+};

@@ -24,9 +24,13 @@ survey.json: ResearchKitOnFHIR 2.0.10 (iOS, SpeziQuestionnaire 1.x)
 | Target | Renderer |
 |---|---|
 | `researchkit-on-fhir[@version]` (aliases `ios`, `rkof`) | [ResearchKitOnFHIR](https://github.com/StanfordBDHG/ResearchKitOnFHIR), used by SpeziQuestionnaire 1.x on iOS. Versions 2.0.0 to 3.0.0-beta.2; the default is 2.0.10, which SpeziQuestionnaire 1.3 resolves to. Run `--list-targets` for all of them. |
-| `spezivibe-react-native` (alias `react-native`) | The questionnaire package of the [SpeziVibe React Native template](https://github.com/StanfordSpezi/SpeziVibeReactNativeTemplate), as of its main branch on 2026-03-15. It isn't versioned: apps get a copy of the template when they're created. |
+| `spezivibe-react-native[@version]` (alias `react-native`) | The questionnaire package of the [SpeziVibe React Native template](https://github.com/StanfordSpezi/SpeziVibeReactNativeTemplate). Apps get a copy of the package when they're created, so use the version in the app's `packages/questionnaire/package.json`: 1.0.0, or 1.1.0, which fixed validation and saved answers. The default is 1.1.0. |
 
 SpeziQuestionnaire 2.x on iOS uses a new converter that isn't covered yet.
+
+**Newer versions:** renderers keep releasing. A version the checker doesn't list isn't an error: it uses the rules of the closest earlier version it knows, and prints a note saying so (also in `--json` output). Only versions older than the checker covers are rejected.
+
+**Keeping the rules current:** `src/compatibility/verified-renderers.json` records the version of each renderer the rules were last checked against. A weekly workflow (`.github/workflows/watch-renderer-releases.yml`) opens an issue in Phoenix when a renderer has newer releases or commits.
 
 ## Options
 

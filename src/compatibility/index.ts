@@ -1,31 +1,32 @@
 import type { Questionnaire } from '../types/fhir';
 import { RKOF_DEFAULT_VERSION, RKOF_VERSIONS, researchKitOnFHIRTarget } from './researchKitOnFHIR';
-import { speziVibeReactNativeTarget } from './speziVibeReactNative';
+import { RN_VERSIONS, speziVibeReactNativeTarget } from './speziVibeReactNative';
 import type { Issue, Target } from './types';
 
 export type { Issue, Severity, Target } from './types';
 export { RKOF_DEFAULT_VERSION, RKOF_VERSIONS } from './researchKitOnFHIR';
+export { RN_DEFAULT_VERSION, RN_VERSIONS } from './speziVibeReactNative';
 
 export const DEFAULT_TARGET = `researchkit-on-fhir@${RKOF_DEFAULT_VERSION}`;
 
 /** Every target id the checker accepts, for help text and pickers. */
-export const TARGET_IDS = [...RKOF_VERSIONS.map((v) => `researchkit-on-fhir@${v}`), speziVibeReactNativeTarget.id];
+export const TARGET_IDS = [
+    ...RKOF_VERSIONS.map((v) => `researchkit-on-fhir@${v}`),
+    ...RN_VERSIONS.map((v) => `spezivibe-react-native@${v}`),
+];
 
 /**
- * Resolves a target id: `researchkit-on-fhir` (or `rkof`), optionally with `@<version>`, or `spezivibe-react-native`
- * (or `react-native`). Throws for anything else.
+ * Resolves a target id: `researchkit-on-fhir` (or `ios`, `rkof`) or `spezivibe-react-native` (or `react-native`),
+ * optionally with `@<version>`. A version the checker doesn't list uses the closest earlier version's rules, and the
+ * target's `note` says so. Throws for an unknown renderer, or a version older than the checker covers.
  */
 export const getTarget = (id: string): Target => {
     const [name, version] = id.trim().toLowerCase().split('@');
     if (['researchkit-on-fhir', 'researchkitonfhir', 'rkof', 'ios'].includes(name)) {
-        const resolved = version ?? RKOF_DEFAULT_VERSION;
-        if (!RKOF_VERSIONS.includes(resolved)) {
-            throw new Error(`Unknown ResearchKitOnFHIR version "${resolved}". Known versions: ${RKOF_VERSIONS.join(', ')}.`);
-        }
-        return researchKitOnFHIRTarget(resolved);
+        return researchKitOnFHIRTarget(version);
     }
     if (['spezivibe-react-native', 'react-native', 'rn'].includes(name)) {
-        return speziVibeReactNativeTarget;
+        return speziVibeReactNativeTarget(version);
     }
     throw new Error(`Unknown target "${id}". Use one of: ${TARGET_IDS.join(', ')}.`);
 };

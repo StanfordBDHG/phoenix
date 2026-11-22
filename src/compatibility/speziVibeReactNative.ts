@@ -1,16 +1,25 @@
 import type { Questionnaire, QuestionnaireItem } from '../types/fhir';
 import { checkStructure, findExtension, Issue, issue, itemControlCode, label, Target, URLS, walkItems } from './types';
+import { compareVersions, resolveVersion } from './versions';
 
 // Rules for the questionnaire package of the SpeziVibe React Native template
 // (https://github.com/StanfordSpezi/SpeziVibeReactNativeTemplate, packages/questionnaire). It is not published to npm:
-// `create-spezivibe-app` copies the template's main branch into each new app, so these rules describe apps generated
-// from main as of commit 443995a (2026-03-15). The package's behaviour hasn't changed since it was created.
-// File references are relative to packages/questionnaire/src at that commit.
+// `create-spezivibe-app` copies the template into each new app, so an app keeps the package version it was created
+// with; it's in the app's packages/questionnaire/package.json.
+// - 1.0.0: the package as created, up to commit 0762807. File references are relative to packages/questionnaire/src.
+// - 1.1.0: SpeziVibeReactNativeTemplate#25, which validates optional and only shown questions, saves string and integer
+//   choice answers, and saves time answers in FHIR format.
+
+export const RN_VERSIONS = ['1.0.0', '1.1.0'];
+export const RN_DEFAULT_VERSION = '1.1.0';
 
 const RENDERED_TYPES = ['group', 'display', 'boolean', 'string', 'text', 'integer', 'decimal', 'date', 'dateTime', 'time', 'choice', 'open-choice'];
 
-export const checkSpeziVibeReactNative = (questionnaire: Questionnaire): Issue[] => {
+export const checkSpeziVibeReactNative = (questionnaire: Questionnaire, version: string = RN_DEFAULT_VERSION): Issue[] => {
     const issues = checkStructure(questionnaire);
+    // Fixed in 1.1.0: hidden or unshown questions no longer block Submit, limits apply to optional questions, string
+    // and integer choice answers are saved, and time answers are saved as hh:mm:ss.
+    const fixed = compareVersions(version, '1.1.0') >= 0;
     const contexts = walkItems(questionnaire);
     const byLinkId = new Map(contexts.map(({ item }) => [item.linkId, item]));
 
@@ -24,7 +33,7 @@ export const checkSpeziVibeReactNative = (questionnaire: Questionnaire): Issue[]
         // A required item the participant can't see or answer blocks Submit, with no message
         // (validation/schema-builder.ts validates every required item; it ignores enableWhen and rendering).
         const unanswerable = (why: string, fix: string) =>
-            required
+            required && !fixed
                 ? add('error', 'rn/required-unanswerable', `${label(item)} is required but ${why}, so Submit silently does nothing. ${fix}`)
                 : add('warning', 'rn/not-shown', `${label(item)} ${why}. ${fix}`);
 
@@ -36,7 +45,7 @@ export const checkSpeziVibeReactNative = (questionnaire: Questionnaire): Issue[]
             unanswerable(`has type "${item.type}", which the app doesn't support and leaves out`, 'Use a supported type, or remove it.');
             continue;
         }
-        if (required && conditional) {
+        if (required && conditional && !fixed) {
             add('error', 'rn/required-conditional', `${label(item)} is required and only shown when a condition holds. While it's hidden, Submit silently does nothing, because the app still requires an answer. Make it optional.`);
         }
 
@@ -44,8 +53,10 @@ export const checkSpeziVibeReactNative = (questionnaire: Questionnaire): Issue[]
             const options = item.answerOption ?? [];
             if (options.length === 0) {
                 unanswerable(`has no answerOption${item.answerValueSet ? ' (the app ignores answerValueSet)' : ''}, so the app shows no choices`, 'List the choices in answerOption.');
-            } else if (options.some((option) => !option.valueCoding)) {
+            } else if (!fixed && options.some((option) => !option.valueCoding)) {
                 add('warning', 'rn/non-coding-option', `Some options of ${label(item)} aren't valueCoding. Participants can pick them, but the answer is left out of the response, and conditions on it never match. Use valueCoding for every option.`);
+            } else if (fixed && options.some((option) => !option.valueCoding && option.valueString === undefined && option.valueInteger === undefined)) {
+                add('warning', 'rn/non-coding-option', `Some options of ${label(item)} are dates, times or references, which the app can't offer properly: their answers are left out of the response. Use valueCoding, valueString or valueInteger.`);
             }
             if (item.type === 'open-choice') {
                 add('warning', 'rn/open-choice', `${label(item)} is open-choice, but the app has no free-text "other" entry: it works like a plain choice.`);
@@ -56,10 +67,10 @@ export const checkSpeziVibeReactNative = (questionnaire: Questionnaire): Issue[]
         const hasLimit = [URLS.minValue, URLS.maxValue].some((url) => findExtension(item, url));
         if (hasLimit && ['date', 'dateTime', 'time'].includes(item.type)) {
             add('warning', 'rn/date-limit-ignored', `The app ignores the minimum and maximum of ${label(item)}.`);
-        } else if (hasLimit && !item.required) {
+        } else if (hasLimit && !item.required && !fixed) {
             add('warning', 'rn/limit-optional', `The app only enforces the minimum and maximum of required questions, so ${label(item)} accepts any value. Make it required, or check the value elsewhere.`);
         }
-        if (item.type === 'time') {
+        if (item.type === 'time' && !fixed) {
             add('warning', 'rn/time-format', `The app saves answers to the time question ${label(item)} as "HH:MM" without checking the format, but FHIR requires "hh:mm:ss", so the response may be invalid FHIR.`);
         }
 
@@ -108,8 +119,12 @@ export const checkSpeziVibeReactNative = (questionnaire: Questionnaire): Issue[]
     return issues;
 };
 
-export const speziVibeReactNativeTarget: Target = {
-    id: 'spezivibe-react-native',
-    name: 'SpeziVibe React Native template (questionnaire package, main as of 2026-03-15)',
-    check: checkSpeziVibeReactNative,
+export const speziVibeReactNativeTarget = (requested: string = RN_DEFAULT_VERSION): Target => {
+    const { version, note } = resolveVersion('The SpeziVibe React Native questionnaire package', RN_VERSIONS, requested);
+    return {
+        id: `spezivibe-react-native@${version}`,
+        name: `SpeziVibe React Native template (questionnaire package ${version})`,
+        check: (questionnaire) => checkSpeziVibeReactNative(questionnaire, version),
+        note,
+    };
 };

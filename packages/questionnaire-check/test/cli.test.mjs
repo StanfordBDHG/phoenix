@@ -27,10 +27,18 @@ test('checks several targets and prints JSON', () => {
     const output = JSON.parse(result.stdout);
     assert.deepEqual(
         output.results.map((r) => r.target),
-        ['researchkit-on-fhir@2.0.6', 'spezivibe-react-native'],
+        ['researchkit-on-fhir@2.0.6', 'spezivibe-react-native@1.1.0'],
     );
     assert.equal(output.errors, 3);
-    assert.equal(output.warnings, 1);
+    assert.equal(output.warnings, 0);
+});
+
+test('uses the newest rules for a newer version, with a note', () => {
+    const result = run(fixture('date-conditions.json'), '--target', 'ios@3.2.0');
+    assert.match(result.stdout, /ResearchKitOnFHIR 3\.0\.0-beta\.2 \(iOS/);
+    assert.match(result.stdout, /note: ResearchKitOnFHIR 3\.2\.0 is newer than the checker's rules/);
+    const json = JSON.parse(run(fixture('date-conditions.json'), '--target', 'ios@3.2.0', '--json').stdout);
+    assert.match(json.results[0].note, /last checked against 3\.0\.0-beta\.2/);
 });
 
 test('prints a Phoenix link that decodes to the original file', () => {
@@ -45,5 +53,6 @@ test('exits with status 2 on bad input', () => {
     assert.equal(run('does-not-exist.json').status, 2);
     assert.equal(run(fileURLToPath(new URL('../package.json', import.meta.url))).status, 2);
     assert.equal(run(fixture('date-conditions.json'), '--target', 'android').status, 2);
+    assert.equal(run(fixture('date-conditions.json'), '--target', 'ios@1.0.0').status, 2);
     assert.equal(run().status, 2);
 });

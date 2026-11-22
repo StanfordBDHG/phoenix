@@ -1,6 +1,14 @@
 import { useMemo, useState, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import { checkQuestionnaire, DEFAULT_TARGET, getTarget, RKOF_DEFAULT_VERSION, RKOF_VERSIONS } from '../../compatibility';
+import {
+    checkQuestionnaire,
+    DEFAULT_TARGET,
+    getTarget,
+    RKOF_DEFAULT_VERSION,
+    RKOF_VERSIONS,
+    RN_DEFAULT_VERSION,
+    RN_VERSIONS,
+} from '../../compatibility';
 import Modal from '../Modal/Modal';
 import type { Questionnaire } from '../../types/fhir';
 import './CompatibilityModal.css';
@@ -17,8 +25,8 @@ const readStoredTarget = (): string => {
     try {
         const stored = localStorage.getItem(TARGET_STORAGE_KEY);
         if (stored) {
-            getTarget(stored);
-            return stored;
+            // Normalize, e.g. an id saved before React Native targets had versions.
+            return getTarget(stored).id;
         }
     } catch {
         // Storage unavailable, or a target that no longer exists.
@@ -58,8 +66,13 @@ const CompatibilityModal = ({ questionnaire, onClose }: CompatibilityModalProps)
                                 </option>
                             ))}
                         </optgroup>
-                        <optgroup label="React Native">
-                            <option value="spezivibe-react-native">SpeziVibe React Native template</option>
+                        <optgroup label="React Native (SpeziVibe template)">
+                            {[...RN_VERSIONS].reverse().map((version) => (
+                                <option key={version} value={`spezivibe-react-native@${version}`}>
+                                    questionnaire package {version}
+                                    {version === RN_DEFAULT_VERSION ? ` (${t('current')})` : ''}
+                                </option>
+                            ))}
                         </optgroup>
                     </select>
                 </label>

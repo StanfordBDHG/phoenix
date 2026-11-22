@@ -10,8 +10,10 @@ and reports anything the app would reject (error) or silently ignore (warning).
 
 Options:
   -t, --target <ids>    Renderers to check, comma-separated (default: ${DEFAULT_TARGET}).
-                          researchkit-on-fhir[@version]  iOS, SpeziQuestionnaire 1.x (alias: ios, rkof)
-                          spezivibe-react-native         SpeziVibe React Native template (alias: react-native)
+                          researchkit-on-fhir[@version]     iOS, SpeziQuestionnaire 1.x (alias: ios, rkof)
+                          spezivibe-react-native[@version]  SpeziVibe React Native template (alias: react-native)
+                        Without a version, the newest known one is used. A version the checker
+                        doesn't list uses the closest earlier version's rules, with a note.
       --list-targets    Print every known target and exit.
       --json            Print the result as JSON.
       --strict          Exit with status 1 on warnings too, not only errors.
@@ -107,7 +109,12 @@ const main = () => {
         fail((error as Error).message);
     }
 
-    const results = targets.map((target) => ({ target: target.id, name: target.name, issues: checkQuestionnaire(questionnaire, target) }));
+    const results = targets.map((target) => ({
+        target: target.id,
+        name: target.name,
+        ...(target.note ? { note: target.note } : {}),
+        issues: checkQuestionnaire(questionnaire, target),
+    }));
     const all = results.flatMap((r) => r.issues);
     const errors = all.filter((i) => i.severity === 'error').length;
     const warnings = all.length - errors;
@@ -118,6 +125,7 @@ const main = () => {
     } else {
         for (const result of results) {
             process.stdout.write(`${file}: ${result.name}\n`);
+            if (result.note) process.stdout.write(`  note: ${result.note}\n`);
             process.stdout.write(result.issues.length ? `${result.issues.map(formatIssue).join('\n')}\n` : '  no issues\n');
         }
         process.stdout.write(`${errors} error${errors === 1 ? '' : 's'}, ${warnings} warning${warnings === 1 ? '' : 's'}\n`);

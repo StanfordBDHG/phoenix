@@ -1,6 +1,8 @@
 import type { Questionnaire, QuestionnaireItem } from '../types/fhir';
 import { checkQuestionnaire, getTarget, TARGET_IDS } from './index';
-import { compareVersions } from './researchKitOnFHIR';
+import { compareVersions } from './versions';
+import { RKOF_VERSIONS } from './researchKitOnFHIR';
+import verified from './verified-renderers.json';
 import { URLS } from './types';
 
 const SYSTEM = 'http://example.org/codes';
@@ -49,10 +51,33 @@ describe('targets', () => {
     it('resolves aliases and versions', () => {
         expect(getTarget('rkof').id).toBe('researchkit-on-fhir@2.0.10');
         expect(getTarget('ios@2.0.6').id).toBe('researchkit-on-fhir@2.0.6');
-        expect(getTarget('react-native').id).toBe('spezivibe-react-native');
-        expect(() => getTarget('rkof@9.9.9')).toThrow('Unknown ResearchKitOnFHIR version');
+        expect(getTarget('react-native').id).toBe('spezivibe-react-native@1.1.0');
+        expect(getTarget('rn@1.0.0').id).toBe('spezivibe-react-native@1.0.0');
+        expect(getTarget('rkof').note).toBeUndefined();
         expect(() => getTarget('android')).toThrow('Unknown target');
         expect(TARGET_IDS).toContain('researchkit-on-fhir@3.0.0-beta.2');
+        expect(TARGET_IDS).toContain('spezivibe-react-native@1.0.0');
+    });
+
+    it('uses the newest rules for a newer version, and says so', () => {
+        const target = getTarget('ios@3.1.0');
+        expect(target.id).toBe('researchkit-on-fhir@3.0.0-beta.2');
+        expect(target.note).toBe(
+            'ResearchKitOnFHIR 3.1.0 is newer than the checker\'s rules, which were last checked against 3.0.0-beta.2. ' +
+                'Its rules were used, so newer features may be reported as unsupported.',
+        );
+        expect(getTarget('react-native@1.2.0').id).toBe('spezivibe-react-native@1.1.0');
+    });
+
+    it('uses the closest earlier rules for a version between known ones', () => {
+        const target = getTarget('ios@2.0.8');
+        expect(target.id).toBe('researchkit-on-fhir@2.0.7');
+        expect(target.note).toContain('the rules for 2.0.7, the closest earlier one, were used');
+    });
+
+    it('rejects versions it does not cover', () => {
+        expect(() => getTarget('ios@1.3.0')).toThrow('The checker covers ResearchKitOnFHIR 2.0.0 and later, not 1.3.0.');
+        expect(() => getTarget('ios@latest')).toThrow('"latest" isn\'t a ResearchKitOnFHIR version');
     });
 
     it('orders versions, with pre-releases before their release', () => {
@@ -60,6 +85,10 @@ describe('targets', () => {
         expect(compareVersions('3.0.0-beta.2', '2.0.10')).toBeGreaterThan(0);
         expect(compareVersions('3.0.0-beta.1', '3.0.0')).toBeLessThan(0);
         expect(compareVersions('3.0.0-beta.2', '3.0.0-beta.1')).toBeGreaterThan(0);
+        expect(compareVersions('2.0.4', '2.0.4')).toBe(0);
+        expect(compareVersions('2.0', '2.0.0')).toBe(0);
+        expect(compareVersions('2.1', '2.0.10')).toBeGreaterThan(0);
+        expect(compareVersions('3.0.0-beta.2', '3.0.0-beta.2')).toBe(0);
     });
 });
 
@@ -150,6 +179,8 @@ describe('ResearchKitOnFHIR', () => {
         expect(rules(questionnaire, 'rkof@2.0.2')).toEqual(['error rkof/enable-when-unsupported x', 'error rkof/enable-when-unsupported x']);
         expect(rules(questionnaire, 'rkof@2.0.3')).toEqual(['warning rkof/enable-behavior-swapped x']);
         expect(rules(q(...wellFormed.item!), 'rkof@2.0.5')).toEqual(['warning rkof/enable-when-group-selector packs', 'warning rkof/decimal-limit weight']);
+        // 2.0.4 is affected too (an equal-version comparison used to miss it).
+        expect(rules(q(...wellFormed.item!), 'rkof@2.0.4')).toEqual(['warning rkof/enable-when-group-selector packs', 'warning rkof/decimal-limit weight']);
     });
 
     it.each([
@@ -195,9 +226,9 @@ describe('ResearchKitOnFHIR', () => {
     });
 });
 
-describe('SpeziVibe React Native', () => {
+describe('SpeziVibe React Native 1.0.0', () => {
     it('reports what a typical Phoenix survey loses', () => {
-        expect(rules(wellFormed, 'react-native')).toEqual([
+        expect(rules(wellFormed, 'react-native@1.0.0')).toEqual([
             'warning rn/limit-optional packs',
             'warning rn/limit-optional pain',
             'warning rn/ignored pain',
@@ -214,7 +245,7 @@ describe('SpeziVibe React Native', () => {
             { linkId: 'q', type: 'string', text: 'Q', item: [{ linkId: 'child', type: 'string', text: 'Child', required: true }] },
             { linkId: 'opt', type: 'quantity', text: 'Opt' },
         );
-        expect(rules(questionnaire, 'react-native')).toEqual([
+        expect(rules(questionnaire, 'react-native@1.0.0')).toEqual([
             'error rn/required-conditional cond',
             'error rn/required-unanswerable photo',
             'error rn/required-unanswerable vs',
@@ -228,10 +259,42 @@ describe('SpeziVibe React Native', () => {
             { linkId: 'c', type: 'open-choice', text: 'C', answerOption: [{ valueCoding: coding('a') }, { valueString: 'b' }] },
             { linkId: 'x', type: 'string', text: 'X', enableWhen: [{ question: 'c', operator: '=', answerCoding: { code: 'a' } }] },
         );
-        expect(rules(questionnaire, 'react-native')).toEqual([
+        expect(rules(questionnaire, 'react-native@1.0.0')).toEqual([
             'warning rn/non-coding-option c',
             'warning rn/open-choice c',
             'warning rn/enable-when-coding-mismatch x',
         ]);
+    });
+});
+
+describe('SpeziVibe React Native 1.1.0', () => {
+    it('no longer reports what 1.1.0 fixed', () => {
+        expect(rules(wellFormed, 'react-native@1.1.0')).toEqual(['warning rn/ignored pain']);
+        const time = q({ linkId: 't', type: 'time', text: 'T' });
+        expect(rules(time, 'react-native@1.1.0')).toEqual([]);
+    });
+
+    it('reports questions it cannot show as warnings, since they no longer block Submit', () => {
+        const questionnaire = q(
+            { linkId: 'gate', type: 'boolean', text: 'Gate' },
+            { linkId: 'cond', type: 'string', text: 'Cond', required: true, enableWhen: [{ question: 'gate', operator: '=', answerBoolean: true }] },
+            { linkId: 'photo', type: 'attachment', text: 'Photo', required: true },
+        );
+        expect(rules(questionnaire, 'react-native@1.1.0')).toEqual(['warning rn/not-shown photo']);
+    });
+
+    it('accepts string and integer options, but not other kinds', () => {
+        const options = (...answerOption: object[]) => q({ linkId: 'c', type: 'choice', text: 'C', answerOption });
+        expect(rules(options({ valueString: 'a' }, { valueInteger: 1 }, { valueCoding: coding('b') }), 'react-native@1.1.0')).toEqual([]);
+        expect(rules(options({ valueString: 'a' }, { valueDate: '2026-01-01' }), 'react-native@1.1.0')).toEqual([
+            'warning rn/non-coding-option c',
+        ]);
+    });
+});
+
+describe('verified-renderers.json', () => {
+    it('matches the newest ResearchKitOnFHIR version the rules list', () => {
+        const rkof = verified.renderers.find((r) => r.name === 'ResearchKitOnFHIR');
+        expect(rkof?.verified).toBe(RKOF_VERSIONS[RKOF_VERSIONS.length - 1]);
     });
 });
