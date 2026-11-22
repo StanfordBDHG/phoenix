@@ -32,44 +32,74 @@ const FrontPage = (): JSX.Element => {
     const [linkError, setLinkError] = useState<string>();
 
     // The latest values, for the hashchange listener registered once on mount (see below).
-    const latest = useRef({ state, stateFromStorage, isFormBuilderShown });
-    latest.current = { state, stateFromStorage, isFormBuilderShown };
-
+    const latest = useRef({ state, stateFromStorage, isFormBuilderShown, storedStateForLink });
+    latest.current = { state, stateFromStorage, isFormBuilderShown, storedStateForLink };
+    // The survey saved in the browser, read once on mount. A failed read counts as no saved survey, so that a link
+    // still opens.
+    const storedState = useRef<Promise<TreeState | undefined>>(undefined);
+    // Whether the saved survey has been handed on: offered for restore, or considered by a link.
+    const isStoredStateHandled = useRef(false);
+    // Numbers each link import, so that only the newest one is applied when several finish out of order.
+    const linkRequest = useRef(0);
 
     const hasItems = (treeState?: TreeState): boolean =>
         treeState?.qItems ? Object.keys(treeState.qItems).length > 0 : false;
 
     const loadInitialQuestionnaire = async () => {
-        const [indexedDbState, linked] = await Promise.all([getStateFromDb(), readLinkedQuestionnaire(window.location.search, window.location.hash)]);
+        const request = ++linkRequest.current;
+        const [indexedDbState, linked] = await Promise.all([
+            storedState.current,
+            readLinkedQuestionnaire(window.location.search, window.location.hash),
+        ]);
         if (linked) {
-            handleLinkedQuestionnaire(linked, indexedDbState);
-        } else {
+            applyLinkedQuestionnaire(request, linked, indexedDbState);
+        } else if (request === linkRequest.current && !isStoredStateHandled.current) {
+            isStoredStateHandled.current = true;
             setStateFromStorage(indexedDbState);
         }
     };
 
     const openLinkedQuestionnaire = async () => {
-        const linked = await readLinkedQuestionnaire(window.location.search, window.location.hash);
-        if (!linked) {
-            return;
+        const request = ++linkRequest.current;
+        const [indexedDbState, linked] = await Promise.all([
+            storedState.current,
+            readLinkedQuestionnaire(window.location.search, window.location.hash),
+        ]);
+        if (linked) {
+            applyLinkedQuestionnaire(request, linked, indexedDbState);
         }
-        const { state: current, stateFromStorage: pendingRestore, isFormBuilderShown: isEditing } = latest.current;
+    };
+
+    // Decides what the link would replace once it has loaded, since the user may have started editing or opened
+    // another link in the meantime.
+    const applyLinkedQuestionnaire = (request: number, linked: LinkedQuestionnaire, indexedDbState?: TreeState) => {
+        if (request !== linkRequest.current) {
+            return; // A newer link superseded this one.
+        }
+        const { state: current, stateFromStorage: pendingRestore, isFormBuilderShown: isEditing, storedStateForLink: retained } =
+            latest.current;
+        const stored = isStoredStateHandled.current ? undefined : indexedDbState;
+        isStoredStateHandled.current = true;
         if (isEditing) {
             // Keeping the survey in progress means leaving the editor as it is.
             handleLinkedQuestionnaire(linked, current, false);
         } else {
-            // Still on the front page: the survey in progress is the one the restore prompt offers.
+            // Still on the front page: the survey in progress is the saved one, whether the restore prompt or an
+            // earlier link prompt is offering it, or it hasn't been offered yet.
             setStateFromStorage(undefined);
-            handleLinkedQuestionnaire(linked, pendingRestore);
+            handleLinkedQuestionnaire(linked, retained ?? pendingRestore ?? stored);
         }
     };
 
     // `inProgress` is the survey the link would replace. When `restoreOnKeep` is set, keeping it (or dismissing an
-    // error) restores it from storage, as on a fresh page load; otherwise it is already on screen.
+    // error) restores it from storage, as on a fresh page load; otherwise it is already on screen. A new link replaces
+    // any prompt or error from an earlier one.
     const handleLinkedQuestionnaire = (linked: LinkedQuestionnaire, inProgress?: TreeState, restoreOnKeep = true) => {
         // Remove the survey from the address bar, so reloading the page doesn't import it over the user's edits.
         window.history.replaceState(window.history.state, '', removeLinkParameters(window.location.href));
         setStoredStateForLink(restoreOnKeep ? inProgress : undefined);
+        setLinkedJson(undefined);
+        setLinkError(undefined);
         if ('error' in linked) {
             // The restore prompt (if any) is shown once the error is dismissed.
             setLinkError(linked.error);
@@ -85,6 +115,7 @@ const FrontPage = (): JSX.Element => {
     linkHandlers.current = { loadInitialQuestionnaire, openLinkedQuestionnaire };
 
     useEffect(() => {
+        storedState.current = getStateFromDb().catch(() => undefined);
         linkHandlers.current.loadInitialQuestionnaire();
         // A link pasted into a tab that already shows Phoenix only changes the fragment and doesn't reload the page.
         const onHashChange = () => linkHandlers.current.openLinkedQuestionnaire();

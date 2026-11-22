@@ -87,4 +87,82 @@ test.describe('open from link', () => {
         await error.getByRole('button', { name: 'Ok' }).click();
         await expect(page.locator('.modal', { hasText: 'Restore Survey' })).toContainText('Mine');
     });
+
+    // The cases below cover links that finish loading at awkward moments.
+
+    test('opens a link even when the saved survey can\'t be read', async ({ page }) => {
+        await page.addInitScript(() => {
+            window.indexedDB.open = () => {
+                throw new Error('IndexedDB blocked');
+            };
+        });
+        await page.goto(await linkTo(page, JSON.stringify(survey('Linked'))));
+        await expectEditorWith(page, 'Linked question');
+    });
+
+    test('ignores a slow link that a newer link has superseded', async ({ page }) => {
+        const url = 'https://surveys.example.org/slow.json';
+        let release: () => void = () => undefined;
+        const released = new Promise<void>((resolve) => (release = resolve));
+        await page.route(url, async (route) => {
+            await released;
+            await route.fulfill({ json: survey('Slow'), headers: { 'Access-Control-Allow-Origin': '*' } });
+        });
+        await page.goto(`?url=${encodeURIComponent(url)}`);
+
+        // A newer link arrives while the first is still downloading.
+        const hash = (await linkTo(page, JSON.stringify(survey('Newer')))).split('#')[1];
+        await page.evaluate((h) => (window.location.hash = h), hash);
+        await expectEditorWith(page, 'Newer question');
+
+        // The slow one finishes later and must not replace it or prompt.
+        release();
+        await page.waitForTimeout(500);
+        await expectEditorWith(page, 'Newer question');
+        await expect(page.locator('.modal', { hasText: 'Open Linked Survey' })).toHaveCount(0);
+    });
+
+    test('asks before a slow link replaces a survey started while it loaded', async ({ page }) => {
+        const url = 'https://surveys.example.org/slow.json';
+        let release: () => void = () => undefined;
+        const released = new Promise<void>((resolve) => (release = resolve));
+        await page.route(url, async (route) => {
+            await released;
+            await route.fulfill({ json: survey('Slow'), headers: { 'Access-Control-Allow-Origin': '*' } });
+        });
+        await page.goto(`?url=${encodeURIComponent(url)}`);
+
+        // Start a survey while the link is still downloading.
+        await page.getByText('Paste JSON').click();
+        await page.locator('textarea').fill(JSON.stringify(survey('Mine')));
+        await page.getByTitle('Import').click();
+        await expectEditorWith(page, 'Mine question');
+
+        release();
+        const prompt = page.locator('.modal', { hasText: 'Open Linked Survey' });
+        await expect(prompt).toContainText('Mine');
+        await prompt.getByRole('button', { name: 'Keep my survey' }).click();
+        await expectEditorWith(page, 'Mine question');
+    });
+
+    test('keeps offering the saved survey when another link arrives during the prompt', async ({ page }) => {
+        await importQuestionnaire(page, survey('Mine'));
+        await expectEditorWith(page, 'Mine question');
+
+        await page.goto('about:blank');
+        await page.goto(await linkTo(page, JSON.stringify(survey('First'))));
+        const prompt = page.locator('.modal', { hasText: 'Open Linked Survey' });
+        await expect(prompt).toContainText('Mine');
+
+        // A second link replaces the first one's prompt, and still offers to keep "Mine".
+        await page.goto(await linkTo(page, JSON.stringify(survey('Second'))));
+        await expect(prompt).toHaveCount(1);
+        await expect(prompt).toContainText('Mine');
+        await prompt.getByRole('button', { name: 'Keep my survey' }).click();
+        await expectEditorWith(page, 'Mine question');
+
+        await page.goto(await linkTo(page, JSON.stringify(survey('Third'))));
+        await page.getByRole('button', { name: 'Open linked survey' }).click();
+        await expectEditorWith(page, 'Third question');
+    });
 });
