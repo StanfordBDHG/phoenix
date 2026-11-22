@@ -12,7 +12,8 @@ Options:
   -t, --target <ids>    Renderers to check, comma-separated (default: ${DEFAULT_TARGET}).
                           researchkit-on-fhir[@version]     iOS, SpeziQuestionnaire 1.x (alias: ios, rkof)
                           spezivibe-react-native[@version]  SpeziVibe React Native template (alias: react-native)
-                        Without a version, the newest known one is used. A version the checker
+                        Without a version, the newest known one is used (for React Native, with a
+                        note: existing apps may have an older package version). A version the checker
                         doesn't list uses the closest earlier version's rules, with a note.
       --list-targets    Print every known target and exit.
       --json            Print the result as JSON.

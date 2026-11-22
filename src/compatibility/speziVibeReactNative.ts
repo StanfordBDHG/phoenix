@@ -125,8 +125,20 @@ export const checkSpeziVibeReactNative = (questionnaire: Questionnaire, version:
     return issues;
 };
 
-export const speziVibeReactNativeTarget = (requested: string = RN_DEFAULT_VERSION): Target => {
-    const { version, note } = resolveVersion('The SpeziVibe React Native questionnaire package', RN_VERSIONS, requested);
+/** When template PR #25 (questionnaire package 1.1.0) was merged. Apps created before it have 1.0.0. */
+export const RN_1_1_0_DATE = '2026-11-22';
+
+export const speziVibeReactNativeTarget = (requested?: string): Target => {
+    const resolved = resolveVersion('The SpeziVibe React Native questionnaire package', RN_VERSIONS, requested ?? RN_DEFAULT_VERSION);
+    const { version } = resolved;
+    // Each app keeps the package version it was created with, so the newest isn't a safe guess for an existing app.
+    const note =
+        resolved.note ??
+        (requested === undefined
+            ? `No questionnaire package version was given, so the rules for ${version} were used. Apps created before ` +
+              `${RN_1_1_0_DATE} have version 1.0.0 (see the app's packages/questionnaire/package.json); check those ` +
+              `with spezivibe-react-native@1.0.0.`
+            : undefined);
     return {
         id: `spezivibe-react-native@${version}`,
         name: `SpeziVibe React Native template (questionnaire package ${version})`,

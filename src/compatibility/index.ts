@@ -5,7 +5,7 @@ import type { Issue, Target } from './types';
 
 export type { Issue, Severity, Target } from './types';
 export { RKOF_DEFAULT_VERSION, RKOF_VERSIONS } from './researchKitOnFHIR';
-export { RN_DEFAULT_VERSION, RN_VERSIONS } from './speziVibeReactNative';
+export { RN_1_1_0_DATE, RN_DEFAULT_VERSION, RN_VERSIONS } from './speziVibeReactNative';
 
 export const DEFAULT_TARGET = `researchkit-on-fhir@${RKOF_DEFAULT_VERSION}`;
 
