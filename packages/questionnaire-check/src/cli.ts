@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { deflateRawSync } from 'node:zlib';
-import { checkQuestionnaire, DEFAULT_TARGET, getTarget, Issue, TARGET_IDS } from '../../../src/compatibility';
+import { checkQuestionnaire, DEFAULT_TARGET, extractQuestionnaire, getTarget, Issue, TARGET_IDS } from '../../../src/compatibility';
 import type { Questionnaire } from '../../../src/types/fhir';
 
 const HELP = `Usage: questionnaire-check <questionnaire.json> [options]
@@ -92,15 +92,17 @@ const main = () => {
     } catch (error) {
         fail(`can't read ${file}: ${(error as Error).message}`);
     }
-    let questionnaire: Questionnaire;
+    let parsed: unknown;
     try {
         // Strip a UTF-8 byte order mark, which some Windows tools write.
-        questionnaire = JSON.parse(text.replace(/^\uFEFF/, ''));
+        parsed = JSON.parse(text.replace(/^\uFEFF/, ''));
     } catch (error) {
         return fail(`${file} is not valid JSON: ${(error as Error).message}`);
     }
-    if ((questionnaire as { resourceType?: string })?.resourceType !== 'Questionnaire') {
-        fail(`${file} is not a FHIR Questionnaire (resourceType must be "Questionnaire").`);
+    // A Bundle is what Phoenix exports for a survey with translations: check its main questionnaire.
+    const questionnaire = extractQuestionnaire(parsed) as Questionnaire;
+    if (!questionnaire) {
+        fail(`${file} is not a FHIR Questionnaire, or a Bundle containing one.`);
     }
 
     let targets: ReturnType<typeof getTarget>[] = [];
@@ -138,7 +140,8 @@ const main = () => {
         process.stdout.write(`${errors} error${errors === 1 ? '' : 's'}, ${warnings} warning${warnings === 1 ? '' : 's'}\n`);
         if (link) process.stdout.write(`\nReview in Phoenix: ${link}\n`);
     }
-    process.exit(errors > 0 || (options.strict && warnings > 0) ? 1 : 0);
+    // exitCode rather than exit(), so piped output is flushed before the process ends.
+    process.exitCode = errors > 0 || (options.strict && warnings > 0) ? 1 : 0;
 };
 
 main();

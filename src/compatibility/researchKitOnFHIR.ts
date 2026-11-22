@@ -9,7 +9,7 @@ import { checkStructure, findExtension, Issue, issue, itemControlCode, label, Ta
 // FHIRModelsExtensions' Questionnaire+Extensions.swift ("FME"), which holds the extension parsing from 3.0.0-beta.1.
 // Versions before 2.0.0 are not covered; SpeziQuestionnaire 1.2.2 and later require 2.0.0 or newer.
 
-export const RKOF_VERSIONS = ['2.0.0', '2.0.1', '2.0.2', '2.0.3', '2.0.4', '2.0.5', '2.0.6', '2.0.7', '2.0.10', '3.0.0-beta.2'];
+export const RKOF_VERSIONS = ['2.0.0', '2.0.1', '2.0.2', '2.0.3', '2.0.4', '2.0.5', '2.0.6', '2.0.7', '2.0.10', '3.0.0-beta.1', '3.0.0-beta.2'];
 /** What SpeziQuestionnaire 1.3.x resolves to today (it allows 2.0.4 up to, but not including, 3.0.0). */
 export const RKOF_DEFAULT_VERSION = '2.0.10';
 

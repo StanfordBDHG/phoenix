@@ -31,6 +31,22 @@ export const getTarget = (id: string): Target => {
     throw new Error(`Unknown target "${id}". Use one of: ${TARGET_IDS.join(', ')}.`);
 };
 
+/**
+ * Returns the Questionnaire to check from parsed FHIR JSON: the Questionnaire itself, or, for a Bundle (Phoenix
+ * exports one when a survey has translations), its first Questionnaire, which is the main language. Translations
+ * share its structure, so checking it covers them. Returns undefined for anything else.
+ */
+export const extractQuestionnaire = (resource: unknown): Questionnaire | undefined => {
+    const r = resource as { resourceType?: string; entry?: { resource?: { resourceType?: string } }[] } | null;
+    if (r?.resourceType === 'Questionnaire') {
+        return r as unknown as Questionnaire;
+    }
+    if (r?.resourceType === 'Bundle' && Array.isArray(r.entry)) {
+        return r.entry.map((e) => e?.resource).find((res) => res?.resourceType === 'Questionnaire') as Questionnaire | undefined;
+    }
+    return undefined;
+};
+
 /** Checks `questionnaire` against `target`, errors first. */
 export const checkQuestionnaire = (questionnaire: Questionnaire, target: string | Target = DEFAULT_TARGET): Issue[] => {
     const resolved = typeof target === 'string' ? getTarget(target) : target;

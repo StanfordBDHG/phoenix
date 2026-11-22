@@ -74,13 +74,12 @@ const unreviewed = async (renderer: Renderer): Promise<string[]> => {
     if (renderer.watch === 'tags') {
         const checked = new Set(renderer.checked ?? []);
         const tags: { name: string }[] = await list(`/repos/${renderer.repo}/tags`);
+        // Compare and show the version without a "v" prefix, but link to the tag as it is named.
         const pending = tags
-            .map((tag) => tag.name)
-            .filter((name) => VERSION.test(name))
-            .map((name) => name.replace(/^v/, ''))
-            .filter((version) => compareVersions(version, renderer.since ?? '0.0.0') >= 0 && !checked.has(version))
-            .sort(compareVersions);
-        return pending.map((version) => `[${version}](https://github.com/${renderer.repo}/releases/tag/${version})`);
+            .map((tag) => ({ tag: tag.name, version: tag.name.replace(/^v/, '') }))
+            .filter(({ tag, version }) => VERSION.test(tag) && compareVersions(version, renderer.since ?? '0.0.0') >= 0 && !checked.has(version))
+            .sort((a, b) => compareVersions(a.version, b.version));
+        return pending.map(({ tag, version }) => `[${version}](https://github.com/${renderer.repo}/releases/tag/${encodeURIComponent(tag)})`);
     }
 
     const commits: { sha: string; html_url: string; commit: { message: string; author: { date: string } } }[] = await api(

@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import IconBtn from '../IconBtn/IconBtn';
 import MoreIcon from '../../images/icons/ellipsis-horizontal-outline.svg';
 import CompatibilityModal from '../CompatibilityModal/CompatibilityModal';
+import { extractQuestionnaire } from '../../compatibility';
 import type { Questionnaire } from '../../types/fhir';
 
 type Props = {
@@ -167,7 +168,10 @@ const Navbar = ({
                         <Btn
                             title={t('Check app compatibility')}
                             onClick={() =>
-                                callbackAndHide(() => setCompatibilityQuestionnaire(JSON.parse(generateQuestionnaire(state))))
+                                callbackAndHide(() =>
+                                    // With translations, the export is a Bundle; check its main questionnaire.
+                                    setCompatibilityQuestionnaire(extractQuestionnaire(JSON.parse(generateQuestionnaire(state)))),
+                                )
                             }
                         />
                         <Btn

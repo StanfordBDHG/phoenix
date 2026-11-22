@@ -47,6 +47,8 @@ export const checkSpeziVibeReactNative = (questionnaire: Questionnaire, version:
         }
         if (required && conditional && !fixed) {
             add('error', 'rn/required-conditional', `${label(item)} is required and only shown when a condition holds. While it's hidden, Submit silently does nothing, because the app still requires an answer. Make it optional.`);
+        } else if (conditional && !fixed && item.type !== 'group' && item.type !== 'display') {
+            add('warning', 'rn/hidden-answer-kept', `${label(item)} is only shown when a condition holds. If a participant answers it and then changes an earlier answer so it's hidden, the app still submits its answer and uses it in other conditions. Fixed in questionnaire package 1.1.0.`);
         }
 
         if (item.type === 'choice' || item.type === 'open-choice') {
@@ -70,6 +72,9 @@ export const checkSpeziVibeReactNative = (questionnaire: Questionnaire, version:
         } else if (hasLimit && !item.required && !fixed) {
             add('warning', 'rn/limit-optional', `The app only enforces the minimum and maximum of required questions, so ${label(item)} accepts any value. Make it required, or check the value elsewhere.`);
         }
+        if (item.type === 'date' && !fixed) {
+            add('warning', 'rn/date-utc', `The app saves answers to the date question ${label(item)} through UTC, so in time zones ahead of UTC (Europe, Asia, …) the day before the one picked is saved. Fixed in questionnaire package 1.1.0.`);
+        }
         if (item.type === 'time' && !fixed) {
             add('warning', 'rn/time-format', `The app saves answers to the time question ${label(item)} as "HH:MM" without checking the format, but FHIR requires "hh:mm:ss", so the response may be invalid FHIR.`);
         }
@@ -83,7 +88,8 @@ export const checkSpeziVibeReactNative = (questionnaire: Questionnaire, version:
                 const target = byLinkId.get(condition.question);
                 const options = target?.answerOption?.map((option) => option.valueCoding).filter(Boolean) ?? [];
                 const matches = options.some((coding) => coding?.code === condition.answerCoding?.code && coding?.system === condition.answerCoding?.system);
-                if (options.length > 0 && !matches) {
+                // With "!=", a coding no option has is simply always true, which isn't the problem described here.
+                if (condition.operator !== '!=' && options.length > 0 && !matches) {
                     add('warning', 'rn/enable-when-coding-mismatch', `A condition on ${label(item)} never matches: no option of ${target ? label(target) : condition.question} has exactly that code and system. The app compares both, so a missing or different system counts as different.`);
                 }
             }

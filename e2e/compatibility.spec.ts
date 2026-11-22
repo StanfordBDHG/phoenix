@@ -62,3 +62,18 @@ test('reports no issues for a survey the app fully supports', async ({ page }) =
     const modal = await openCheck(page);
     await expect(modal).toContainText('No issues found');
 });
+
+test('checks a survey with translations, which Phoenix exports as a Bundle', async ({ page }) => {
+    const german = { ...questionnaire, language: 'de-DE', title: 'Kompatibilität' };
+    await importQuestionnaire(page, {
+        resourceType: 'Bundle',
+        type: 'searchset',
+        total: 2,
+        entry: [{ resource: questionnaire }, { resource: german }],
+    });
+    const modal = await openCheck(page);
+    await modal.locator('select').selectOption('researchkit-on-fhir@2.0.10');
+    await expect(modal).toContainText('Errors: 1. Warnings: 0.');
+    await expect(modal.locator('.compatibility__issue--error')).toContainText('it has 100 steps');
+});
+

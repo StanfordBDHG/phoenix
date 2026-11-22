@@ -1,5 +1,5 @@
 import type { Questionnaire, QuestionnaireItem } from '../types/fhir';
-import { checkQuestionnaire, getTarget, TARGET_IDS } from './index';
+import { checkQuestionnaire, extractQuestionnaire, getTarget, TARGET_IDS } from './index';
 import { compareVersions } from './versions';
 import { RKOF_VERSIONS } from './researchKitOnFHIR';
 import verified from './verified-renderers.json';
@@ -73,6 +73,17 @@ describe('targets', () => {
         const target = getTarget('ios@2.0.8');
         expect(target.id).toBe('researchkit-on-fhir@2.0.7');
         expect(target.note).toContain('the rules for 2.0.7, the closest earlier one, were used');
+    });
+
+    it('has rules for 3.0.0-beta.1, which reads valueDateTime date limits', () => {
+        const limit = q({
+            linkId: 'd',
+            type: 'date',
+            text: 'D',
+            extension: [{ url: URLS.maxValue, valueDateTime: '2030-01-01T00:00:00Z' }],
+        });
+        expect(rules(limit, 'ios@2.0.10')).toEqual(['warning rkof/date-limit d']);
+        expect(rules(limit, 'ios@3.0.0-beta.1')).toEqual([]);
     });
 
     it('accepts short forms of known versions', () => {
@@ -241,6 +252,7 @@ describe('ResearchKitOnFHIR', () => {
 describe('SpeziVibe React Native 1.0.0', () => {
     it('reports what a typical Phoenix survey loses', () => {
         expect(rules(wellFormed, 'react-native@1.0.0')).toEqual([
+            'warning rn/hidden-answer-kept packs',
             'warning rn/limit-optional packs',
             'warning rn/limit-optional pain',
             'warning rn/ignored pain',
@@ -274,8 +286,38 @@ describe('SpeziVibe React Native 1.0.0', () => {
         expect(rules(questionnaire, 'react-native@1.0.0')).toEqual([
             'warning rn/non-coding-option c',
             'warning rn/open-choice c',
+            'warning rn/hidden-answer-kept x',
             'warning rn/enable-when-coding-mismatch x',
         ]);
+    });
+
+    it('does not call a "!=" condition on an unlisted coding one that never matches', () => {
+        const questionnaire = q(
+            { linkId: 'c', type: 'choice', text: 'C', answerOption: [{ valueCoding: coding('a') }] },
+            { linkId: 'x', type: 'string', text: 'X', enableWhen: [{ question: 'c', operator: '!=', answerCoding: { code: 'a' } }] },
+        );
+        expect(rules(questionnaire, 'react-native@1.0.0')).not.toContain('warning rn/enable-when-coding-mismatch x');
+    });
+
+    it('warns that hidden answers are kept, including inside a conditional group', () => {
+        const questionnaire = q(
+            { linkId: 'gate', type: 'boolean', text: 'Gate' },
+            {
+                linkId: 'g',
+                type: 'group',
+                text: 'G',
+                enableWhen: [{ question: 'gate', operator: '=', answerBoolean: true }],
+                item: [{ linkId: 'inside', type: 'string', text: 'Inside' }],
+            },
+        );
+        expect(rules(questionnaire, 'react-native@1.0.0')).toEqual(['warning rn/hidden-answer-kept inside']);
+        expect(rules(questionnaire, 'react-native@1.1.0')).toEqual([]);
+    });
+
+    it('warns that dates are saved through UTC', () => {
+        const date = q({ linkId: 'd', type: 'date', text: 'D' });
+        expect(rules(date, 'react-native@1.0.0')).toEqual(['warning rn/date-utc d']);
+        expect(rules(date, 'react-native@1.1.0')).toEqual([]);
     });
 });
 
@@ -309,5 +351,21 @@ describe('verified-renderers.json', () => {
         const rkof = verified.renderers.find((r) => r.name === 'ResearchKitOnFHIR');
         expect(rkof?.checked).toEqual(expect.arrayContaining(RKOF_VERSIONS));
         expect(rkof?.since).toBe(RKOF_VERSIONS[0]);
+    });
+});
+
+describe('extractQuestionnaire', () => {
+    const main = q({ linkId: 'a', type: 'string', text: 'A' });
+    it('returns a Questionnaire, or the first one in a Bundle (Phoenix exports translations that way)', () => {
+        expect(extractQuestionnaire(main)).toBe(main);
+        const translated = { ...main, language: 'de' };
+        const bundle = { resourceType: 'Bundle', type: 'searchset', entry: [{ resource: main }, { resource: translated }] };
+        expect(extractQuestionnaire(bundle)).toBe(main);
+    });
+
+    it('returns undefined for anything else', () => {
+        expect(extractQuestionnaire({ resourceType: 'Patient' })).toBeUndefined();
+        expect(extractQuestionnaire({ resourceType: 'Bundle', entry: [{ resource: { resourceType: 'Patient' } }] })).toBeUndefined();
+        expect(extractQuestionnaire(null)).toBeUndefined();
     });
 });

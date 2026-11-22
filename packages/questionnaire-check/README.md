@@ -23,7 +23,7 @@ survey.json: ResearchKitOnFHIR 2.0.10 (iOS, SpeziQuestionnaire 1.x)
 
 | Target | Renderer |
 |---|---|
-| `researchkit-on-fhir[@version]` (aliases `ios`, `rkof`) | [ResearchKitOnFHIR](https://github.com/StanfordBDHG/ResearchKitOnFHIR), used by SpeziQuestionnaire 1.x on iOS. Versions 2.0.0 to 3.0.0-beta.2; the default is 2.0.10, which SpeziQuestionnaire 1.3 resolves to. Run `--list-targets` for all of them. |
+| `researchkit-on-fhir[@version]` (aliases `ios`, `rkof`) | [ResearchKitOnFHIR](https://github.com/StanfordBDHG/ResearchKitOnFHIR), used by SpeziQuestionnaire 1.x on iOS. Versions 2.0.0 to 3.0.0-beta.2; the default is 2.0.10. SpeziQuestionnaire 1.3 allows ResearchKitOnFHIR 2.0.4 up to 3.0.0, so an app may use an older version: use the one in the app's `Package.resolved`, e.g. `researchkit-on-fhir@2.0.4`. Run `--list-targets` for all of them. |
 | `spezivibe-react-native[@version]` (alias `react-native`) | The questionnaire package of the [SpeziVibe React Native template](https://github.com/StanfordSpezi/SpeziVibeReactNativeTemplate). Apps get a copy of the package when they're created, so use the version in the app's `packages/questionnaire/package.json`: 1.0.0, or 1.1.0, which fixed validation and saved answers. The default is 1.1.0. |
 
 SpeziQuestionnaire 2.x on iOS uses a new converter that isn't covered yet.
@@ -42,7 +42,7 @@ SpeziQuestionnaire 2.x on iOS uses a new converter that isn't covered yet.
 | `--link` | Also print a link that opens the questionnaire in [Phoenix](https://stanfordbdhg.github.io/phoenix) for review. The survey is in the part of the link after `#`, which is never sent to a server. |
 | `--phoenix-url <url>` | Phoenix instance for `--link`. |
 
-Pass `-` as the file to read from standard input. Exit status: 0 when there are no errors, 1 when there are (or warnings with `--strict`), and 2 on bad input.
+Pass `-` as the file to read from standard input. A Bundle, which Phoenix exports for a survey with translations, is checked through its main questionnaire. Exit status: 0 when there are no errors, 1 when there are (or warnings with `--strict`), and 2 on bad input.
 
 ## Development
 
