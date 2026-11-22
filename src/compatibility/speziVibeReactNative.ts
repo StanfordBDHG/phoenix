@@ -7,8 +7,8 @@ import { compareVersions, resolveVersion } from './versions';
 // `create-spezivibe-app` copies the template into each new app, so an app keeps the package version it was created
 // with; it's in the app's packages/questionnaire/package.json.
 // - 1.0.0: the package as created, up to commit 0762807. File references are relative to packages/questionnaire/src.
-// - 1.1.0: SpeziVibeReactNativeTemplate#25, which validates optional and only shown questions, saves string and integer
-//   choice answers, and saves time answers in FHIR format.
+// - 1.1.0: SpeziVibeReactNativeTemplate#25 (commit 0aca805), which validates optional and only shown questions, saves
+//   string and integer choice answers, and saves time answers in FHIR format.
 
 export const RN_VERSIONS = ['1.0.0', '1.1.0'];
 export const RN_DEFAULT_VERSION = '1.1.0';

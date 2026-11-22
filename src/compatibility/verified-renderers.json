@@ -31,7 +31,7 @@
             "watch": "commits",
             "branch": "main",
             "path": "packages/questionnaire",
-            "verified": "0762807",
+            "verified": "0aca805",
             "rules": "src/compatibility/speziVibeReactNative.ts (RN_VERSIONS)"
         }
     ]
