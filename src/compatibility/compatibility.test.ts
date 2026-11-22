@@ -158,6 +158,8 @@ describe('ResearchKitOnFHIR', () => {
         [slider('s', 0, 100, 1), 'error'],
         [slider('s', 0, 10, 3), 'error'],
         [slider('s', 5, 5), 'error'],
+        [slider('s', 0, 20000, 2000), 'error'],
+        [slider('s', -10000, 10000, 2000), 'none'],
         [slider('s', undefined, 10), 'error'],
         [{ ...slider('s', 0, 10), type: 'decimal' }, 'warning'],
     ])('checks slider %#', (item, expected) => {

@@ -199,6 +199,8 @@ export const checkResearchKitOnFHIR = (questionnaire: Questionnaire, version: st
                     crash('it needs both a minimum and a maximum (as whole numbers).');
                 } else if (max <= min) {
                     crash('the maximum must be greater than the minimum.');
+                } else if (min < -10000 || max > 10000) {
+                    crash('the minimum and maximum must be between -10000 and 10000.');
                 } else if (step < 1) {
                     crash('the step must be at least 1.');
                 } else if ((max - min) % step !== 0) {
