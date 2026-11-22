@@ -1,0 +1,53 @@
+name: Release questionnaire-check
+
+# Publishes the questionnaire-check CLI (packages/questionnaire-check) as a single file attached to the
+# `questionnaire-check` GitHub release, replaced whenever the rules change, so tools such as the SpeziVibe
+# fhir-questionnaire-authoring skill can download the current version from a fixed URL:
+# https://github.com/StanfordBDHG/phoenix/releases/download/questionnaire-check/questionnaire-check.mjs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - src/compatibility/**
+      - src/helpers/sliderHelper.ts
+      - packages/questionnaire-check/**
+      - .github/workflows/release-questionnaire-check.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-questionnaire-check
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js from .nvmrc
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build and test the CLI
+        run: npm run test:check
+      - name: Publish to the questionnaire-check release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp packages/questionnaire-check/dist/cli.js questionnaire-check.mjs
+          sha256sum questionnaire-check.mjs | tee questionnaire-check.mjs.sha256
+          notes="The questionnaire-check CLI, built from ${GITHUB_SHA::7}. This release is replaced whenever the compatibility rules change. Run it with Node.js 18 or later: node questionnaire-check.mjs survey.json --target ios,react-native. See packages/questionnaire-check/README.md."
+          if gh release view questionnaire-check >/dev/null 2>&1; then
+            gh release upload questionnaire-check questionnaire-check.mjs questionnaire-check.mjs.sha256 --clobber
+            gh release edit questionnaire-check --notes "$notes"
+          else
+            gh release create questionnaire-check questionnaire-check.mjs questionnaire-check.mjs.sha256 \
+              --target "$GITHUB_SHA" --title "questionnaire-check" --notes "$notes" --latest=false
+          fi

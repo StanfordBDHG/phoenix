@@ -4,10 +4,15 @@ Checks a FHIR Questionnaire against what a Spezi app renderer actually supports.
 
 FHIR allows far more than any renderer implements, and most gaps are silent. For example, the iOS app shows a question inside a group even when it has a condition, and the React Native app doesn't enforce the maximum of an optional question.
 
+The CLI is a single file with no dependencies, attached to the [`questionnaire-check` release](https://github.com/StanfordBDHG/phoenix/releases/tag/questionnaire-check) and replaced whenever the rules change. Run it with Node.js 18 or later:
+
 ```bash
-npx @stanfordbdhg/questionnaire-check survey.json
-npx @stanfordbdhg/questionnaire-check survey.json --target ios,react-native --link
+curl -fsSLO https://github.com/StanfordBDHG/phoenix/releases/download/questionnaire-check/questionnaire-check.mjs
+node questionnaire-check.mjs survey.json
+node questionnaire-check.mjs survey.json --target ios,react-native --link
 ```
+
+It isn't on npm yet; `package.json` is set up for publishing (`npm publish` builds it) once there is a package name to publish under.
 
 ```
 survey.json: ResearchKitOnFHIR 2.0.10 (iOS, SpeziQuestionnaire 1.x)
