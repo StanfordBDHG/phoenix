@@ -1,21 +1,35 @@
-/** Compares `major.minor.patch[-beta.n]` versions; a pre-release sorts before its release. */
-export const compareVersions = (a: string, b: string): number => {
-    const parse = (v: string) => {
-        const [core, pre] = v.split('-');
-        const nums = [...core.split('.').map(Number), 0, 0].slice(0, 3); // "2.0" is "2.0.0"
-        // A release sorts after its pre-releases. (A large number, not Infinity: Infinity - Infinity is NaN.)
-        const preNum = pre ? Number(pre.replace(/\D+/g, '')) || 0 : Number.MAX_SAFE_INTEGER;
-        return [...nums, preNum];
-    };
-    const [pa, pb] = [parse(a), parse(b)];
-    for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
-        const diff = (pa[i] ?? 0) - (pb[i] ?? 0);
-        if (diff !== 0) return diff;
+// scripts/watch-renderer-releases.ts imports this file directly with Node's TypeScript type stripping. Keep it free
+// of imports and of syntax Node can't strip (enums, namespaces, parameter properties); CI runs the script's import.
+
+const parse = (version: string): { core: number[]; pre?: { name: string; number: number } } => {
+    const [core, pre] = version.split('-');
+    const nums = [...core.split('.').map(Number), 0, 0].slice(0, 3); // "2.0" is "2.0.0"
+    if (!pre) {
+        return { core: nums };
     }
-    return 0;
+    const match = /^([a-z]*)\.?(\d*)$/i.exec(pre);
+    return { core: nums, pre: { name: (match?.[1] ?? pre).toLowerCase(), number: Number(match?.[2]) || 0 } };
 };
 
-const VERSION_PATTERN = /^\d+(\.\d+){0,2}(-[a-z]+\.?\d*)?$/;
+/**
+ * Compares `major.minor.patch[-pre.n]` versions. A pre-release sorts before its release, and pre-releases sort by
+ * name, then number: alpha.2 < beta.1 < rc.1.
+ */
+export const compareVersions = (a: string, b: string): number => {
+    const [pa, pb] = [parse(a), parse(b)];
+    for (let i = 0; i < 3; i++) {
+        if (pa.core[i] !== pb.core[i]) return pa.core[i] - pb.core[i];
+    }
+    if (!pa.pre || !pb.pre) {
+        return (pa.pre ? -1 : 0) - (pb.pre ? -1 : 0);
+    }
+    if (pa.pre.name !== pb.pre.name) {
+        return pa.pre.name < pb.pre.name ? -1 : 1;
+    }
+    return pa.pre.number - pb.pre.number;
+};
+
+const VERSION_PATTERN = /^\d+(\.\d+){0,2}(-[a-z]+\.?\d*)?$/i;
 
 export interface ResolvedVersion {
     /** The version whose rules apply. */
@@ -33,8 +47,9 @@ export const resolveVersion = (renderer: string, known: string[], requested: str
     if (!VERSION_PATTERN.test(requested)) {
         throw new Error(`"${requested}" isn't a ${renderer} version. Known versions: ${known.join(', ')}.`);
     }
-    if (known.includes(requested)) {
-        return { version: requested };
+    const exact = known.find((v) => compareVersions(v, requested) === 0);
+    if (exact) {
+        return { version: exact };
     }
     const earlier = known.filter((v) => compareVersions(v, requested) < 0);
     if (earlier.length === 0) {

@@ -75,6 +75,14 @@ describe('targets', () => {
         expect(target.note).toContain('the rules for 2.0.7, the closest earlier one, were used');
     });
 
+    it('accepts short forms of known versions', () => {
+        expect(getTarget('ios@2.0').id).toBe('researchkit-on-fhir@2.0.0');
+        expect(getTarget('ios@2').note).toBeUndefined();
+        expect(getTarget('ios@3').id).toBe('researchkit-on-fhir@3.0.0-beta.2');
+        expect(getTarget('ios@3').note).toContain('ResearchKitOnFHIR 3 is newer');
+        expect(getTarget('ios@3.0.0-rc.1').id).toBe('researchkit-on-fhir@3.0.0-beta.2');
+    });
+
     it('rejects versions it does not cover', () => {
         expect(() => getTarget('ios@1.3.0')).toThrow('The checker covers ResearchKitOnFHIR 2.0.0 and later, not 1.3.0.');
         expect(() => getTarget('ios@latest')).toThrow('"latest" isn\'t a ResearchKitOnFHIR version');
@@ -87,6 +95,10 @@ describe('targets', () => {
         expect(compareVersions('3.0.0-beta.2', '3.0.0-beta.1')).toBeGreaterThan(0);
         expect(compareVersions('2.0.4', '2.0.4')).toBe(0);
         expect(compareVersions('2.0', '2.0.0')).toBe(0);
+        expect(compareVersions('3.0.0-alpha.3', '3.0.0-beta.2')).toBeLessThan(0);
+        expect(compareVersions('3.0.0-rc.1', '3.0.0-beta.2')).toBeGreaterThan(0);
+        expect(compareVersions('3.0.0-beta', '3.0.0-beta.1')).toBeLessThan(0);
+        expect(compareVersions('3.0.0-rc.1', '3.0.0')).toBeLessThan(0);
         expect(compareVersions('2.1', '2.0.10')).toBeGreaterThan(0);
         expect(compareVersions('3.0.0-beta.2', '3.0.0-beta.2')).toBe(0);
     });
@@ -293,8 +305,9 @@ describe('SpeziVibe React Native 1.1.0', () => {
 });
 
 describe('verified-renderers.json', () => {
-    it('matches the newest ResearchKitOnFHIR version the rules list', () => {
+    it('lists every ResearchKitOnFHIR version the rules describe as checked', () => {
         const rkof = verified.renderers.find((r) => r.name === 'ResearchKitOnFHIR');
-        expect(rkof?.verified).toBe(RKOF_VERSIONS[RKOF_VERSIONS.length - 1]);
+        expect(rkof?.checked).toEqual(expect.arrayContaining(RKOF_VERSIONS));
+        expect(rkof?.since).toBe(RKOF_VERSIONS[0]);
     });
 });

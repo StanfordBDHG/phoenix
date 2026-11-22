@@ -94,7 +94,8 @@ const main = () => {
     }
     let questionnaire: Questionnaire;
     try {
-        questionnaire = JSON.parse(text);
+        // Strip a UTF-8 byte order mark, which some Windows tools write.
+        questionnaire = JSON.parse(text.replace(/^\uFEFF/, ''));
     } catch (error) {
         return fail(`${file} is not valid JSON: ${(error as Error).message}`);
     }
@@ -109,12 +110,18 @@ const main = () => {
         fail((error as Error).message);
     }
 
-    const results = targets.map((target) => ({
-        target: target.id,
-        name: target.name,
-        ...(target.note ? { note: target.note } : {}),
-        issues: checkQuestionnaire(questionnaire, target),
-    }));
+    let results: { target: string; name: string; note?: string; issues: Issue[] }[] = [];
+    try {
+        results = targets.map((target) => ({
+            target: target.id,
+            name: target.name,
+            ...(target.note ? { note: target.note } : {}),
+            issues: checkQuestionnaire(questionnaire, target),
+        }));
+    } catch (error) {
+        // Malformed JSON that parses (e.g. "item" that isn't an array). Exit 2, not 1, which means "has errors".
+        fail(`couldn't check ${file}, it isn't a well-formed Questionnaire: ${(error as Error).message}`);
+    }
     const all = results.flatMap((r) => r.issues);
     const errors = all.filter((i) => i.severity === 'error').length;
     const warnings = all.length - errors;

@@ -36,6 +36,8 @@ jobs:
           CI: ""
       - name: Test questionnaire-check CLI
         run: npm run test:check
+      - name: Check the renderer release watch script loads
+        run: node scripts/watch-renderer-releases.ts --check
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
       - name: End-to-end tests

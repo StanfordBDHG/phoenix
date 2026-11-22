@@ -36,17 +36,18 @@ test('shows what each app would reject or ignore, and remembers the chosen app',
 
     let modal = await openCheck(page);
     await expect(modal.locator('select')).toHaveValue('researchkit-on-fhir@2.0.10');
-    await expect(modal).toContainText('1 error, 0 warnings');
+    await expect(modal).toContainText('Errors: 1. Warnings: 0.');
     await expect(modal.locator('.compatibility__issue--error')).toContainText('it has 100 steps, and ResearchKit allows at most 13');
+    await expect(modal.locator('.compatibility__issue--error .compatibility__link-id')).toHaveText('pain');
 
     // React Native 1.0.0 doesn't enforce the slider's limits on an optional question, and saves times as HH:MM.
     await modal.locator('select').selectOption('spezivibe-react-native@1.0.0');
-    await expect(modal).toContainText('0 errors, 3 warnings');
+    await expect(modal).toContainText('Errors: 0. Warnings: 3.');
     await expect(modal).toContainText('saves answers to the time question "Visit time" as "HH:MM"');
 
     // 1.1.0 fixed both; it still shows a number field instead of a slider.
     await modal.locator('select').selectOption('spezivibe-react-native@1.1.0');
-    await expect(modal).toContainText('0 errors, 1 warning');
+    await expect(modal).toContainText('Errors: 0. Warnings: 1.');
 
     await modal.getByRole('button', { name: 'Close' }).last().click();
     await expect(modal).toBeHidden();

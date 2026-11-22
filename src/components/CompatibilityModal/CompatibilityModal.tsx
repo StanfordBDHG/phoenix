@@ -79,13 +79,20 @@ const CompatibilityModal = ({ questionnaire, onClose }: CompatibilityModalProps)
                 <p className="compatibility__summary">
                     {issues.length === 0
                         ? t('No issues found: the app supports everything in this survey.')
-                        : `${errors} ${errors === 1 ? t('error') : t('errors')}, ${warnings} ${warnings === 1 ? t('warning') : t('warnings')}. ${t('Errors stop the app from loading the survey or stop participants from finishing it. Warnings are parts of the survey the app ignores without telling anyone.')}`}
+                        : t(
+                              'Errors: {0}. Warnings: {1}. Errors stop the app from loading the survey or stop participants from finishing it. Warnings are parts of the survey the app ignores without telling anyone.',
+                          )
+                              .replace('{0}', errors.toString())
+                              .replace('{1}', warnings.toString())}
                 </p>
                 <ul className="compatibility__issues">
                     {issues.map((issue, index) => (
                         <li key={index} className={`compatibility__issue compatibility__issue--${issue.severity}`}>
                             <span className="compatibility__severity">{issue.severity === 'error' ? t('Error') : t('Warning')}</span>
-                            <span>{issue.message}</span>
+                            <span>
+                                {issue.linkId && <code className="compatibility__link-id">{issue.linkId}</code>}
+                                {issue.message}
+                            </span>
                         </li>
                     ))}
                 </ul>

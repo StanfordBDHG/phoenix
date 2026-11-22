@@ -56,3 +56,27 @@ test('exits with status 2 on bad input', () => {
     assert.equal(run(fixture('date-conditions.json'), '--target', 'ios@1.0.0').status, 2);
     assert.equal(run().status, 2);
 });
+
+test('exits with status 2, not a crash, on a malformed Questionnaire', () => {
+    for (const malformed of [{ item: {} }, { item: [{ linkId: 'a', type: 'choice', answerOption: [null] }] }, { item: [{ linkId: 'a', type: 'string', extension: 'x' }] }]) {
+        const result = spawnSync(process.execPath, [cli, '-'], { input: JSON.stringify({ resourceType: 'Questionnaire', ...malformed }), encoding: 'utf8' });
+        assert.equal(result.status, 2, JSON.stringify(malformed));
+        assert.match(result.stderr, /isn't a well-formed Questionnaire/);
+    }
+});
+
+test('reads a file that starts with a byte order mark', () => {
+    const json = readFileSync(fixture('legacy-item-controls.json'), 'utf8');
+    const result = spawnSync(process.execPath, [cli, '-'], { input: `\uFEFF${json}`, encoding: 'utf8' });
+    assert.equal(result.status, 0);
+});
+
+test('packs the CLI and its license for publishing', () => {
+    const packageDir = fileURLToPath(new URL('..', import.meta.url));
+    // --ignore-scripts: test:check has just built dist/cli.js, so skip prepack's rebuild.
+    const result = spawnSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: packageDir, encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stderr);
+    const files = JSON.parse(result.stdout)[0].files.map((f) => f.path).sort();
+    assert.deepEqual(files, ['LICENSE', 'README.md', 'dist/cli.js', 'package.json']);
+});
+

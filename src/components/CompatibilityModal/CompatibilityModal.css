@@ -53,3 +53,11 @@
 .compatibility__issue--warning .compatibility__severity {
     color: #8a5300;
 }
+
+.compatibility__link-id {
+    margin-right: 8px;
+    padding: 1px 6px;
+    font-size: 0.85em;
+    background: var(--color-base-3);
+    border-radius: 3px;
+}

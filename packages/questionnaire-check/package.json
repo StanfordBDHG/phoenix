@@ -13,8 +13,12 @@
         "questionnaire-check": "dist/cli.js"
     },
     "files": [
-        "dist"
+        "dist",
+        "LICENSE"
     ],
+    "scripts": {
+        "prepack": "npm --prefix ../.. run build:check"
+    },
     "engines": {
         "node": ">=18"
     },
