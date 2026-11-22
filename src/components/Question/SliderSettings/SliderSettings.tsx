@@ -6,6 +6,11 @@ import FormField from '../../FormField/FormField';
 import { QuestionnaireItem } from '../../../types/fhir';
 import { IExtentionType } from '../../../types/IQuestionnareItemType';
 
+// ResearchKit's ORKScaleAnswerFormat, which ResearchKitOnFHIR uses for sliders, rejects anything outside these limits.
+const MAX_SLIDER_STEPS = 13;
+const MIN_SLIDER_VALUE = -10000;
+const MAX_SLIDER_VALUE = 10000;
+
 interface SliderSettingsProp {
     item: QuestionnaireItem;
 }
@@ -29,6 +34,13 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
             newErrors.minValue = newErrors.maxValue = true;
             errorMessage += t('Both min and max values must be filled in.');
             isValid = false;
+        } else if (minValue < MIN_SLIDER_VALUE || maxValue > MAX_SLIDER_VALUE) {
+            newErrors.minValue = minValue < MIN_SLIDER_VALUE;
+            newErrors.maxValue = maxValue > MAX_SLIDER_VALUE;
+            errorMessage += t('Min and max values must be between {0} and {1}.')
+                .replace('{0}', MIN_SLIDER_VALUE.toString())
+                .replace('{1}', MAX_SLIDER_VALUE.toString());
+            isValid = false;
         } else if (maxValue <= minValue) {
             newErrors.minValue = newErrors.maxValue = true;
             errorMessage += t('Max value must be greater than min value.');
@@ -41,7 +53,14 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
             newErrors.stepValue = true;
             errorMessage += t('It must be possible to reach the max value from the min value using the step value.');
             isValid = false;
-        }      
+        } else if ((maxValue - minValue) / stepValue > MAX_SLIDER_STEPS) {
+            newErrors.stepValue = true;
+            errorMessage += t('A slider can have at most {0} steps, but this one has {1}. Use a step of at least {2}, or a smaller range.')
+                .replace('{0}', MAX_SLIDER_STEPS.toString())
+                .replace('{1}', ((maxValue - minValue) / stepValue).toString())
+                .replace('{2}', Math.ceil((maxValue - minValue) / MAX_SLIDER_STEPS).toString());
+            isValid = false;
+        }
 
         setErrors(newErrors);
         if (isValid) {
@@ -55,7 +74,7 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
     const handleMinValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!event.target.value) {
             setMinValue(undefined);
-            removeItemExtension(item, 'minValue', dispatch);
+            removeItemExtension(item, IExtentionType.minValue, dispatch);
         } else {
             const value = parseInt(event.target.value);
             setMinValue(value);
@@ -71,7 +90,7 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
     const handleMaxValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!event.target.value) {
             setMaxValue(undefined);
-            removeItemExtension(item, 'maxValue', dispatch);
+            removeItemExtension(item, IExtentionType.maxValue, dispatch);
         } else {
             const value = parseInt(event.target.value);
             setMaxValue(value);
@@ -86,7 +105,7 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
     const handleStepValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!event.target.value) {
             setStepValue(undefined);
-            removeItemExtension(item, 'questionnaireSliderStepValue', dispatch);
+            removeItemExtension(item, IExtentionType.questionnaireSliderStepValue, dispatch);
         } else {
             const value = parseInt(event.target.value);
             setStepValue(value);
