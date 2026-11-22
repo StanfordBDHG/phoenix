@@ -18,6 +18,24 @@ A web application that allows you to build healthcare surveys using the [HL7® F
 ## Getting Started
 - To use the application online, visit [https://stanfordbdhg.github.io/phoenix](https://stanfordbdhg.github.io/phoenix).
 
+## Open a Survey from a Link
+Phoenix can open a FHIR Questionnaire straight from a link, so that tools such as AI coding agents can hand a survey to a person for review and editing:
+
+- `https://stanfordbdhg.github.io/phoenix/#questionnaire=<JSON>` opens the survey in the link itself. `<JSON>` is the Questionnaire's UTF-8 JSON, [base64url](https://datatracker.ietf.org/doc/html/rfc4648#section-5)-encoded without padding. For longer surveys, use `#questionnaire-deflate=<data>`, where `<data>` is the JSON compressed with raw DEFLATE and then base64url-encoded. The part after `#` is never sent to a server, so the survey stays in the reviewer's browser.
+- `https://stanfordbdhg.github.io/phoenix/?url=<URL>` loads the survey from an `https://` URL, such as a raw GitHub file. The server must allow cross-origin requests.
+
+If a survey is already in progress, Phoenix asks before replacing it. The survey is then removed from the address bar, so reloading the page doesn't import it again.
+
+To create a link from the command line:
+
+```bash
+# Short surveys
+echo "https://stanfordbdhg.github.io/phoenix/#questionnaire=$(base64 < survey.json | tr '+/' '-_' | tr -d '=\n')"
+
+# Any size (Node.js)
+node -e 'const z=require("zlib"),j=require("fs").readFileSync(process.argv[1]);console.log("https://stanfordbdhg.github.io/phoenix/#questionnaire-deflate="+z.deflateRawSync(j).toString("base64url"))' survey.json
+```
+
 ## Run for Development
 First, ensure that Node.js (version 24 or greater) and npm are installed on your system.
 
