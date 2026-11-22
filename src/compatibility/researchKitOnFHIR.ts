@@ -1,4 +1,5 @@
 import type { Questionnaire, QuestionnaireItem, QuestionnaireItemAnswerOption, QuestionnaireItemEnableWhen, ValueSet } from '../types/fhir';
+import { MAX_SLIDER_STEPS, MAX_SLIDER_VALUE, MIN_SLIDER_VALUE, suggestSliderStep } from '../helpers/sliderHelper';
 import { checkStructure, findExtension, Issue, issue, itemControlCode, label, Target, URLS, walkItems } from './types';
 
 // Rules for ResearchKitOnFHIR (https://github.com/StanfordBDHG/ResearchKitOnFHIR), which SpeziQuestionnaire 1.x uses
@@ -199,14 +200,20 @@ export const checkResearchKitOnFHIR = (questionnaire: Questionnaire, version: st
                     crash('it needs both a minimum and a maximum (as whole numbers).');
                 } else if (max <= min) {
                     crash('the maximum must be greater than the minimum.');
-                } else if (min < -10000 || max > 10000) {
-                    crash('the minimum and maximum must be between -10000 and 10000.');
+                } else if (min < MIN_SLIDER_VALUE || max > MAX_SLIDER_VALUE) {
+                    crash(`the minimum and maximum must be between ${MIN_SLIDER_VALUE} and ${MAX_SLIDER_VALUE}.`);
                 } else if (step < 1) {
                     crash('the step must be at least 1.');
                 } else if ((max - min) % step !== 0) {
                     crash(`the range ${min}–${max} must divide evenly by the step (${step}).`);
-                } else if ((max - min) / step > 13) {
-                    crash(`it has ${(max - min) / step} steps, and ResearchKit allows at most 13. Use a larger step (e.g. ${Math.ceil((max - min) / 13)}) or a smaller range, or use a number field instead.`);
+                } else if ((max - min) / step > MAX_SLIDER_STEPS) {
+                    const suggested = suggestSliderStep(max - min);
+                    crash(
+                        `it has ${(max - min) / step} steps, and ResearchKit allows at most ${MAX_SLIDER_STEPS}. ` +
+                            (suggested
+                                ? `Use a step of ${suggested}, a smaller range, or a number field instead.`
+                                : `No step divides this range evenly into at most ${MAX_SLIDER_STEPS} steps, so use a different range or a number field instead.`),
+                    );
                 }
             }
         } else if (itemControlCode(item) && !['check-box'].includes(itemControlCode(item) ?? '')) {

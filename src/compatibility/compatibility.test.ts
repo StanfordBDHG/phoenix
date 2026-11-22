@@ -167,7 +167,8 @@ describe('ResearchKitOnFHIR', () => {
     });
 
     it('explains the 13-step slider limit with a usable step', () => {
-        expect(checkQuestionnaire(q(slider('s', 0, 100, 1)))[0].message).toContain('at most 13. Use a larger step (e.g. 8)');
+        expect(checkQuestionnaire(q(slider('s', 0, 100, 1)))[0].message).toContain('at most 13. Use a step of 10,');
+        expect(checkQuestionnaire(q(slider('s', 0, 97, 1)))[0].message).toContain('No step divides this range evenly');
     });
 
     it('checks choice options and repeats', () => {
