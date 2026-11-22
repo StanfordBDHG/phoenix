@@ -1,0 +1,38 @@
+{
+    "description": "What the compatibility rules were last checked against. For repositories watched by tag, `checked` lists every release from `since` on that was reviewed; for the React Native template, `verified` is the last reviewed commit to `path`. scripts/watch-renderer-releases.ts opens an issue for anything newer or unlisted, including patch releases on older lines. After reviewing one, add it here.",
+    "renderers": [
+        {
+            "name": "ResearchKitOnFHIR",
+            "repo": "StanfordBDHG/ResearchKitOnFHIR",
+            "watch": "tags",
+            "since": "2.0.0",
+            "checked": ["2.0.0", "2.0.1", "2.0.2", "2.0.3", "2.0.4", "2.0.5", "2.0.6", "2.0.7", "2.0.10", "3.0.0-beta.1", "3.0.0-beta.2"],
+            "rules": "src/compatibility/researchKitOnFHIR.ts (RKOF_VERSIONS)"
+        },
+        {
+            "name": "FHIRModelsExtensions",
+            "repo": "StanfordBDHG/FHIRModelsExtensions",
+            "watch": "tags",
+            "since": "0.1.0",
+            "checked": ["0.1.0", "0.1.1", "0.1.2", "0.2.0"],
+            "rules": "src/compatibility/researchKitOnFHIR.ts (extension parsing, used by ResearchKitOnFHIR 3.x)"
+        },
+        {
+            "name": "SpeziQuestionnaire",
+            "repo": "StanfordSpezi/SpeziQuestionnaire",
+            "watch": "tags",
+            "since": "1.2.2",
+            "checked": ["1.2.2", "1.2.3", "1.2.4", "1.3.0", "1.3.1", "2.0.0-beta.1", "2.0.0-beta.2", "2.0.0-beta.3"],
+            "rules": "1.x uses ResearchKitOnFHIR (check which versions it allows); 2.x has its own converter (SpeziQuestionnaireFHIR), not covered yet"
+        },
+        {
+            "name": "SpeziVibe React Native questionnaire package",
+            "repo": "StanfordSpezi/SpeziVibeReactNativeTemplate",
+            "watch": "commits",
+            "branch": "main",
+            "path": "packages/questionnaire",
+            "verified": "0aca805",
+            "rules": "src/compatibility/speziVibeReactNative.ts (RN_VERSIONS)"
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+name: Watch renderer releases
+
+# The compatibility checker (src/compatibility) describes how other repositories render questionnaires. Once a week,
+# check them for changes since the rules were last checked, and open or update an issue listing them.
+
+on:
+  schedule:
+    - cron: '0 14 * * 1' # Mondays
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js from .nvmrc
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Check renderers for changes
+        run: node scripts/watch-renderer-releases.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
