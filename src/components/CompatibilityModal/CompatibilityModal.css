@@ -1,0 +1,55 @@
+.compatibility__target {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.compatibility__target select {
+    font-weight: normal;
+    max-width: 100%;
+}
+
+.compatibility__summary {
+    margin: 16px 0;
+}
+
+.compatibility__issues {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.compatibility__issue {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-left: 4px solid;
+    background: var(--color-base-2);
+    line-height: 1.4;
+}
+
+.compatibility__issue--error {
+    border-color: var(--primary-1);
+}
+
+.compatibility__issue--warning {
+    border-color: #b26b00;
+}
+
+.compatibility__severity {
+    flex: 0 0 4.5em;
+    font-size: 0.85em;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.compatibility__issue--error .compatibility__severity {
+    color: var(--primary-1);
+}
+
+.compatibility__issue--warning .compatibility__severity {
+    color: #8a5300;
+}

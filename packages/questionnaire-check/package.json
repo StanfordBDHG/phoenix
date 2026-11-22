@@ -1,0 +1,27 @@
+{
+    "name": "@stanfordbdhg/questionnaire-check",
+    "version": "0.1.0",
+    "description": "Check a FHIR Questionnaire against what Spezi app renderers (ResearchKitOnFHIR, SpeziVibe React Native) actually support.",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/StanfordBDHG/phoenix.git",
+        "directory": "packages/questionnaire-check"
+    },
+    "type": "module",
+    "bin": {
+        "questionnaire-check": "dist/cli.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "engines": {
+        "node": ">=18"
+    },
+    "keywords": [
+        "fhir",
+        "questionnaire",
+        "spezi",
+        "researchkit"
+    ]
+}

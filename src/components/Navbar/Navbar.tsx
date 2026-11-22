@@ -13,6 +13,8 @@ import { ValidationErrorsModal } from '../ValidationErrorsModal/validationErrors
 import { useTranslation } from 'react-i18next';
 import IconBtn from '../IconBtn/IconBtn';
 import MoreIcon from '../../images/icons/ellipsis-horizontal-outline.svg';
+import CompatibilityModal from '../CompatibilityModal/CompatibilityModal';
+import type { Questionnaire } from '../../types/fhir';
 
 type Props = {
     showFormFiller: () => void;
@@ -47,6 +49,7 @@ const Navbar = ({
     const [showImportValueSet, setShowImportValueSet] = useState(false);
     const [showJSONView, setShowJSONView] = useState(false);
     const [showValidationErrors, setShowValidationErrors] = useState<boolean>(false);
+    const [compatibilityQuestionnaire, setCompatibilityQuestionnaire] = useState<Questionnaire>();
     const navBarRef = useRef<HTMLDivElement>(null);
     const fileExtension = 'json';
 
@@ -162,6 +165,12 @@ const Navbar = ({
                             }}
                         />
                         <Btn
+                            title={t('Check app compatibility')}
+                            onClick={() =>
+                                callbackAndHide(() => setCompatibilityQuestionnaire(JSON.parse(generateQuestionnaire(state))))
+                            }
+                        />
+                        <Btn
                             title={t('Import ValueSets')}
                             onClick={() => callbackAndHide(() => setShowImportValueSet(!showImportValueSet))}
                         />
@@ -178,6 +187,12 @@ const Navbar = ({
                     translationErrors={translationErrors}
                     hasTranslations={hasTranslations(state.qAdditionalLanguages)}
                     onClose={() => setShowValidationErrors(false)}
+                />
+            )}
+            {compatibilityQuestionnaire && (
+                <CompatibilityModal
+                    questionnaire={compatibilityQuestionnaire}
+                    onClose={() => setCompatibilityQuestionnaire(undefined)}
                 />
             )}
             {showContained && <PredefinedValueSetModal close={() => setShowContained(!showContained)} />}
