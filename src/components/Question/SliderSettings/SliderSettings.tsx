@@ -5,6 +5,7 @@ import { removeItemExtension, setItemExtension } from '../../../helpers/extensio
 import FormField from '../../FormField/FormField';
 import { QuestionnaireItem } from '../../../types/fhir';
 import { IExtentionType } from '../../../types/IQuestionnareItemType';
+import { MAX_SLIDER_STEPS, MAX_SLIDER_VALUE, MIN_SLIDER_VALUE, suggestSliderStep } from '../../../helpers/sliderHelper';
 
 interface SliderSettingsProp {
     item: QuestionnaireItem;
@@ -29,6 +30,13 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
             newErrors.minValue = newErrors.maxValue = true;
             errorMessage += t('Both min and max values must be filled in.');
             isValid = false;
+        } else if (minValue < MIN_SLIDER_VALUE || maxValue > MAX_SLIDER_VALUE) {
+            newErrors.minValue = minValue < MIN_SLIDER_VALUE;
+            newErrors.maxValue = maxValue > MAX_SLIDER_VALUE;
+            errorMessage += t('Min and max values must be between {0} and {1}.')
+                .replace('{0}', MIN_SLIDER_VALUE.toString())
+                .replace('{1}', MAX_SLIDER_VALUE.toString());
+            isValid = false;
         } else if (maxValue <= minValue) {
             newErrors.minValue = newErrors.maxValue = true;
             errorMessage += t('Max value must be greater than min value.');
@@ -41,7 +49,21 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
             newErrors.stepValue = true;
             errorMessage += t('It must be possible to reach the max value from the min value using the step value.');
             isValid = false;
-        }      
+        } else if ((maxValue - minValue) / stepValue > MAX_SLIDER_STEPS) {
+            newErrors.stepValue = true;
+            const suggestedStep = suggestSliderStep(maxValue - minValue);
+            errorMessage += t('A slider can have at most {0} steps, but this one has {1}.')
+                .replace('{0}', MAX_SLIDER_STEPS.toString())
+                .replace('{1}', ((maxValue - minValue) / stepValue).toString());
+            errorMessage += ' ';
+            errorMessage += suggestedStep
+                ? t('Use a step of {0}, or a smaller range.').replace('{0}', suggestedStep.toString())
+                : t('No step divides this range evenly into at most {0} steps, so use a different range.').replace(
+                      '{0}',
+                      MAX_SLIDER_STEPS.toString(),
+                  );
+            isValid = false;
+        }
 
         setErrors(newErrors);
         if (isValid) {
@@ -55,7 +77,7 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
     const handleMinValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!event.target.value) {
             setMinValue(undefined);
-            removeItemExtension(item, 'minValue', dispatch);
+            removeItemExtension(item, IExtentionType.minValue, dispatch);
         } else {
             const value = parseInt(event.target.value);
             setMinValue(value);
@@ -71,7 +93,7 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
     const handleMaxValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!event.target.value) {
             setMaxValue(undefined);
-            removeItemExtension(item, 'maxValue', dispatch);
+            removeItemExtension(item, IExtentionType.maxValue, dispatch);
         } else {
             const value = parseInt(event.target.value);
             setMaxValue(value);
@@ -86,7 +108,7 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
     const handleStepValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!event.target.value) {
             setStepValue(undefined);
-            removeItemExtension(item, 'questionnaireSliderStepValue', dispatch);
+            removeItemExtension(item, IExtentionType.questionnaireSliderStepValue, dispatch);
         } else {
             const value = parseInt(event.target.value);
             setStepValue(value);
