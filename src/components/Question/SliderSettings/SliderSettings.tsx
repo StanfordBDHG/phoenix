@@ -5,11 +5,7 @@ import { removeItemExtension, setItemExtension } from '../../../helpers/extensio
 import FormField from '../../FormField/FormField';
 import { QuestionnaireItem } from '../../../types/fhir';
 import { IExtentionType } from '../../../types/IQuestionnareItemType';
-
-// ResearchKit's ORKScaleAnswerFormat, which ResearchKitOnFHIR uses for sliders, rejects anything outside these limits.
-const MAX_SLIDER_STEPS = 13;
-const MIN_SLIDER_VALUE = -10000;
-const MAX_SLIDER_VALUE = 10000;
+import { MAX_SLIDER_STEPS, MAX_SLIDER_VALUE, MIN_SLIDER_VALUE, suggestSliderStep } from '../../../helpers/sliderHelper';
 
 interface SliderSettingsProp {
     item: QuestionnaireItem;
@@ -55,10 +51,17 @@ const SliderSettings = ({ item }: SliderSettingsProp): JSX.Element => {
             isValid = false;
         } else if ((maxValue - minValue) / stepValue > MAX_SLIDER_STEPS) {
             newErrors.stepValue = true;
-            errorMessage += t('A slider can have at most {0} steps, but this one has {1}. Use a step of at least {2}, or a smaller range.')
+            const suggestedStep = suggestSliderStep(maxValue - minValue);
+            errorMessage += t('A slider can have at most {0} steps, but this one has {1}.')
                 .replace('{0}', MAX_SLIDER_STEPS.toString())
-                .replace('{1}', ((maxValue - minValue) / stepValue).toString())
-                .replace('{2}', Math.ceil((maxValue - minValue) / MAX_SLIDER_STEPS).toString());
+                .replace('{1}', ((maxValue - minValue) / stepValue).toString());
+            errorMessage += ' ';
+            errorMessage += suggestedStep
+                ? t('Use a step of {0}, or a smaller range.').replace('{0}', suggestedStep.toString())
+                : t('No step divides this range evenly into at most {0} steps, so use a different range.').replace(
+                      '{0}',
+                      MAX_SLIDER_STEPS.toString(),
+                  );
             isValid = false;
         }
 

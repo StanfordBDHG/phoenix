@@ -46,10 +46,18 @@ test.beforeEach(async ({ page }) => {
 
 test('rejects sliders with more than 13 steps', async ({ page }) => {
     await setField(page, 'Slider max value', '100');
-    await expect(error(page)).toHaveText('A slider can have at most 13 steps, but this one has 100. Use a step of at least 8, or a smaller range.');
+    await expect(error(page)).toHaveText('A slider can have at most 13 steps, but this one has 100. Use a step of 10, or a smaller range.');
 
+    // The suggested step is accepted.
     await setField(page, 'Slider step value', '10');
     await expect(error(page)).toHaveCount(0);
+});
+
+test('asks for a different range when no step fits', async ({ page }) => {
+    await setField(page, 'Slider max value', '97');
+    await expect(error(page)).toHaveText(
+        'A slider can have at most 13 steps, but this one has 97. No step divides this range evenly into at most 13 steps, so use a different range.',
+    );
 });
 
 test('rejects values outside ResearchKit\'s range', async ({ page }) => {
