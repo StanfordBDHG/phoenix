@@ -13,7 +13,7 @@ import { IExtentionType, IItemProperty, IQuestionnaireItemType } from '../../typ
 
 import { updateItemAction } from '../../store/treeStore/treeActions';
 import { isRecipientList } from '../../helpers/QuestionHelper';
-import { removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
+import { convertNumericBoundExtensions, removeItemExtension, setItemExtension, hasExtension } from '../../helpers/extensionHelper';
 
 import Accordion from '../Accordion/Accordion';
 import { ActionType } from '../../store/treeStore/treeStore';
@@ -151,25 +151,25 @@ const Question = (props: QuestionProps): JSX.Element => {
                                             : IQuestionnaireItemType.decimal;
                                     dispatchUpdateItem(IItemProperty.type, newItemType)
 
-                                    // remove slider-related extensions if toggling decimals on, as sliders currently only support integers
-                                    if (newItemType === IQuestionnaireItemType.decimal) {
-                                        const extensionsToRemove = [
-                                            IExtentionType.itemControl,
-                                            IExtentionType.questionnaireSliderStepValue,
-                                            IExtentionType.minValue,
-                                            IExtentionType.maxValue
-                                        ]
-                                        removeItemExtension(
-                                            props.item, 
-                                            extensionsToRemove, 
-                                            props.dispatch
-                                        );
-                                    }
-
-                                    // remove max decimal places extension if toggling decimals off
-                                    if (newItemType === IQuestionnaireItemType.integer) {
-                                        removeItemExtension(props.item, IExtentionType.maxDecimalPlaces, props.dispatch);
-                                    }
+                                    const isNewTypeDecimal = newItemType === IQuestionnaireItemType.decimal;
+                                    // when toggling decimals on, remove slider-related extensions, as sliders currently only support integers;
+                                    // when toggling decimals off, remove the max decimal places extension
+                                    const extensionsToRemove: string[] = isNewTypeDecimal
+                                        ? isSlider
+                                            ? [
+                                                  IExtentionType.itemControl,
+                                                  IExtentionType.questionnaireSliderStepValue,
+                                                  IExtentionType.minValue,
+                                                  IExtentionType.maxValue,
+                                              ]
+                                            : []
+                                        : [IExtentionType.maxDecimalPlaces];
+                                    // keep any remaining min/max values, converted to match the new item type
+                                    const extensions = convertNumericBoundExtensions(
+                                        (props.item.extension || []).filter((x) => extensionsToRemove.indexOf(x.url) === -1),
+                                        isNewTypeDecimal,
+                                    );
+                                    dispatchUpdateItem(IItemProperty.extension, extensions);
                                 }} />
                             </FormField>
                         </>
