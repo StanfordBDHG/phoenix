@@ -59,15 +59,18 @@ export const getNumericExtensionValue = (item: QuestionnaireItem, url: IExtentio
     return extension?.valueDecimal ?? extension?.valueInteger;
 };
 
-// Builds a minValue/maxValue extension whose value type matches the item type, as required by FHIR.
+// Builds a minValue/maxValue extension. Decimal items use valueDecimal only for fractional values: whole numbers stay
+// valueInteger because ResearchKitOnFHIR 2.0.6 and earlier read only valueInteger, and would silently drop the bound.
 export const createNumericBoundExtension = (
     url: IExtentionType.minValue | IExtentionType.maxValue,
     value: number,
     isDecimal: boolean,
-): Extension => (isDecimal ? { url, valueDecimal: value } : { url, valueInteger: Math.trunc(value) });
+): Extension =>
+    isDecimal && !Number.isInteger(value) ? { url, valueDecimal: value } : { url, valueInteger: Math.trunc(value) };
 
-// Converts existing minValue/maxValue extensions to valueDecimal or valueInteger when an item switches between
-// decimal and integer. When converting to integer, bounds are rounded inwards so the original range still holds.
+// Converts existing minValue/maxValue extensions when an item switches between decimal and integer, following the
+// rules of createNumericBoundExtension. When converting to integer, bounds are rounded inwards so the original range
+// still holds.
 export const convertNumericBoundExtensions = (extensions: Extension[], toDecimal: boolean): Extension[] =>
     extensions.map((extension) => {
         if (numericBoundUrls.indexOf(extension.url) === -1) {
@@ -80,7 +83,8 @@ export const convertNumericBoundExtensions = (extensions: Extension[], toDecimal
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { valueDecimal, valueInteger, ...rest } = extension;
         if (toDecimal) {
-            return { ...rest, valueDecimal: value };
+            const url = extension.url as IExtentionType.minValue | IExtentionType.maxValue;
+            return { ...rest, ...createNumericBoundExtension(url, value, true) };
         }
         const rounded = extension.url === IExtentionType.minValue ? Math.ceil(value) : Math.floor(value);
         return { ...rest, valueInteger: rounded };

@@ -58,6 +58,22 @@ test.describe('number validation', () => {
         );
     });
 
+    test('saves whole-number min and max values on a decimal question as integers', async ({ page }) => {
+        await importQuestionnaire(page, questionnaire('decimal'));
+        await openQuestion(page);
+        await openValidation(page);
+        await fillBound(boundInput(page, 'Min value'), '3');
+        await fillBound(boundInput(page, 'Max value'), '9.5');
+        await closeEditorDrawer(page);
+
+        expect(await extensions(page)).toEqual(
+            expect.arrayContaining([
+                { url: MIN_VALUE, valueInteger: 3 },
+                { url: MAX_VALUE, valueDecimal: 9.5 },
+            ]),
+        );
+    });
+
     test('keeps integer min and max values on an integer question', async ({ page }) => {
         await importQuestionnaire(page, questionnaire('integer'));
         await openQuestion(page);
@@ -95,7 +111,7 @@ test.describe('number validation', () => {
             ]),
         );
 
-        // Turning decimals back on keeps the bounds as decimals.
+        // Turning decimals back on keeps whole-number bounds as integers, which older ResearchKitOnFHIR versions need.
         await openQuestion(page);
         await page.locator('.switch-btn', { hasText: 'Allow decimals' }).first().locator('.slider').click();
         await closeEditorDrawer(page);
@@ -103,8 +119,8 @@ test.describe('number validation', () => {
         result = await extensions(page);
         expect(result).toEqual(
             expect.arrayContaining([
-                { url: MIN_VALUE, valueDecimal: 3 },
-                { url: MAX_VALUE, valueDecimal: 9 },
+                { url: MIN_VALUE, valueInteger: 3 },
+                { url: MAX_VALUE, valueInteger: 9 },
             ]),
         );
     });

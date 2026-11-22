@@ -41,6 +41,13 @@ describe('createNumericBoundExtension', () => {
         });
     });
 
+    it('emits valueInteger for whole numbers on decimal items, for older ResearchKitOnFHIR versions', () => {
+        expect(createNumericBoundExtension(IExtentionType.minValue, 3, true)).toEqual({
+            url: IExtentionType.minValue,
+            valueInteger: 3,
+        });
+    });
+
     it('emits valueInteger for integer items', () => {
         expect(createNumericBoundExtension(IExtentionType.maxValue, 10, false)).toEqual({
             url: IExtentionType.maxValue,
@@ -52,20 +59,25 @@ describe('createNumericBoundExtension', () => {
 describe('convertNumericBoundExtensions', () => {
     const other = { url: IExtentionType.validationtext, valueString: 'error' };
 
-    it('converts integer bounds to decimal', () => {
+    it('keeps whole-number bounds as integers when converting to decimal', () => {
         const result = convertNumericBoundExtensions(
             [
                 { url: IExtentionType.minValue, valueInteger: 1 },
-                { url: IExtentionType.maxValue, valueInteger: 5 },
+                { url: IExtentionType.maxValue, valueDecimal: 5 },
                 other,
             ],
             true,
         );
         expect(result).toEqual([
-            { url: IExtentionType.minValue, valueDecimal: 1 },
-            { url: IExtentionType.maxValue, valueDecimal: 5 },
+            { url: IExtentionType.minValue, valueInteger: 1 },
+            { url: IExtentionType.maxValue, valueInteger: 5 },
             other,
         ]);
+    });
+
+    it('keeps fractional bounds as decimals when converting to decimal', () => {
+        const result = convertNumericBoundExtensions([{ url: IExtentionType.maxValue, valueDecimal: 9.5 }], true);
+        expect(result).toEqual([{ url: IExtentionType.maxValue, valueDecimal: 9.5 }]);
     });
 
     it('converts decimal bounds to integer, rounding inwards', () => {
