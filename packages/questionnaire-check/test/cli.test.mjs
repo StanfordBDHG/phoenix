@@ -29,6 +29,8 @@ test('checks several targets and prints JSON', () => {
         output.results.map((r) => r.target),
         ['researchkit-on-fhir@2.0.6', 'spezivibe-react-native@1.1.0'],
     );
+    assert.equal(output.results[0].note, undefined);
+    assert.match(output.results[1].note, /check those with spezivibe-react-native@1\.0\.0/);
     assert.equal(output.errors, 3);
     assert.equal(output.warnings, 0);
 });

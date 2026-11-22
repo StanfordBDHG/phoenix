@@ -53,6 +53,10 @@ describe('targets', () => {
         expect(getTarget('ios@2.0.6').id).toBe('researchkit-on-fhir@2.0.6');
         expect(getTarget('react-native').id).toBe('spezivibe-react-native@1.1.0');
         expect(getTarget('rn@1.0.0').id).toBe('spezivibe-react-native@1.0.0');
+        // Existing apps keep the version they were created with, so a missing version is pointed out.
+        expect(getTarget('react-native').note).toContain('Apps created before 2026-11-22 have version 1.0.0');
+        expect(getTarget('react-native@1.1.0').note).toBeUndefined();
+        expect(getTarget('rn@1.0.0').note).toBeUndefined();
         expect(getTarget('rkof').note).toBeUndefined();
         expect(() => getTarget('android')).toThrow('Unknown target');
         expect(TARGET_IDS).toContain('researchkit-on-fhir@3.0.0-beta.2');

@@ -41,6 +41,7 @@ test('shows what each app would reject or ignore, and remembers the chosen app',
     await expect(modal.locator('.compatibility__issue--error .compatibility__link-id')).toHaveText('pain');
 
     // React Native 1.0.0 doesn't enforce the slider's limits on an optional question, and saves times as HH:MM.
+    await expect(modal.locator('option[value="spezivibe-react-native@1.0.0"]')).toHaveText('questionnaire package 1.0.0 (apps created before 2026-11-22)');
     await modal.locator('select').selectOption('spezivibe-react-native@1.0.0');
     await expect(modal).toContainText('Errors: 0. Warnings: 3.');
     await expect(modal).toContainText('saves answers to the time question "Visit time" as "HH:MM"');

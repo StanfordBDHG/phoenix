@@ -6,6 +6,7 @@ import {
     getTarget,
     RKOF_DEFAULT_VERSION,
     RKOF_VERSIONS,
+    RN_1_1_0_DATE,
     RN_DEFAULT_VERSION,
     RN_VERSIONS,
 } from '../../compatibility';
@@ -71,6 +72,7 @@ const CompatibilityModal = ({ questionnaire, onClose }: CompatibilityModalProps)
                                 <option key={version} value={`spezivibe-react-native@${version}`}>
                                     questionnaire package {version}
                                     {version === RN_DEFAULT_VERSION ? ` (${t('current')})` : ''}
+                                    {version === '1.0.0' ? ` (${t('apps created before {0}').replace('{0}', RN_1_1_0_DATE)})` : ''}
                                 </option>
                             ))}
                         </optgroup>
