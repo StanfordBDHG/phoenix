@@ -9,7 +9,7 @@
         "@nosferatu500/react-dnd-html5-backend": "^19.2.0",
         "@nosferatu500/react-sortable-tree": "^7.1.0",
         "date-fns": "^4.4.0",
-        "i18next": "^19.6.3",
+        "i18next": "^27.2.6",
         "idb": "^6.0.0",
         "immer": "^10.1.1",
         "react": "^19.3.1",
